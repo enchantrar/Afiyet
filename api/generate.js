@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           system_instruction: { parts: [{ text: system }] },
           contents,
-          generationConfig: { maxOutputTokens: max_tokens || 1400 }
+          generationConfig: { maxOutputTokens: max_tokens || 4000 }
         })
       }
     );
