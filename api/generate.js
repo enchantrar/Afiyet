@@ -26,6 +26,7 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+    console.log('RAW GEMINI:', JSON.stringify(data)); // ← add here
 
     // Convert Gemini response → Anthropic format so frontend stays unchanged
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
