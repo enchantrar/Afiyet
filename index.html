@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afiyet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:#FAF6EF; --bg2:#F0E8D8; --surface:#FFFFFF;
+    --ink:#1A1208; --ink2:#5C3D1E; --ink3:#7A6A55;
+    --amber:#D4890A; --rust:#C04F1B; --sage:#5A7A5C;
+    --border:rgba(92,61,30,0.14); --shadow:rgba(26,18,8,0.08);
+    --grad1:rgba(212,137,10,0.08); --grad2:rgba(192,79,27,0.08);
+    --header-bg:linear-gradient(135deg,#1A1208 0%,#3A2510 100%);
+    --T:0.3s ease;
+  }
+
+  body.dark {
+    --bg:#12100D; --bg2:#1C1812; --surface:#231E17;
+    --ink:#F5EFE4; --ink2:#C4A882; --ink3:#9A8A72;
+    --amber:#E8A020; --rust:#D4673A; --sage:#7AAA7C;
+    --border:rgba(200,160,100,0.14); --shadow:rgba(0,0,0,0.4);
+    --grad1:rgba(232,160,32,0.06); --grad2:rgba(212,103,58,0.06);
+    --header-bg:linear-gradient(135deg,#0A0806 0%,#201508 100%);
+  }
+
+  body { background:var(--bg); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; transition:background var(--T),color var(--T); }
+
+  body::before { content:''; position:fixed; inset:0; background-image:radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 50%); pointer-events:none; z-index:0; }
+
+  /* TOPBAR */
+  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:flex-end; align-items:center; gap:8px; padding:12px 24px; background:var(--bg); border-bottom:1px solid var(--border); transition:background var(--T),border-color var(--T); }
+
+  .toggle-pill { display:flex; align-items:center; background:var(--bg2); border:1.5px solid var(--border); border-radius:50px; overflow:hidden; transition:all var(--T); }
+
+  .toggle-pill button { background:none; border:none; padding:6px 13px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--ink3); cursor:pointer; border-radius:50px; transition:all 0.18s ease; }
+
+  .toggle-pill button.active { background:var(--ink); color:var(--bg); }
+
+  .pill-sep { width:1px; height:16px; background:var(--border); flex-shrink:0; }
+
+  /* CONTAINER */
+  .container { max-width:860px; margin:0 auto; padding:88px 24px 80px; position:relative; z-index:1; }
+
+  /* HEADER */
+  header { text-align:center; margin-bottom:44px; animation:fadeDown 0.7s ease both; }
+
+  .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; transition:color var(--T); }
+
+  .logo { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:700; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); }
+
+  .logo em { font-style:italic; color:var(--rust); transition:color var(--T); }
+
+  .subtitle { font-size:14.5px; color:var(--ink3); font-weight:300; max-width:400px; margin:0 auto; line-height:1.6; transition:color var(--T); }
+
+  /* MODE SWITCHER */
+  .mode-switcher { display:flex; gap:10px; margin-bottom:44px; animation:fadeUp 0.7s 0.15s ease both; }
+
+  .mode-btn { flex:1; padding:16px 14px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; }
+
+  .mode-btn:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 8px 24px var(--shadow); }
+
+  .mode-btn.active { border-color:var(--amber); background:var(--bg2); }
+
+  .mode-btn-icon { font-size:26px; flex-shrink:0; }
+
+  .mode-btn-title { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:3px; transition:color var(--T); }
+
+  .mode-btn-desc { font-size:11.5px; color:var(--ink3); font-weight:300; line-height:1.4; transition:color var(--T); }
+
+  /* SECTION LABEL */
+  .section-label { font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink2); margin-bottom:18px; display:flex; align-items:center; gap:12px; transition:color var(--T); }
+
+  .section-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
+
+  /* CUISINE GRID */
+  .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(138px,1fr)); gap:10px; margin-bottom:38px; animation:fadeUp 0.7s 0.2s ease both; }
+
+  .cuisine-card { background:var(--surface); border:1.5px solid var(--border); border-radius:12px; padding:17px 13px; cursor:pointer; transition:all 0.2s ease; text-align:center; user-select:none; }
+
+  .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 6px 20px var(--shadow); }
+
+  .cuisine-card.selected { border-color:var(--amber); background:var(--bg2); }
+
+  .cuisine-card.selected .cuisine-emoji { transform:scale(1.15); }
+
+  .cuisine-emoji { font-size:28px; display:block; margin-bottom:7px; transition:transform 0.2s ease; }
+
+  .cuisine-name { font-size:12px; font-weight:500; color:var(--ink); transition:color var(--T); }
+
+  /* FILTER CHIPS */
+  .filters-section { margin-bottom:30px; animation:fadeUp 0.7s 0.25s ease both; }
+
+  .filter-grid { display:flex; flex-wrap:wrap; gap:7px; }
+
+  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+
+  .filter-chip:hover { border-color:var(--sage); color:var(--sage); }
+
+  .filter-chip.active { background:var(--sage); border-color:var(--sage); color:white; font-weight:500; }
+
+  /* SPICE */
+  .spice-section { margin-bottom:34px; animation:fadeUp 0.7s 0.28s ease both; }
+
+  .spice-row { display:flex; gap:7px; flex-wrap:wrap; }
+
+  .spice-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 15px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+
+  .spice-btn:hover { border-color:var(--rust); color:var(--rust); }
+
+  .spice-btn.active { background:var(--rust); border-color:var(--rust); color:white; font-weight:500; }
+
+  .spice-section.dimmed { opacity:0.3; pointer-events:none; }
+
+  /* MEDICAL CARDS */
+  .medical-section { margin-bottom:16px; animation:fadeUp 0.7s 0.27s ease both; }
+
+  .medical-intro { font-size:12.5px; color:var(--ink3); font-weight:300; margin-bottom:14px; line-height:1.6; }
+
+  .medical-grid { display:flex; flex-direction:column; gap:10px; }
+
+  .med-card { border-radius:14px; padding:15px 19px; cursor:pointer; transition:all 0.2s ease; display:flex; align-items:flex-start; gap:13px; user-select:none; border:1.5px solid transparent; }
+
+  .med-card:hover { transform:translateY(-1px); }
+
+  body:not(.dark) .med-card.theme-blue   { background:#f0f7ff; border-color:#b8d8f0; }
+  body:not(.dark) .med-card.theme-blue.active   { background:#d0eafa; border-color:#4a9cc7; box-shadow:0 4px 16px rgba(74,156,199,0.18); }
+  body:not(.dark) .med-card.theme-purple { background:#f7f0ff; border-color:#d0b8f0; }
+  body:not(.dark) .med-card.theme-purple.active { background:#ead0fa; border-color:#7a4cc7; box-shadow:0 4px 16px rgba(122,76,199,0.18); }
+  body:not(.dark) .med-card.theme-red    { background:#fff0f0; border-color:#f0b8b8; }
+  body:not(.dark) .med-card.theme-red.active    { background:#fad0d0; border-color:#c74a4a; box-shadow:0 4px 16px rgba(199,74,74,0.18); }
+  body:not(.dark) .med-card.theme-green  { background:#f0fff4; border-color:#b8e8c8; }
+  body:not(.dark) .med-card.theme-green.active  { background:#c8f0d8; border-color:#2a9c52; box-shadow:0 4px 16px rgba(42,156,82,0.18); }
+  body:not(.dark) .med-card.theme-orange { background:#fff8f0; border-color:#f0d0b8; }
+  body:not(.dark) .med-card.theme-orange.active { background:#fae4c8; border-color:#c7784a; box-shadow:0 4px 16px rgba(199,120,74,0.18); }
+
+  body.dark .med-card.theme-blue   { background:rgba(74,156,199,0.08); border-color:rgba(74,156,199,0.22); }
+  body.dark .med-card.theme-blue.active   { background:rgba(74,156,199,0.18); border-color:#4a9cc7; }
+  body.dark .med-card.theme-purple { background:rgba(122,76,199,0.08); border-color:rgba(122,76,199,0.22); }
+  body.dark .med-card.theme-purple.active { background:rgba(122,76,199,0.18); border-color:#7a4cc7; }
+  body.dark .med-card.theme-red    { background:rgba(199,74,74,0.08); border-color:rgba(199,74,74,0.22); }
+  body.dark .med-card.theme-red.active    { background:rgba(199,74,74,0.18); border-color:#c74a4a; }
+  body.dark .med-card.theme-green  { background:rgba(42,156,82,0.08); border-color:rgba(42,156,82,0.22); }
+  body.dark .med-card.theme-green.active  { background:rgba(42,156,82,0.18); border-color:#2a9c52; }
+  body.dark .med-card.theme-orange { background:rgba(199,120,74,0.08); border-color:rgba(199,120,74,0.22); }
+  body.dark .med-card.theme-orange.active { background:rgba(199,120,74,0.18); border-color:#c7784a; }
+
+  .med-icon { font-size:23px; flex-shrink:0; margin-top:2px; }
+
+  .med-body { flex:1; }
+
+  .med-title-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
+
+  .med-title { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--ink); transition:color var(--T); }
+
+  .med-badge { font-family:'DM Sans',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; border-radius:50px; color:white; }
+
+  .theme-blue   .med-badge { background:#4a9cc7; }
+  .theme-purple .med-badge { background:#7a4cc7; }
+  .theme-red    .med-badge { background:#c74a4a; }
+  .theme-green  .med-badge { background:#2a9c52; }
+  .theme-orange .med-badge { background:#c7784a; }
+
+  .med-desc { font-size:12px; line-height:1.55; font-weight:300; color:var(--ink3); transition:color var(--T); }
+
+  .med-rules { display:none; margin-top:9px; padding-top:9px; border-top:1px solid var(--border); flex-wrap:wrap; gap:5px; }
+
+  .med-card.active .med-rules { display:flex; }
+
+  .med-rule-tag { font-size:11px; font-weight:500; border-radius:50px; padding:3px 9px; }
+
+  .theme-blue   .med-rule-tag { background:rgba(74,156,199,0.12); color:#1a5a7a; }
+  .theme-purple .med-rule-tag { background:rgba(122,76,199,0.12); color:#3a1a7a; }
+  .theme-red    .med-rule-tag { background:rgba(199,74,74,0.12); color:#7a1a1a; }
+  .theme-green  .med-rule-tag { background:rgba(42,156,82,0.12); color:#0a4a1a; }
+  .theme-orange .med-rule-tag { background:rgba(199,120,74,0.12); color:#5a2a0a; }
+  body.dark .med-rule-tag { opacity:0.9; }
+
+  /* SHOPPING TOGGLE */
+  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:7px 17px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+
+  .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); }
+
+  .shopping-toggle.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:500; }
+
+  /* CTA */
+  .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
+
+  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:14px 36px; font-family:'DM Sans',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer; transition:all 0.25s ease; }
+
+  .generate-btn:hover:not(:disabled) { background:var(--rust); transform:scale(1.03); box-shadow:0 8px 28px var(--shadow); }
+
+  .generate-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  .surprise-btn { background:none; border:1.5px solid var(--border); color:var(--ink2); border-radius:50px; padding:10px 24px; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s ease; margin-left:10px; }
+
+  .surprise-btn:hover { border-color:var(--amber); color:var(--amber); }
+
+  /* RESULT */
+  #result { display:none; animation:fadeUp 0.6s ease both; }
+  #result.visible { display:block; }
+
+  .result-card { background:var(--surface); border-radius:20px; overflow:hidden; box-shadow:0 20px 60px var(--shadow); border:1px solid var(--border); transition:background var(--T),border-color var(--T); }
+
+  .result-header { background:var(--header-bg); padding:30px 34px; display:flex; justify-content:space-between; align-items:flex-start; }
+
+  .result-cuisine-tag { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); font-weight:500; margin-bottom:7px; }
+
+  .result-title { font-family:'Playfair Display',serif; font-size:1.65rem; color:#FAF6EF; font-weight:700; }
+
+  .result-emoji { font-size:42px; }
+
+  .result-body { padding:34px; }
+
+  .course-block { margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+
+  .course-block:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+
+  .course-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:5px; transition:color var(--T); }
+
+  .course-name { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
+
+  .course-desc { font-size:13.5px; color:var(--ink3); line-height:1.6; font-weight:300; transition:color var(--T); }
+
+  .result-footer { padding:17px 34px; background:var(--bg2); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); }
+
+  .regen-btn { background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:9px 21px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s ease; }
+
+  .regen-btn:hover { background:var(--rust); }
+
+  .other-btn { background:var(--surface); color:var(--ink2); border:1.5px solid var(--border); border-radius:50px; padding:9px 21px; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:all 0.2s ease; }
+
+  .other-btn:hover { border-color:var(--amber); color:var(--amber); }
+
+  .shopping-block { margin-top:4px; padding-top:24px; border-top:1px solid var(--border); }
+
+  .shopping-title { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; }
+
+  .shopping-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:6px 14px; list-style:none; }
+
+  .shopping-list li { font-size:13px; color:var(--ink3); font-weight:300; display:flex; align-items:center; gap:7px; line-height:1.5; }
+
+  .shopping-list li::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--amber); flex-shrink:0; }
+
+  /* LOADING */
+  .loading-area { display:none; text-align:center; padding:46px 24px; }
+  .loading-area.visible { display:block; }
+  .loading-spinner { width:38px; height:38px; border:3px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 14px; }
+  .loading-text { font-family:'Playfair Display',serif; font-size:1.05rem; font-style:italic; color:var(--ink2); }
+
+  .hidden-section { display:none; }
+
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
+  @keyframes spin     { to{transform:rotate(360deg)} }
+
+  @media(max-width:600px){
+    .topbar{padding:9px 14px;gap:6px;}
+    .toggle-pill button{padding:5px 10px;font-size:11px;}
+    .cuisine-grid{grid-template-columns:repeat(3,1fr);gap:7px;}
+    .cuisine-card{padding:11px 7px;}
+    .cuisine-emoji{font-size:23px;}
+    .cuisine-name{font-size:10.5px;}
+    .mode-switcher{flex-direction:column;}
+    .result-header{padding:20px;flex-direction:column;gap:10px;}
+    .result-body{padding:20px;}
+    .result-footer{padding:13px 20px;}
+    .generate-btn{padding:12px 24px;font-size:13.5px;}
+    .surprise-btn{margin-left:0;margin-top:8px;}
+    .cta-area{display:flex;flex-direction:column;align-items:center;}
+    .shopping-list{grid-template-columns:1fr 1fr;}
+    .med-card{padding:12px 13px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="toggle-pill" id="langToggle">
+    <button class="active" onclick="setLang('en')">EN</button>
+    <div class="pill-sep"></div>
+    <button onclick="setLang('tr')">TR</button>
+  </div>
+  <div class="toggle-pill" id="themeToggle">
+    <button class="active" onclick="setTheme('light')">☀️</button>
+    <div class="pill-sep"></div>
+    <button onclick="setTheme('dark')">🌙</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <header>
+    <p class="tagline" data-i18n="tagline">✦ Daily Inspiration ✦</p>
+    <h1 class="logo"><em>Afiyet</em></h1>
+    <p class="subtitle" data-i18n="subtitle">Pick a cuisine and we'll craft a full menu for you — starter, main, and dessert.</p>
+  </header>
+
+  <div class="mode-switcher">
+    <div class="mode-btn active" id="modeGeneral" onclick="setMode('general')">
+      <div class="mode-btn-icon">🍽️</div>
+      <div>
+        <div class="mode-btn-title" data-i18n="modeGeneralTitle">General Cooking</div>
+        <div class="mode-btn-desc" data-i18n="modeGeneralDesc">Everyday meals for any appetite</div>
+      </div>
+    </div>
+    <div class="mode-btn" id="modeMedical" onclick="setMode('medical')">
+      <div class="mode-btn-icon">🩺</div>
+      <div>
+        <div class="mode-btn-title" data-i18n="modeMedicalTitle">Medical Diets</div>
+        <div class="mode-btn-desc" data-i18n="modeMedicalDesc">Condition-specific dietary rules</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label" data-i18n="labelCuisine">Choose your cuisine</p>
+  <div class="cuisine-grid">
+    <div class="cuisine-card" data-cuisine="Turkish"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫙</span><span class="cuisine-name" data-i18n="cuisineTurkish">Turkish</span></div>
+    <div class="cuisine-card" data-cuisine="Italian"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🍝</span><span class="cuisine-name" data-i18n="cuisineItalian">Italian</span></div>
+    <div class="cuisine-card" data-cuisine="Japanese" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍱</span><span class="cuisine-name" data-i18n="cuisineJapanese">Japanese</span></div>
+    <div class="cuisine-card" data-cuisine="Mexican"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🌮</span><span class="cuisine-name" data-i18n="cuisineMexican">Mexican</span></div>
+    <div class="cuisine-card" data-cuisine="Indian"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🍛</span><span class="cuisine-name" data-i18n="cuisineIndian">Indian</span></div>
+    <div class="cuisine-card" data-cuisine="French"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥐</span><span class="cuisine-name" data-i18n="cuisineFrench">French</span></div>
+    <div class="cuisine-card" data-cuisine="Chinese"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineChinese">Chinese</span></div>
+    <div class="cuisine-card" data-cuisine="American" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍔</span><span class="cuisine-name" data-i18n="cuisineAmerican">American</span></div>
+    <div class="cuisine-card" data-cuisine="Thai"     onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineThai">Thai</span></div>
+    <div class="cuisine-card" data-cuisine="Greek"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineGreek">Greek</span></div>
+  </div>
+
+  <!-- GENERAL SECTIONS -->
+  <div id="generalSections">
+    <p class="section-label" data-i18n="labelDietary">Dietary preferences</p>
+    <div class="filters-section">
+      <div class="filter-grid">
+        <div class="filter-chip" data-filter="Vegetarian"   onclick="toggleFilter(this)">🥦 <span data-i18n="filterVeg">Vegetarian</span></div>
+        <div class="filter-chip" data-filter="Vegan"        onclick="toggleFilter(this)">🌱 <span data-i18n="filterVegan">Vegan</span></div>
+        <div class="filter-chip" data-filter="Pescetarian"  onclick="toggleFilter(this)">🐟 <span data-i18n="filterPesc">Pescetarian</span></div>
+        <div class="filter-chip" data-filter="Keto"         onclick="toggleFilter(this)">🥑 <span data-i18n="filterKeto">Keto</span></div>
+        <div class="filter-chip" data-filter="Coeliac"      onclick="toggleFilter(this)">🌾 <span data-i18n="filterCoeliac">Coeliac</span></div>
+        <div class="filter-chip" data-filter="Gluten-free"  onclick="toggleFilter(this)">🚫 <span data-i18n="filterGluten">Gluten-free</span></div>
+        <div class="filter-chip" data-filter="Lactose-free" onclick="toggleFilter(this)">🥛 <span data-i18n="filterLactose">Lactose-free</span></div>
+        <div class="filter-chip" data-filter="Glucose-free" onclick="toggleFilter(this)">🍬 <span data-i18n="filterGlucose">Glucose-free</span></div>
+      </div>
+    </div>
+    <p class="section-label" data-i18n="labelSpice">Spice level</p>
+    <div class="spice-section" id="spiceSection">
+      <div class="spice-row">
+        <div class="spice-btn active" data-spice="normal"      onclick="selectSpice(this)">🌿 <span data-i18n="spiceNormal">Normal</span></div>
+        <div class="spice-btn"        data-spice="mild"        onclick="selectSpice(this)">😌 <span data-i18n="spiceMild">Mild</span></div>
+        <div class="spice-btn"        data-spice="spicy"       onclick="selectSpice(this)">🌶️ <span data-i18n="spiceSpicy">Spicy</span></div>
+        <div class="spice-btn"        data-spice="extra spicy" onclick="selectSpice(this)">🔥 <span data-i18n="spiceExtra">Extra Spicy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDICAL SECTIONS -->
+  <div id="medicalSections" class="hidden-section">
+    <div class="medical-section" style="margin-bottom:38px;">
+      <p class="medical-intro" data-i18n="medicalIntro">For patients managing a medical condition — tap any card to activate. Only one can be active at a time.</p>
+      <div class="medical-grid">
+
+        <div class="med-card theme-blue" data-mode="chemo" onclick="toggleMedical(this)">
+          <div class="med-icon">🎗️</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medChemoTitle">GI Cancer — Chemotherapy Diet</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medChemoDesc">Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag" data-i18n="chemoR1">✗ No root/subterranean veg</span>
+              <span class="med-rule-tag" data-i18n="chemoR2">✗ No chicken or poultry</span>
+              <span class="med-rule-tag" data-i18n="chemoR3">✗ No high-sugar fruits</span>
+              <span class="med-rule-tag" data-i18n="chemoR4">✗ No deep-fried foods</span>
+              <span class="med-rule-tag" data-i18n="chemoR5">✗ No spices</span>
+              <span class="med-rule-tag" data-i18n="chemoR6">✗ No grains</span>
+              <span class="med-rule-tag" data-i18n="chemoR7">✗ No legumes (beans, lentils)</span>
+              <span class="med-rule-tag" data-i18n="chemoR8">✗ No raw vegetables</span>
+              <span class="med-rule-tag" data-i18n="chemoR9">✓ Soft, gentle, easy-to-digest</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="med-card theme-purple" data-mode="hypoglycemia" onclick="toggleMedical(this)">
+          <div class="med-icon">🩸</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medHypoTitle">Hypoglycaemia (Low Blood Sugar)</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medHypoDesc">Meals that stabilise blood glucose — low GI carbs, protein with every meal, no refined sugars.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag">✗ <span data-i18n="hypoR1">No refined sugar</span></span>
+              <span class="med-rule-tag">✗ <span data-i18n="hypoR2">No white bread / white rice</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="hypoR4">Low GI carbs only</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="hypoR5">Protein with every meal</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="med-card theme-red" data-mode="diabetes" onclick="toggleMedical(this)">
+          <div class="med-icon">💉</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medDiabTitle">Type 2 Diabetes Diet</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medDiabDesc">Blood sugar management — no added sugars, high fibre, lean protein, non-starchy vegetables.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag">✗ <span data-i18n="diabR1">No added sugars</span></span>
+              <span class="med-rule-tag">✗ <span data-i18n="diabR2">No refined carbs</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="diabR3">High fibre</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="diabR4">Lean protein</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="med-card theme-red" data-mode="heart" onclick="toggleMedical(this)">
+          <div class="med-icon">❤️</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medHeartTitle">Heart-Healthy / Cardiovascular Diet</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medHeartDesc">Low saturated fat, low sodium, omega-3 rich. Avoids fried foods and processed meats.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag">✗ <span data-i18n="heartR1">No saturated / trans fat</span></span>
+              <span class="med-rule-tag">✗ <span data-i18n="heartR2">Low sodium</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="heartR4">Omega-3 rich</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="med-card theme-orange" data-mode="gout" onclick="toggleMedical(this)">
+          <div class="med-icon">🦴</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medGoutTitle">Gout Diet (Low Purine)</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medGoutDesc">Reduces uric acid — no red meat, no shellfish, no alcohol, no sugary drinks.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag">✗ <span data-i18n="goutR1">No red meat / organ meat</span></span>
+              <span class="med-rule-tag">✗ <span data-i18n="goutR2">No shellfish</span></span>
+              <span class="med-rule-tag">✗ <span data-i18n="goutR3">No alcohol</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="med-card theme-green" data-mode="tuberculosis" onclick="toggleMedical(this)">
+          <div class="med-icon">🫁</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medTbTitle">Tuberculosis Recovery Diet</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medTbDesc">High-calorie, high-protein meals to fight TB weight loss. Rich in vitamins A, C, E, zinc and iron.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag">✗ <span data-i18n="tbR1">No alcohol</span></span>
+              <span class="med-rule-tag">✗ <span data-i18n="tbR2">No raw/undercooked food</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="tbR3">High calorie + protein</span></span>
+              <span class="med-rule-tag">✓ <span data-i18n="tbR4">Vitamins A, C, E + zinc</span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label" data-i18n="labelExtras">Extras</p>
+  <div style="margin-bottom:38px;">
+    <div class="shopping-toggle" id="shoppingToggle" onclick="toggleShopping()">
+      🛒 <span data-i18n="shoppingBtn">Include shopping list</span>
+    </div>
+  </div>
+
+  <div class="cta-area">
+    <button class="generate-btn" id="generateBtn" onclick="generateMenu()" disabled>
+      ✦ <span data-i18n="generateBtn">Generate My Menu</span>
+    </button>
+    <button class="surprise-btn" onclick="surpriseMe()">🎲 <span data-i18n="surpriseBtn">Surprise Me</span></button>
+  </div>
+
+  <div class="loading-area" id="loadingArea">
+    <div class="loading-spinner"></div>
+    <p class="loading-text" data-i18n="loading">Crafting your perfect menu…</p>
+  </div>
+
+  <div id="result"></div>
+
+</div>
+
+<script>
+  let selected = null;
+  let activeFilters = new Set();
+  let spiceLevel = 'normal';
+  let wantsShopping = false;
+  let activeMedicalMode = null;
+  let currentMode = 'general';
+  let currentLang = 'en';
+
+  const i18n = {
+    en: {
+      tagline:'✦ Daily Inspiration ✦',
+      subtitle:'Pick a cuisine and we\'ll craft a full menu for you — starter, main, and dessert.',
+      modeGeneralTitle:'General Cooking', modeGeneralDesc:'Everyday meals for any appetite',
+      modeMedicalTitle:'Medical Diets', modeMedicalDesc:'Condition-specific dietary rules',
+      labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences',
+      labelSpice:'Spice level', labelExtras:'Extras',
+      cuisineTurkish:'Turkish', cuisineItalian:'Italian', cuisineJapanese:'Japanese',
+      cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
+      cuisineChinese:'Chinese', cuisineAmerican:'American', cuisineThai:'Thai', cuisineGreek:'Greek',
+      filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
+      filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
+      spiceNormal:'Normal', spiceMild:'Mild', spiceSpicy:'Spicy', spiceExtra:'Extra Spicy',
+      medicalIntro:'For patients managing a medical condition — tap any card to activate. Only one can be active at a time.',
+      medChemoTitle:'GI Cancer — Chemotherapy Diet',
+      medChemoDesc:'Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.',
+      medHypoTitle:'Hypoglycaemia (Low Blood Sugar)',
+      medHypoDesc:'Meals that stabilise blood glucose — low GI carbs, protein with every meal, no refined sugars.',
+      medDiabTitle:'Type 2 Diabetes Diet',
+      medDiabDesc:'Blood sugar management — no added sugars, high fibre, lean protein, non-starchy vegetables.',
+      medHeartTitle:'Heart-Healthy / Cardiovascular Diet',
+      medHeartDesc:'Low saturated fat, low sodium, omega-3 rich. Avoids fried foods and processed meats.',
+      medGoutTitle:'Gout Diet (Low Purine)',
+      medGoutDesc:'Reduces uric acid — no red meat, no shellfish, no alcohol, no sugary drinks.',
+      medTbTitle:'Tuberculosis Recovery Diet',
+      medTbDesc:'High-calorie, high-protein meals to fight TB weight loss. Rich in vitamins A, C, E, zinc and iron.',
+      chemoR1:'✗ No root/subterranean veg', chemoR2:'✗ No chicken or poultry', chemoR3:'✗ No high-sugar fruits',
+      chemoR4:'✗ No deep-fried foods', chemoR5:'✗ No spices', chemoR6:'✗ No grains',
+      chemoR7:'✗ No legumes (beans, lentils)', chemoR8:'✗ No raw vegetables', chemoR9:'✓ Soft, gentle, easy-to-digest',
+      hypoR1:'No refined sugar', hypoR2:'No white bread / white rice', hypoR4:'Low GI carbs only', hypoR5:'Protein with every meal',
+      diabR1:'No added sugars', diabR2:'No refined carbs', diabR3:'High fibre', diabR4:'Lean protein',
+      heartR1:'No saturated / trans fat', heartR2:'Low sodium', heartR4:'Omega-3 rich',
+      goutR1:'No red meat / organ meat', goutR2:'No shellfish', goutR3:'No alcohol',
+      tbR1:'No alcohol', tbR2:'No raw/undercooked food', tbR3:'High calorie + protein', tbR4:'Vitamins A, C, E + zinc',
+      shoppingBtn:'Include shopping list', generateBtn:'Generate My Menu',
+      surpriseBtn:'Surprise Me', loading:'Crafting your perfect menu…',
+      badgeOff:'Off', badgeActive:'Active',
+      starter:'Starter', mainCourse:'Main Course', dessert:'Dessert',
+      shoppingListTitle:'🛒 Shopping List',
+      regenBtn:'↺ New Menu', changeBtn:'← Change Options',
+      cuisineWord:'Cuisine',
+    },
+    tr: {
+      tagline:'✦ Günlük İlham ✦',
+      subtitle:'Bir mutfak seç, sana başlangıç, ana yemek ve tatlıdan oluşan tam bir menü hazırlayalım.',
+      modeGeneralTitle:'Genel Yemek', modeGeneralDesc:'Her damak zevkine uygun günlük yemekler',
+      modeMedicalTitle:'Tıbbi Diyetler', modeMedicalDesc:'Hastalığa özel beslenme kuralları',
+      labelCuisine:'Mutfak seçin', labelDietary:'Beslenme tercihleri',
+      labelSpice:'Baharatlı mı?', labelExtras:'Ekstralar',
+      cuisineTurkish:'Türk', cuisineItalian:'İtalyan', cuisineJapanese:'Japon',
+      cuisineMexican:'Meksika', cuisineIndian:'Hint', cuisineFrench:'Fransız',
+      cuisineChinese:'Çin', cuisineAmerican:'Amerikan', cuisineThai:'Tayland', cuisineGreek:'Yunan',
+      filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Peşeteryen', filterKeto:'Keto',
+      filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
+      spiceNormal:'Normal', spiceMild:'Az Baharatlı', spiceSpicy:'Baharatlı', spiceExtra:'Çok Baharatlı',
+      medicalIntro:'Tıbbi durumunu yöneten hastalar için — aktifleştirmek için kartına dokun. Bir seferde yalnızca bir tane aktif olabilir.',
+      medChemoTitle:'GİS Kanseri — Kemoterapi Diyeti',
+      medChemoDesc:'Kemoterapi sürecindeki GİS kanser hastaları için sıkı diyet. Kök sebze, kümes hayvanı, baklagil, tahıl, baharat, kızartma yok.',
+      medHypoTitle:'Hipoglisemi (Düşük Kan Şekeri)',
+      medHypoDesc:'Kan şekerini dengeleyen öğünler — düşük GI karbonhidrat, her öğünde protein, rafine şeker yok.',
+      medDiabTitle:'Tip 2 Diyabet Diyeti',
+      medDiabDesc:'Kan şekeri kontrolü — ilave şeker yok, yüksek lif, yağsız protein, nişastasız sebzeler.',
+      medHeartTitle:'Kalp Dostu / Kardiyovasküler Diyet',
+      medHeartDesc:'Düşük doymuş yağ, düşük sodyum, omega-3 açısından zengin. Kızartma ve işlenmiş et yok.',
+      medGoutTitle:'Gut Diyeti (Düşük Pürin)',
+      medGoutDesc:'Ürik asidi azaltır — kırmızı et, kabuklu deniz ürünleri, alkol, şekerli içecek yok.',
+      medTbTitle:'Tüberküloz İyileşme Diyeti',
+      medTbDesc:'TB ile ilgili kilo kaybını önlemek için yüksek kalorili, yüksek proteinli öğünler.',
+      chemoR1:'✗ Kök/yeraltı sebze yok', chemoR2:'✗ Tavuk veya kümes hayvanı yok', chemoR3:'✗ Yüksek şekerli meyve yok',
+      chemoR4:'✗ Kızartma yok', chemoR5:'✗ Baharat yok', chemoR6:'✗ Tahıl yok',
+      chemoR7:'✗ Baklagil yok (fasulye, mercimek)', chemoR8:'✗ Çiğ sebze yok', chemoR9:'✓ Yumuşak, hafif, sindirimi kolay',
+      hypoR1:'Rafine şeker yok', hypoR2:'Beyaz ekmek / beyaz pirinç yok', hypoR4:'Yalnızca düşük GI karbonhidrat', hypoR5:'Her öğünde protein',
+      diabR1:'İlave şeker yok', diabR2:'Rafine karbonhidrat yok', diabR3:'Yüksek lif', diabR4:'Yağsız protein',
+      heartR1:'Doymuş / trans yağ yok', heartR2:'Düşük sodyum', heartR4:'Omega-3 zengini',
+      goutR1:'Kırmızı et / sakatat yok', goutR2:'Kabuklu deniz ürünleri yok', goutR3:'Alkol yok',
+      tbR1:'Alkol yok', tbR2:'Çiğ/az pişmiş yemek yok', tbR3:'Yüksek kalori + protein', tbR4:'A, C, E vitamini + çinko',
+      shoppingBtn:'Alışveriş listesi ekle', generateBtn:'Menümü Oluştur',
+      surpriseBtn:'Şansıma Bırak', loading:'Mükemmel menün hazırlanıyor…',
+      badgeOff:'Kapalı', badgeActive:'Aktif',
+      starter:'Başlangıç', mainCourse:'Ana Yemek', dessert:'Tatlı',
+      shoppingListTitle:'🛒 Alışveriş Listesi',
+      regenBtn:'↺ Yeni Menü', changeBtn:'← Seçenekleri Değiştir',
+      cuisineWord:'Mutfağı',
+    }
+  };
+
+  const medicalPrompts = {
+    chemo:`CRITICAL — GI CANCER / CHEMOTHERAPY PATIENT DIET. Every ingredient must comply. No exceptions.
+FORBIDDEN:
+- NO subterranean/root vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beets, radishes, turnips, parsnips, celeriac, yams
+- NO chicken, turkey, or any poultry
+- NO high-sugar fruits: bananas, grapes, mangoes, dates, figs, watermelon, pineapple — only tiny amounts of low-sugar fruit if needed
+- NO deep-fried, pan-fried, or heavily oiled foods
+- NO spices, chilli, black pepper, paprika, cumin, curry — mild fresh herbs only (parsley, dill, mint)
+- NO grains: wheat, rice, oats, barley, bulgur, corn, bread, pasta, couscous, quinoa, semolina
+- NO legumes: lentils (mercimek), white beans, chickpeas, kidney beans, black beans, peas, soybeans — they cause dangerous gas and bloating for GI cancer patients
+- NO raw vegetables — everything must be soft and well-cooked
+FOCUS ON: steamed/poached white fish, poached eggs, soft well-cooked above-ground vegetables (zucchini, steamed broccoli tips, steamed spinach, steamed green beans), clear broths and smooth soups (no legumes, no grains), small amounts of plain yoghurt if tolerated.`,
+
+    hypoglycemia:`HYPOGLYCAEMIA (LOW BLOOD SUGAR) DIET:
+- NO refined sugars, sweets, candy, sugary desserts or sauces
+- NO white bread, white rice, or high-GI carbohydrates
+- NO alcohol or sugary drinks
+- Every dish must include a protein source to slow glucose absorption
+- Use only low-GI carbohydrates (legumes, oats, sweet potato, whole grains)
+- Portions must be moderate and well-balanced
+- Dessert must be low-sugar (Greek yoghurt with berries, nut-based treat, etc.)`,
+
+    diabetes:`TYPE 2 DIABETES DIET:
+- NO added sugars, sweets, or sugary sauces
+- NO refined carbohydrates (white bread, white pasta, white rice, pastries)
+- Prefer non-starchy vegetables; avoid high-starch veg
+- High fibre in every course
+- Lean protein required (fish, legumes, skinless poultry, eggs)
+- Avoid processed foods; healthy fats ok (olive oil, nuts, avocado)`,
+
+    heart:`HEART-HEALTHY / CARDIOVASCULAR DIET:
+- NO saturated fats (fatty red meat, full-fat dairy, palm/coconut oil, lard)
+- NO trans fats or hydrogenated oils
+- Very LOW sodium — avoid salt-heavy preparations, cured meats, processed foods
+- NO deep-fried foods
+- Include omega-3 rich ingredients (oily fish, walnuts, flaxseed)
+- Prioritise whole grains, legumes, and fresh vegetables
+- Avoid processed meats (bacon, sausage, deli meats)`,
+
+    gout:`GOUT / LOW PURINE DIET:
+- NO red meat (beef, lamb, pork)
+- NO organ meats (liver, kidney, brain)
+- NO shellfish (prawns, mussels, scallops, crab, lobster)
+- NO alcohol of any kind
+- NO sugary drinks or high-fructose corn syrup
+- Encourage: low-fat dairy, eggs, tofu, vegetables, cherries, hydrating foods`,
+
+    tuberculosis:`TUBERCULOSIS RECOVERY DIET:
+- NO alcohol
+- NO raw or undercooked meat, eggs, or fish (everything must be well-cooked)
+- Meals must be HIGH in calories to fight TB-related weight loss
+- HIGH protein in every course (lean meat, fish, eggs, legumes, dairy)
+- Include Vitamin A (orange/yellow veg), Vitamin C (citrus, bell pepper), Vitamin E (nuts, seeds)
+- Include zinc-rich foods (pumpkin seeds, legumes, meat) and iron-rich foods (leafy greens, lentils)
+- Nourishing, calorie-dense, immune-supporting meals`
+  };
+
+  const medicalLabels = {
+    chemo:        { en:'🎗️ GI Cancer Diet',       tr:'🎗️ GİS Kanseri Diyeti' },
+    hypoglycemia: { en:'🩸 Hypoglycaemia Diet',    tr:'🩸 Hipoglisemi Diyeti' },
+    diabetes:     { en:'💉 Type 2 Diabetes Diet',  tr:'💉 Tip 2 Diyabet Diyeti' },
+    heart:        { en:'❤️ Heart-Healthy Diet',    tr:'❤️ Kalp Dostu Diyet' },
+    gout:         { en:'🦴 Gout Diet',             tr:'🦴 Gut Diyeti' },
+    tuberculosis: { en:'🫁 TB Recovery Diet',      tr:'🫁 TB İyileşme Diyeti' }
+  };
+
+  const cuisineEmojis = {
+    Turkish:'🫙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
+    Indian:'🍛', French:'🥐', Chinese:'🥟', American:'🍔',
+    Thai:'🍜', Greek:'🫒'
+  };
+
+  /* LANGUAGE */
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    const btns = document.querySelectorAll('#langToggle button');
+    btns[0].classList.toggle('active', lang === 'en');
+    btns[1].classList.toggle('active', lang === 'tr');
+    const t = i18n[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if (t[k] !== undefined) el.textContent = t[k];
+    });
+    document.querySelectorAll('[data-badge]').forEach(badge => {
+      const isActive = badge.closest('.med-card')?.classList.contains('active');
+      badge.textContent = isActive ? t.badgeActive : t.badgeOff;
+    });
+  }
+
+  /* THEME */
+  function setTheme(theme) {
+    document.body.classList.toggle('dark', theme === 'dark');
+    const btns = document.querySelectorAll('#themeToggle button');
+    btns[0].classList.toggle('active', theme === 'light');
+    btns[1].classList.toggle('active', theme === 'dark');
+  }
+
+  /* MODE */
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('modeGeneral').classList.toggle('active', mode === 'general');
+    document.getElementById('modeMedical').classList.toggle('active', mode === 'medical');
+    document.getElementById('generalSections').classList.toggle('hidden-section', mode !== 'general');
+    document.getElementById('medicalSections').classList.toggle('hidden-section', mode !== 'medical');
+    if (mode === 'general') {
+      activeMedicalMode = null;
+      document.getElementById('spiceSection').classList.remove('dimmed');
+    }
+    if (mode === 'medical') {
+      activeFilters.clear();
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    }
+    document.getElementById('result').classList.remove('visible');
+    document.getElementById('result').innerHTML = '';
+  }
+
+  /* CUISINE */
+  function selectCuisine(card) {
+    document.querySelectorAll('.cuisine-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selected = card.dataset.cuisine;
+    document.getElementById('generateBtn').disabled = false;
+  }
+
+  /* FILTERS / SPICE / SHOPPING */
+  function toggleFilter(chip) {
+    chip.classList.toggle('active');
+    const f = chip.dataset.filter;
+    activeFilters.has(f) ? activeFilters.delete(f) : activeFilters.add(f);
+  }
+
+  function selectSpice(btn) {
+    document.querySelectorAll('.spice-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    spiceLevel = btn.dataset.spice;
+  }
+
+  function toggleShopping() {
+    wantsShopping = !wantsShopping;
+    document.getElementById('shoppingToggle').classList.toggle('active', wantsShopping);
+  }
+
+  /* MEDICAL */
+  function toggleMedical(card) {
+    const mode = card.dataset.mode;
+    const wasActive = card.classList.contains('active');
+    const t = i18n[currentLang];
+    document.querySelectorAll('.med-card').forEach(c => {
+      c.classList.remove('active');
+      c.querySelector('[data-badge]').textContent = t.badgeOff;
+    });
+    if (!wasActive) {
+      card.classList.add('active');
+      card.querySelector('[data-badge]').textContent = t.badgeActive;
+      activeMedicalMode = mode;
+      const noSpice = ['chemo','heart'];
+      document.getElementById('spiceSection').classList.toggle('dimmed', noSpice.includes(mode));
+      if (noSpice.includes(mode)) {
+        document.querySelectorAll('.spice-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-spice="normal"]').classList.add('active');
+        spiceLevel = 'normal';
+      }
+    } else {
+      activeMedicalMode = null;
+      document.getElementById('spiceSection').classList.remove('dimmed');
+    }
+  }
+
+  /* SURPRISE */
+  function surpriseMe() {
+    const cards = document.querySelectorAll('.cuisine-card');
+    const random = cards[Math.floor(Math.random() * cards.length)];
+    selectCuisine(random);
+    generateMenu();
+  }
+
+  /* GENERATE */
+  async function generateMenu() {
+    if (!selected) return;
+    document.getElementById('loadingArea').classList.add('visible');
+    document.getElementById('result').classList.remove('visible');
+    document.getElementById('result').innerHTML = '';
+    document.getElementById('generateBtn').disabled = true;
+
+    const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
+    const medicalNote = activeMedicalMode ? medicalPrompts[activeMedicalMode] : '';
+    const dietaryNote = activeFilters.size > 0 ? `Additional dietary requirements: ${[...activeFilters].join(', ')}. All dishes must comply.` : '';
+    const spiceNote = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode)) ? `Spice level: ${spiceLevel}.` : '';
+    const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
+    const shoppingSchema = wantsShopping ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2"]` : '';
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:1400,
+          system:`You are a thoughtful, medically-informed chef who designs beautiful menus. You take medical dietary restrictions extremely seriously. Always respond ONLY with valid JSON, no markdown, no extra text. Write ALL menu content (dish names and descriptions) in ${lang}.`,
+          messages:[{
+            role:'user',
+            content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert.
+
+${medicalNote}
+${dietaryNote}
+${spiceNote}
+${shoppingNote}
+
+Respond with ONLY this JSON:
+{
+  "menuTitle": "A poetic 3-5 word title in ${lang}",
+  "starter":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
+  "main":     { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
+  "dessert":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" }${shoppingSchema}
+}`
+          }]
+        })
+      });
+      const data = await response.json();
+      const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+      const menu = JSON.parse(raw);
+      renderMenu(menu);
+    } catch(err) {
+      renderError();
+    } finally {
+      document.getElementById('loadingArea').classList.remove('visible');
+      document.getElementById('generateBtn').disabled = false;
+    }
+  }
+
+  /* RENDER */
+  function renderMenu(menu) {
+    const t = i18n[currentLang];
+    const emoji = cuisineEmojis[selected] || '🍽️';
+    const medColors = {
+      chemo:'rgba(74,156,199,0.2);color:#4a9cc7',
+      hypoglycemia:'rgba(122,76,199,0.2);color:#7a4cc7',
+      diabetes:'rgba(199,74,74,0.2);color:#c74a4a',
+      heart:'rgba(199,74,74,0.2);color:#c74a4a',
+      gout:'rgba(199,120,74,0.2);color:#c7784a',
+      tuberculosis:'rgba(42,156,82,0.2);color:#2a9c52'
+    };
+    const medTag = activeMedicalMode
+      ? `<span style="background:${medColors[activeMedicalMode]};border-radius:50px;padding:3px 10px;font-size:11px;font-weight:600;">${medicalLabels[activeMedicalMode][currentLang]}</span>`
+      : '';
+    const filterTags = [...activeFilters].map(f =>
+      `<span style="background:rgba(90,122,92,0.15);color:var(--sage);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:500;">${f}</span>`
+    ).join(' ');
+    const spiceTag = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode))
+      ? `<span style="background:rgba(192,79,27,0.12);color:var(--rust);border-radius:50px;padding:3px 10px;font-size:11px;">${spiceLevel==='extra spicy'?'🔥':spiceLevel==='spicy'?'🌶️':'😌'} ${t['spice'+spiceLevel.split(' ').map((w,i)=>i?w[0].toUpperCase()+w.slice(1):w).join('')]||spiceLevel}</span>`
+      : '';
+    const allTags = [medTag,filterTags,spiceTag].filter(Boolean).join(' ');
+    const cuisineLabel = t['cuisine'+selected] || selected;
+    const shoppingHTML = (wantsShopping && menu.shoppingList?.length) ? `
+      <div class="shopping-block">
+        <p class="shopping-title">${t.shoppingListTitle}</p>
+        <ul class="shopping-list">${menu.shoppingList.map(i=>`<li>${i}</li>`).join('')}</ul>
+      </div>` : '';
+
+    document.getElementById('result').innerHTML = `
+      <div class="result-card">
+        <div class="result-header">
+          <div>
+            <p class="result-cuisine-tag">${cuisineLabel} ${t.cuisineWord}</p>
+            <h2 class="result-title">${menu.menuTitle}</h2>
+            ${allTags?`<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">${allTags}</div>`:''}
+          </div>
+          <span class="result-emoji">${emoji}</span>
+        </div>
+        <div class="result-body">
+          <div class="course-block">
+            <p class="course-label">${t.starter}</p>
+            <h3 class="course-name">${menu.starter.name}</h3>
+            <p class="course-desc">${menu.starter.description}</p>
+          </div>
+          <div class="course-block">
+            <p class="course-label">${t.mainCourse}</p>
+            <h3 class="course-name">${menu.main.name}</h3>
+            <p class="course-desc">${menu.main.description}</p>
+          </div>
+          <div class="course-block">
+            <p class="course-label">${t.dessert}</p>
+            <h3 class="course-name">${menu.dessert.name}</h3>
+            <p class="course-desc">${menu.dessert.description}</p>
+          </div>
+          ${shoppingHTML}
+        </div>
+        <div class="result-footer">
+          <button class="regen-btn" onclick="generateMenu()">${t.regenBtn}</button>
+          <button class="other-btn" onclick="scrollToTop()">${t.changeBtn}</button>
+        </div>
+      </div>`;
+    document.getElementById('result').classList.add('visible');
+    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function renderError() {
+    document.getElementById('result').innerHTML = `
+      <div style="text-align:center;padding:40px;color:var(--ink2);">
+        <p style="font-size:30px;margin-bottom:12px;">😕</p>
+        <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;">Something went wrong. Please try again.</p>
+      </div>`;
+    document.getElementById('result').classList.add('visible');
+  }
+
+  function scrollToTop() { window.scrollTo({top:0,behavior:'smooth'}); }
+</script>
+</body>
+</html>
