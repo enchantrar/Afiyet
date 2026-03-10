@@ -1,6 +1,6 @@
 # 🍽️ Afiyet
 
-> *Afiyet olsun* — a Turkish wish of good health through food.
+> *Afiyet olsun*, a Turkish wish of good health through food.
 
 **Afiyet** is an AI-powered menu generator that crafts full 3-course menus based on your chosen cuisine. It includes a dedicated medical diet mode for patients managing conditions like GI cancer, diabetes, heart disease, gout, and more.
 
