@@ -792,7 +792,7 @@ FOCUS ON: steamed/poached white fish, poached eggs, soft well-cooked above-groun
           system:`You are a thoughtful, medically-informed chef who designs beautiful menus. You take medical dietary restrictions extremely seriously. Always respond ONLY with valid JSON, no markdown, no extra text. Write ALL menu content (dish names and descriptions) in ${lang}.`,
           messages:[{
             role:'user',
-            content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert.
+            content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert. Be creative and avoid common default dishes — surprise the user with something interesting and less predictable. Never repeat the same dish across regenerations.
 
 ${medicalNote}
 ${dietaryNote}
