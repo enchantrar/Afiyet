@@ -837,7 +837,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     document.getElementById('generateBtn').disabled = true;
 
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
-    const medicalNote = activeMedicalMode ? medicalPrompts[activeMedicalMode] : '';
+    const medicalNote = activeMedicalMode ? medicalPrompts[activeMedicalMode]() : '';
     const dietaryNote = activeFilters.size > 0 ? `Additional dietary requirements: ${[...activeFilters].join(', ')}. All dishes must comply.` : '';
     const spiceNote = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode)) ? `Spice level: ${spiceLevel}.` : '';
     const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
@@ -859,7 +859,12 @@ ${medicalNote}
 ${dietaryNote}
 ${spiceNote}
 ${shoppingNote}
-Be creative and varied — do not default to the most common dishes. Seed: ${Math.random().toString(36).slice(2,7)}.
+VARIETY RULES — strictly follow these:
+- Do NOT ALWAYS use the most famous or obvious dishes of this cuisine (no pad thai for Thai, no tiramisu for Italian, no hummus for Greek, no butter chicken for Indian, no kung pao for Chinese)
+- SOMETIMES pick lesser-known, regional, or seasonal dishes that a local would eat at home
+- No ingredient should appear in more than one course
+- Each generation must feel completely different from a typical menu
+- Rotation key: ${Math.random().toString(36).slice(2,9)}
 
 Respond with ONLY this JSON:
 {
