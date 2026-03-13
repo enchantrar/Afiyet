@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   try {
     const { messages, system, max_tokens } = req.body;
 
-    // Convert Anthropic format → Gemini format
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }]
@@ -27,7 +26,6 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Convert Gemini response → Anthropic format so frontend stays unchanged
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     return res.status(200).json({
       content: [{ type: 'text', text }]

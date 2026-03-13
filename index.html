@@ -506,7 +506,7 @@
   const i18n = {
     en: {
       tagline:'Your Daily Food Inspiration',
-      subtitle:'Pick a cuisine and we\'ll craft a full menu for you — starter, main, and dessert.',
+      subtitle:'Pick a cuisine and a 3-course menu will be yours: Starter, main, dessert.',
       modeGeneralTitle:'General Cooking', modeGeneralDesc:'Everyday meals for any appetite',
       modeMedicalTitle:'Medical Diets', modeMedicalDesc:'Condition-specific dietary rules',
       labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences',
@@ -547,7 +547,7 @@
       cuisineWord:'Cuisine',
     },
     tr: {
-      tagline:'Sofranızın Günlük İlhamı',
+      tagline:'Sofranızın Günlük İlhamı ✿',
       subtitle:'Bir mutfak seç, sana başlangıç, ana yemek ve tatlıdan oluşan tam bir menü hazırlayalım.',
       modeGeneralTitle:'Genel Yemek', modeGeneralDesc:'Her damak zevkine uygun günlük yemekler',
       modeMedicalTitle:'Tıbbi Diyetler', modeMedicalDesc:'Hastalığa özel beslenme kuralları',
@@ -591,61 +591,121 @@
   };
 
   const medicalPrompts = {
-    chemo:`CRITICAL — GI CANCER / CHEMOTHERAPY PATIENT DIET. Every ingredient must comply. No exceptions.
-FORBIDDEN:
-- NO subterranean/root vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beets, radishes, turnips, parsnips, celeriac, yams
-- NO chicken, turkey, or any poultry
-- NO high-sugar fruits: bananas, grapes, mangoes, dates, figs, watermelon, pineapple — only tiny amounts of low-sugar fruit if needed
-- NO deep-fried, pan-fried, or heavily oiled foods
-- NO spices, chilli, black pepper, paprika, cumin, curry — mild fresh herbs only (parsley, dill, mint)
-- NO grains: wheat, rice, oats, barley, bulgur, corn, bread, pasta, couscous, quinoa, semolina
-- NO legumes: lentils (mercimek), white beans, chickpeas, kidney beans, black beans, peas, soybeans — they cause dangerous gas and bloating for GI cancer patients
-- NO raw vegetables — everything must be soft and well-cooked
-FOCUS ON: steamed/poached white fish, poached eggs, soft well-cooked above-ground vegetables (zucchini, steamed broccoli tips, steamed spinach, steamed green beans), clear broths and smooth soups (no legumes, no grains), small amounts of plain yoghurt if tolerated.`,
 
-    hypoglycemia:`HYPOGLYCAEMIA (LOW BLOOD SUGAR) DIET:
-- NO refined sugars, sweets, candy, sugary desserts or sauces
-- NO white bread, white rice, or high-GI carbohydrates
-- NO alcohol or sugary drinks
-- Every dish must include a protein source to slow glucose absorption
-- Use only low-GI carbohydrates (legumes, oats, sweet potato, whole grains)
-- Portions must be moderate and well-balanced
-- Dessert must be low-sugar (Greek yoghurt with berries, nut-based treat, etc.)`,
+  chemo:`CRITICAL — GI CANCER / CHEMOTHERAPY PATIENT DIET. Every single ingredient must comply. Zero exceptions.
 
-    diabetes:`TYPE 2 DIABETES DIET:
-- NO added sugars, sweets, or sugary sauces
-- NO refined carbohydrates (white bread, white pasta, white rice, pastries)
-- Prefer non-starchy vegetables; avoid high-starch veg
-- High fibre in every course
-- Lean protein required (fish, legumes, skinless poultry, eggs)
-- Avoid processed foods; healthy fats ok (olive oil, nuts, avocado)`,
+STRICTLY FORBIDDEN — check every ingredient against this list:
+- Root/underground vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beetroot, radishes, turnips, parsnips, celeriac
+- Cruciferous vegetables: broccoli, cauliflower, cabbage, Brussels sprouts, kale, rocket, kohlrabi
+- ALL legumes: lentils (mercimek), chickpeas, kidney beans, black beans, white beans, peas, edamame, soy — cause dangerous gas and gut irritation for GI cancer patients
+- ALL poultry: chicken, duck, turkey skin — use only skinless turkey breast as the one approved lean protein
+- Red meat: beef, lamb, pork
+- High-sugar fruits: banana, grapes, mango, fig, date, pineapple, watermelon
+- Deep-fried or pan-fried anything
+- Spices: chili, black pepper, paprika, cumin, curry, coriander seed — mild fresh herbs only (dill, parsley, mint)
+- Grains: wheat, rice, oats, barley, bulgur, corn, bread, pasta, couscous, quinoa, semolina
+- Dairy (except small amount of plain strained yogurt if tolerated)
+- Caffeine and carbonated drinks
 
-    heart:`HEART-HEALTHY / CARDIOVASCULAR DIET:
-- NO saturated fats (fatty red meat, full-fat dairy, palm/coconut oil, lard)
-- NO trans fats or hydrogenated oils
-- Very LOW sodium — avoid salt-heavy preparations, cured meats, processed foods
-- NO deep-fried foods
-- Include omega-3 rich ingredients (oily fish, walnuts, flaxseed)
-- Prioritise whole grains, legumes, and fresh vegetables
-- Avoid processed meats (bacon, sausage, deli meats)`,
+PREFERRED INGREDIENTS:
+- Protein: skinless turkey breast (lean, gentle, clinically recommended for GI patients) — white fish second (sea bass, cod, sole — steamed or baked only) — soft eggs third
+- Vegetables (cooked only, never raw): zucchini, spinach, green beans, pumpkin, peeled cucumber, asparagus tips
+- Carbs: white rice, plain pasta, white bread toast, smooth oats
+- Fat: olive oil (small amounts only)
+- Fruit: cooked peeled apple or pear (unsweetened), small watermelon if no other option
 
-    gout:`GOUT / LOW PURINE DIET:
-- NO red meat (beef, lamb, pork)
-- NO organ meats (liver, kidney, brain)
-- NO shellfish (prawns, mussels, scallops, crab, lobster)
-- NO alcohol of any kind
-- NO sugary drinks or high-fructose corn syrup
-- Encourage: low-fat dairy, eggs, tofu, vegetables, cherries, hydrating foods`,
+SELF-VERIFICATION — before writing the menu, mentally list every ingredient in every course and confirm none appear in the FORBIDDEN list above. If any do, replace them before outputting.`,
 
-    tuberculosis:`TUBERCULOSIS RECOVERY DIET:
-- NO alcohol
-- NO raw or undercooked meat, eggs, or fish (everything must be well-cooked)
-- Meals must be HIGH in calories to fight TB-related weight loss
-- HIGH protein in every course (lean meat, fish, eggs, legumes, dairy)
-- Include Vitamin A (orange/yellow veg), Vitamin C (citrus, bell pepper), Vitamin E (nuts, seeds)
-- Include zinc-rich foods (pumpkin seeds, legumes, meat) and iron-rich foods (leafy greens, lentils)
-- Nourishing, calorie-dense, immune-supporting meals`
-  };
+  hypoglycemia:`HYPOGLYCAEMIA (LOW BLOOD SUGAR) DIET. Every ingredient must comply.
+
+STRICTLY FORBIDDEN:
+- All refined sugars: sugar, honey, maple syrup, sweets, chocolate (except >85% dark), sugary sauces
+- High-GI carbs: white bread, white rice, white pasta, instant oats, corn flakes, rice cakes, most packaged cereals
+- Sugary drinks, fruit juice, soda, energy drinks
+- High-sugar fruits: watermelon, grapes, ripe banana, dates, figs, mango, pineapple, lychee
+- Alcohol, excess caffeine
+
+PREFERRED INGREDIENTS:
+- Protein (ranked): turkey (lean, slows glucose absorption), eggs, white fish, plain Greek yogurt, legumes (lentils/chickpeas — low GI + high protein, fine here)
+- Carbs (GI <55 only): rolled oats, sweet potato, quinoa, whole grain bread, basmati rice (small), bulgur
+- Vegetables: all non-starchy — spinach, zucchini, broccoli, cauliflower, green beans, cucumber, capsicum
+- Fruits: apple, pear, berries, orange — always paired with protein
+
+RULE: Every course must pair carbohydrate with protein — never carbs alone.
+SELF-VERIFICATION — before writing the menu, check every ingredient is off the forbidden list and every course has protein.`,
+
+  diabetes:`TYPE 2 DIABETES DIET. Every ingredient must comply.
+
+STRICTLY FORBIDDEN:
+- All refined sugar: sugar, honey, syrup, sweets, sugary sauces or dressings
+- High-GI starches: white bread, white rice, white pasta, instant mashed potato, corn flakes, rice cakes, crackers
+- Sugary drinks: juice, soda, sports drinks, sweetened tea or coffee
+- Processed/packaged foods: biscuits, cake, pastry, crisps, fast food
+- High-sugar fruits: watermelon, grapes, ripe banana, dates, mango, pineapple
+- Full-fat dairy: cream, butter, full-fat cheese
+
+PREFERRED INGREDIENTS:
+- Protein (ranked): turkey (lean, low saturated fat, supports glucose stability), white fish (grilled/steamed), eggs, legumes (lentils, chickpeas — ideal for T2D: protein + fibre), plain 0% Greek yogurt
+- Carbs: oats, sweet potato, quinoa, bulgur, basmati rice (small portion), whole grain bread
+- Vegetables: all non-starchy — broccoli, spinach, zucchini, cauliflower, capsicum, cucumber, tomato, aubergine
+
+RULE: Every course must include protein AND fibre. No carb-only dishes.
+SELF-VERIFICATION — before writing the menu, check every ingredient against the forbidden list. Specifically check for hidden sugars in sauces, marinades, or dressings.`,
+
+  heart:`HEART-HEALTHY / CARDIOVASCULAR DIET. Every ingredient must comply.
+
+STRICTLY FORBIDDEN:
+- Saturated fats: butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese
+- Trans fats: margarine, shortening, packaged pastry, fried fast food
+- High-sodium: processed meats (sausage, salami, ham, bacon), canned soups, pickles, soy sauce, table salt in excess, crisps
+- Red and processed meat: beef, lamb, pork, veal, hot dogs, deli meats
+- Refined carbs and sugar: white bread, sugary cereals, pastry, sweets, sugary drinks
+- Deep-fried anything
+
+PREFERRED INGREDIENTS:
+- Protein (ranked): oily fish (salmon, mackerel, sardines — highest omega-3), turkey (lean, low saturated fat), legumes (soluble fibre lowers LDL), eggs (not fried), low-fat Greek yogurt
+- Carbs: oats (best for LDL), quinoa, whole grain bread, sweet potato, brown rice, bulgur
+- Fats: olive oil only, avocado, walnuts, almonds, flaxseed, chia seeds
+- Vegetables: all encouraged, especially garlic, spinach, broccoli, tomato, capsicum
+
+RULE: At least one omega-3 source per menu. No added salt — use herbs. No frying.
+SELF-VERIFICATION — before writing the menu, check every ingredient. Specifically verify no hidden sodium in sauces or dressings.`,
+
+  gout:`GOUT / LOW PURINE DIET. Every ingredient must comply.
+
+STRICTLY FORBIDDEN:
+- Very high purine (>200mg/100g): organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster
+- High purine meats: beef, lamb, pork, veal, game meat, goose
+- All alcohol (especially beer — highest gout trigger)
+- Fructose drinks: fruit juice, soda, energy drinks, sweetened beverages
+- Refined carbs and sugary snacks
+
+PREFERRED INGREDIENTS:
+- Protein (ranked by low purine): eggs (very low purine), low-fat dairy — skim milk, low-fat yogurt (actively lowers uric acid), turkey skinless (moderate purine — small portions acceptable), white fish cod/sole (lower than oily fish), tofu
+- Carbs: whole grain bread, oats, sweet potato, brown rice, quinoa
+- Vegetables: zucchini, capsicum, cucumber, lettuce, carrot, green beans, tomato
+- Fruits: cherries (actively lower uric acid — include once), apple, pear, banana, citrus
+
+RULE: Include cherries or cherry-containing ingredient once. Include low-fat dairy at least once. No red meat, organ meat, or shellfish.
+SELF-VERIFICATION — before writing the menu, verify no high-purine animal protein appears anywhere.`,
+
+  tuberculosis:`TUBERCULOSIS RECOVERY DIET. Every ingredient must comply.
+
+STRICTLY FORBIDDEN:
+- All alcohol (damages liver already stressed by TB medication rifampicin)
+- Raw or undercooked meat, eggs, or fish — everything must be well-cooked (immune system is suppressed)
+- Packaged junk food with no nutritional value
+- Excess caffeine (max 1 cup/day)
+
+PREFERRED INGREDIENTS:
+- Protein (high biological value for tissue repair, ranked): turkey (lean complete protein, immune-supportive), eggs (complete amino acids + vitamin D), white fish, legumes (lentils, chickpeas — protein + iron + zinc), full-fat dairy (yogurt, milk, cheese — caloric density needed for TB weight recovery)
+- Carbs (calorie-dense): whole grain bread, oats, sweet potato, brown rice, pasta, bulgur
+- Vegetables: dark leafy greens (spinach, kale) for iron and vitamin A; tomatoes, capsicum, citrus for vitamin C
+- Fats: olive oil, avocado, nuts, seeds — add generously to increase caloric density
+
+RULE: Caloric density is the priority. TB patients are often malnourished. Include a vitamin C source at lunch and dinner (aids iron absorption). Include a vitamin D source once (eggs, fish, or fortified dairy).
+SELF-VERIFICATION — before writing the menu, confirm protein appears in every course, vitamin C appears at main and dessert, and no alcohol or raw protein is used.`
+};
 
   const medicalLabels = {
     chemo:        { en:'🎗️ GI Sensitive Diet',       tr:'🎗️ GİS Hassasiyetli Diyet' },
@@ -789,10 +849,10 @@ FOCUS ON: steamed/poached white fish, poached eggs, soft well-cooked above-groun
         body: JSON.stringify({
           model:'claude-sonnet-4-20250514',
           max_tokens:1400,
-          system:`You are a thoughtful, medically-informed chef who designs beautiful menus. You take medical dietary restrictions extremely seriously. Always respond ONLY with valid JSON, no markdown, no extra text. Write ALL menu content (dish names and descriptions) in ${lang}.`,
+          system:`You are a clinically-informed chef who designs menus for patients with serious medical conditions. When a medical diet is specified, you treat every restriction as absolute — no exceptions, no creative interpretations. Before finalising any menu, you mentally verify every ingredient against the forbidden list for that diet. If any forbidden ingredient appears, you replace it before outputting. You never use chicken when turkey is available and recommended. Always respond ONLY with valid JSON, no markdown, no extra text. Write ALL menu content (dish names and descriptions) in ${lang}.`,          
           messages:[{
             role:'user',
-            content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert. Be creative and avoid common default dishes — surprise the user with something interesting and less predictable. Never repeat the same dish across regenerations.
+            content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert.
 
 ${medicalNote}
 ${dietaryNote}
