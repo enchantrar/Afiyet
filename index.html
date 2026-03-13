@@ -592,9 +592,8 @@
 
   const medicalPrompts = {
 
-  chemo:`CRITICAL — GI CANCER / CHEMOTHERAPY PATIENT DIET. Every single ingredient must comply. Zero exceptions.
+  chemo:`MEDICAL DIET — GI CANCER / CHEMO: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
-STRICTLY FORBIDDEN — check every ingredient against this list:
 - Root/underground vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beetroot, radishes, turnips, parsnips, celeriac
 - Cruciferous vegetables: broccoli, cauliflower, cabbage, Brussels sprouts, kale, rocket, kohlrabi and others that doesn't cause bloating
 - ALL legumes: lentils (mercimek), chickpeas, kidney beans, black beans, white beans, peas, edamame, soy — cause dangerous gas and gut irritation for GI cancer patients
@@ -606,6 +605,7 @@ STRICTLY FORBIDDEN — check every ingredient against this list:
 - Grains: wheat, rice, oats, barley, bulgur, corn, bread, pasta, couscous, quinoa, semolina
 - Dairy (except small amount of plain strained yogurt if tolerated)
 - Caffeine and carbonated drinks
+Before writing the menu: mentally check every ingredient against the list above and replace any that appear.
 
 PREFERRED INGREDIENTS:
 - Protein: turkey (lean, gentle, clinically recommended for GI patients) — white fish second (sea bass, cod, sole — steamed or baked only) — soft eggs third, vegan cheese, lamb
@@ -616,7 +616,8 @@ PREFERRED INGREDIENTS:
 
 SELF-VERIFICATION — before writing the menu, mentally list every ingredient in every course and confirm none appear in the FORBIDDEN list above. If any do, replace them before outputting.`,
 
-  hypoglycemia:`HYPOGLYCAEMIA (LOW BLOOD SUGAR) DIET. Every ingredient must comply.
+
+  hypoglycemia:`MEDICAL DIET — HYPOGLYCAEMIA: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - All refined sugars: sugar, honey, maple syrup, sweets, chocolate (except >85% dark), sugary sauces
@@ -634,7 +635,7 @@ PREFERRED INGREDIENTS:
 RULE: Every course must pair carbohydrate with protein — never carbs alone.
 SELF-VERIFICATION — before writing the menu, check every ingredient is off the forbidden list and every course has protein.`,
 
-  diabetes:`TYPE 2 DIABETES DIET. Every ingredient must comply.
+  diabetes:`MEDICAL DIET — TYPE 2 DIABETES: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - All refined sugar: sugar, honey, syrup, sweets, sugary sauces or dressings
@@ -652,7 +653,7 @@ PREFERRED INGREDIENTS:
 RULE: Every course must include protein AND fibre. No carb-only dishes.
 SELF-VERIFICATION — before writing the menu, check every ingredient against the forbidden list. Specifically check for hidden sugars in sauces, marinades, or dressings.`,
 
-  heart:`HEART-HEALTHY / CARDIOVASCULAR DIET. Every ingredient must comply.
+  heart:`MEDICAL DIET — HEART-HEALTHY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - Saturated fats: butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese
@@ -671,7 +672,7 @@ PREFERRED INGREDIENTS:
 RULE: At least one omega-3 source per menu. No added salt — use herbs. No frying.
 SELF-VERIFICATION — before writing the menu, check every ingredient. Specifically verify no hidden sodium in sauces or dressings.`,
 
-  gout:`GOUT / LOW PURINE DIET. Every ingredient must comply.
+  gout:`MEDICAL DIET — GOUT (LOW PURINE): Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - Very high purine (>200mg/100g): organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster
@@ -689,7 +690,7 @@ PREFERRED INGREDIENTS:
 RULE: Include cherries or cherry-containing ingredient once. Include low-fat dairy at least once. No red meat, organ meat, or shellfish.
 SELF-VERIFICATION — before writing the menu, verify no high-purine animal protein appears anywhere.`,
 
-  tuberculosis:`TUBERCULOSIS RECOVERY DIET. Every ingredient must comply.
+  tuberculosis:`MEDICAL DIET — TUBERCULOSIS RECOVERY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - All alcohol (damages liver already stressed by TB medication rifampicin)
@@ -849,7 +850,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
         body: JSON.stringify({
           model:'claude-sonnet-4-20250514',
           max_tokens:1400,
-          system:`You are a clinically-informed chef who designs menus for patients with serious medical conditions. When a medical diet is specified, you treat every restriction as absolute — no exceptions, no creative interpretations. Before finalising any menu, you mentally verify every ingredient against the forbidden list for that diet. If any forbidden ingredient appears, you replace it before outputting. You never use chicken when turkey is available and recommended. Always respond ONLY with valid JSON, no markdown, no extra text. Write ALL menu content (dish names and descriptions) in ${lang}.`,          
+          system:`You are a creative, knowledgeable chef who designs beautiful 3-course menus. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,          
           messages:[{
             role:'user',
             content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert.
