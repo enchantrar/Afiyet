@@ -592,7 +592,7 @@
 
   const medicalPrompts = {
 
-  chemo:`MEDICAL DIET — GI CANCER / CHEMO: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  chemo: () =>`MEDICAL DIET — GI CANCER / CHEMO: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 - Root/underground vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beetroot, radishes, turnips, parsnips, celeriac
 - Cruciferous vegetables: broccoli, cauliflower, cabbage, Brussels sprouts, kale, rocket, kohlrabi and others that doesn't cause bloating
@@ -617,7 +617,7 @@ PREFERRED INGREDIENTS:
 SELF-VERIFICATION — before writing the menu, mentally list every ingredient in every course and confirm none appear in the FORBIDDEN list above. If any do, replace them before outputting.`,
 
 
-  hypoglycemia:`MEDICAL DIET — HYPOGLYCAEMIA: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  hypoglycemia: () => `MEDICAL DIET — HYPOGLYCAEMIA: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - All refined sugars: sugar, honey, maple syrup, sweets, chocolate (except >85% dark), sugary sauces
@@ -635,7 +635,7 @@ PREFERRED INGREDIENTS:
 RULE: Every course must pair carbohydrate with protein — never carbs alone.
 SELF-VERIFICATION — before writing the menu, check every ingredient is off the forbidden list and every course has protein.`,
 
-  diabetes:`MEDICAL DIET — TYPE 2 DIABETES: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  diabetes: () => `MEDICAL DIET — TYPE 2 DIABETES: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - All refined sugar: sugar, honey, syrup, sweets, sugary sauces or dressings
@@ -653,7 +653,7 @@ PREFERRED INGREDIENTS:
 RULE: Every course must include protein AND fibre. No carb-only dishes.
 SELF-VERIFICATION — before writing the menu, check every ingredient against the forbidden list. Specifically check for hidden sugars in sauces, marinades, or dressings.`,
 
-  heart:`MEDICAL DIET — HEART-HEALTHY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  heart: () =>`MEDICAL DIET — HEART-HEALTHY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - Saturated fats: butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese
@@ -672,7 +672,7 @@ PREFERRED INGREDIENTS:
 RULE: At least one omega-3 source per menu. No added salt — use herbs. No frying.
 SELF-VERIFICATION — before writing the menu, check every ingredient. Specifically verify no hidden sodium in sauces or dressings.`,
 
-  gout:`MEDICAL DIET — GOUT (LOW PURINE): Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  gout: () =>`MEDICAL DIET — GOUT (LOW PURINE): Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - Very high purine (>200mg/100g): organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster
@@ -690,7 +690,7 @@ PREFERRED INGREDIENTS:
 RULE: Include cherries or cherry-containing ingredient once. Include low-fat dairy at least once. No red meat, organ meat, or shellfish.
 SELF-VERIFICATION — before writing the menu, verify no high-purine animal protein appears anywhere.`,
 
-  tuberculosis:`MEDICAL DIET — TUBERCULOSIS RECOVERY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  tuberculosis: () => `MEDICAL DIET — TUBERCULOSIS RECOVERY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
 
 STRICTLY FORBIDDEN:
 - All alcohol (damages liver already stressed by TB medication rifampicin)
