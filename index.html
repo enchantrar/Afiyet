@@ -316,22 +316,25 @@
     </div>
   </div>
 
-  <p class="section-label" data-i18n="labelCuisine">Choose your cuisine</p>
-  <div class="cuisine-grid">
-    <div class="cuisine-card" data-cuisine="Turkish"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫙</span><span class="cuisine-name" data-i18n="cuisineTurkish">Turkish</span></div>
-    <div class="cuisine-card" data-cuisine="Italian"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🍝</span><span class="cuisine-name" data-i18n="cuisineItalian">Italian</span></div>
-    <div class="cuisine-card" data-cuisine="Japanese" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍱</span><span class="cuisine-name" data-i18n="cuisineJapanese">Japanese</span></div>
-    <div class="cuisine-card" data-cuisine="Mexican"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🌮</span><span class="cuisine-name" data-i18n="cuisineMexican">Mexican</span></div>
-    <div class="cuisine-card" data-cuisine="Indian"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🍛</span><span class="cuisine-name" data-i18n="cuisineIndian">Indian</span></div>
-    <div class="cuisine-card" data-cuisine="French"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥐</span><span class="cuisine-name" data-i18n="cuisineFrench">French</span></div>
-    <div class="cuisine-card" data-cuisine="Chinese"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineChinese">Chinese</span></div>
-    <div class="cuisine-card" data-cuisine="American" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍔</span><span class="cuisine-name" data-i18n="cuisineAmerican">American</span></div>
-    <div class="cuisine-card" data-cuisine="Thai"     onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineThai">Thai</span></div>
-    <div class="cuisine-card" data-cuisine="Greek"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineGreek">Greek</span></div>
+  <!-- CUISINE SECTION — general mode only -->
+  <div id="cuisineSection">
+    <p class="section-label" data-i18n="labelCuisine">Choose your cuisine</p>
+    <div class="cuisine-grid">
+      <div class="cuisine-card" data-cuisine="Turkish"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫙</span><span class="cuisine-name" data-i18n="cuisineTurkish">Turkish</span></div>
+      <div class="cuisine-card" data-cuisine="Italian"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🍝</span><span class="cuisine-name" data-i18n="cuisineItalian">Italian</span></div>
+      <div class="cuisine-card" data-cuisine="Japanese" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍱</span><span class="cuisine-name" data-i18n="cuisineJapanese">Japanese</span></div>
+      <div class="cuisine-card" data-cuisine="Mexican"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🌮</span><span class="cuisine-name" data-i18n="cuisineMexican">Mexican</span></div>
+      <div class="cuisine-card" data-cuisine="Indian"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🍛</span><span class="cuisine-name" data-i18n="cuisineIndian">Indian</span></div>
+      <div class="cuisine-card" data-cuisine="French"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥐</span><span class="cuisine-name" data-i18n="cuisineFrench">French</span></div>
+      <div class="cuisine-card" data-cuisine="Chinese"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineChinese">Chinese</span></div>
+      <div class="cuisine-card" data-cuisine="American" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍔</span><span class="cuisine-name" data-i18n="cuisineAmerican">American</span></div>
+      <div class="cuisine-card" data-cuisine="Thai"     onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineThai">Thai</span></div>
+      <div class="cuisine-card" data-cuisine="Greek"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineGreek">Greek</span></div>
+    </div>
   </div>
 
-  <!-- GENERAL SECTIONS -->
-  <div id="generalSections">
+  <!-- DIETARY FILTERS — shown in both modes -->
+  <div id="dietarySection">
     <p class="section-label" data-i18n="labelDietary">Dietary preferences</p>
     <div class="filters-section">
       <div class="filter-grid">
@@ -345,6 +348,10 @@
         <div class="filter-chip" data-filter="Glucose-free" onclick="toggleFilter(this)">🍬 <span data-i18n="filterGlucose">Glucose-free</span></div>
       </div>
     </div>
+  </div>
+
+  <!-- GENERAL ONLY — spice level -->
+  <div id="generalSections">
     <p class="section-label" data-i18n="labelSpice">Spice level</p>
     <div class="spice-section" id="spiceSection">
       <div class="spice-row">
@@ -359,7 +366,7 @@
   <!-- MEDICAL SECTIONS -->
   <div id="medicalSections" class="hidden-section">
     <div class="medical-section" style="margin-bottom:38px;">
-      <p class="medical-intro" data-i18n="medicalIntro">For patients managing a medical condition — tap any card to activate. Only one can be active at a time.</p>
+      <p class="medical-intro" data-i18n="medicalIntro">For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.</p>
       <div class="medical-grid">
 
         <div class="med-card theme-blue" data-mode="chemo" onclick="toggleMedical(this)">
@@ -573,7 +580,8 @@
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       spiceNormal:'Normal', spiceMild:'Mild', spiceSpicy:'Spicy', spiceExtra:'Extra Spicy',
-      medicalIntro:'For patients managing a medical condition: tap any card to activate. Only one can be active at a time.',
+      medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
+      worldCuisines:'World Cuisines',
       medChemoTitle:'GI Chemotherapy Diet',
       medChemoDesc:'Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.',
       medHypoTitle:'Hypoglycaemia (Low Blood Sugar)',
@@ -616,7 +624,8 @@
       filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Pesketaryen', filterKeto:'Keto',
       filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
       spiceNormal:'Normal', spiceMild:'Az Baharatlı', spiceSpicy:'Baharatlı', spiceExtra:'Çok Baharatlı',
-      medicalIntro:'Tıbbi durumunu yöneten hastalar için — aktifleştirmek için kartına dokun. Bir seferde yalnızca bir tane aktif olabilir.',
+      medicalIntro:'Tıbbi durumunu yöneten hastalar için — bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
+      worldCuisines:'Dünya Mutfakları',
       medChemoTitle:'GİS Kemoterapi Diyeti',
       medChemoDesc:'Kemoterapi sürecindeki GİS kanser hastaları için sıkı diyet. Kök sebze, kümes hayvanı, baklagil, tahıl, baharat, kızartma yok.',
       medHypoTitle:'Hipoglisemi (Düşük Kan Şekeri)',
@@ -650,7 +659,7 @@
 
   const medicalPrompts = {
 
-  chemo: () =>`MEDICAL DIET — GI CANCER / CHEMO: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  chemo: () =>`MEDICAL DIET — GI CANCER / CHEMO: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
 
 - Root/underground vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beetroot, radishes, turnips, parsnips, celeriac
 - Cruciferous vegetables: broccoli, cauliflower, cabbage, Brussels sprouts, kale, rocket, kohlrabi and others that doesn't cause bloating
@@ -675,7 +684,7 @@ PREFERRED INGREDIENTS:
 SELF-VERIFICATION — before writing the menu, mentally list every ingredient in every course and confirm none appear in the FORBIDDEN list above. If any do, replace them before outputting.`,
 
 
-  hypoglycemia: () => `MEDICAL DIET — HYPOGLYCAEMIA: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  hypoglycemia: () => `MEDICAL DIET — HYPOGLYCAEMIA: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
 
 STRICTLY FORBIDDEN:
 - All refined sugars: sugar, honey, maple syrup, sweets, chocolate (except >85% dark), sugary sauces
@@ -693,7 +702,7 @@ PREFERRED INGREDIENTS:
 RULE: Every course must pair carbohydrate with protein — never carbs alone.
 SELF-VERIFICATION — before writing the menu, check every ingredient is off the forbidden list and every course has protein.`,
 
-  diabetes: () => `MEDICAL DIET — TYPE 2 DIABETES: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  diabetes: () => `MEDICAL DIET — TYPE 2 DIABETES: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
 
 STRICTLY FORBIDDEN:
 - All refined sugar: sugar, honey, syrup, sweets, sugary sauces or dressings
@@ -711,7 +720,7 @@ PREFERRED INGREDIENTS:
 RULE: Every course must include protein AND fibre. No carb-only dishes.
 SELF-VERIFICATION — before writing the menu, check every ingredient against the forbidden list. Specifically check for hidden sugars in sauces, marinades, or dressings.`,
 
-  heart: () =>`MEDICAL DIET — HEART-HEALTHY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  heart: () =>`MEDICAL DIET — HEART-HEALTHY: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
 
 STRICTLY FORBIDDEN:
 - Saturated fats: butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese
@@ -730,7 +739,7 @@ PREFERRED INGREDIENTS:
 RULE: At least one omega-3 source per menu. No added salt — use herbs. No frying.
 SELF-VERIFICATION — before writing the menu, check every ingredient. Specifically verify no hidden sodium in sauces or dressings.`,
 
-  gout: () =>`MEDICAL DIET — GOUT (LOW PURINE): Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  gout: () =>`MEDICAL DIET — GOUT (LOW PURINE): Drawing from any world cuisine, strictly exclude the following ingredients from every course:
 
 STRICTLY FORBIDDEN:
 - Very high purine (>200mg/100g): organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster
@@ -748,7 +757,7 @@ PREFERRED INGREDIENTS:
 RULE: Include cherries or cherry-containing ingredient once. Include low-fat dairy at least once. No red meat, organ meat, or shellfish.
 SELF-VERIFICATION — before writing the menu, verify no high-purine animal protein appears anywhere.`,
 
-  tuberculosis: () => `MEDICAL DIET — TUBERCULOSIS RECOVERY: Design the menu using ${selected} cuisine ingredients, but strictly exclude:
+  tuberculosis: () => `MEDICAL DIET — TUBERCULOSIS RECOVERY: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
 
 STRICTLY FORBIDDEN:
 - All alcohol (damages liver already stressed by TB medication rifampicin)
@@ -823,26 +832,45 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     currentMode = mode;
     document.getElementById('modeGeneral').classList.toggle('active', mode === 'general');
     document.getElementById('modeMedical').classList.toggle('active', mode === 'medical');
+    // cuisine grid only shown in general mode
+    document.getElementById('cuisineSection').classList.toggle('hidden-section', mode !== 'general');
+    // spice level only shown in general mode
     document.getElementById('generalSections').classList.toggle('hidden-section', mode !== 'general');
+    // medical cards only shown in medical mode
     document.getElementById('medicalSections').classList.toggle('hidden-section', mode !== 'medical');
+    // dietary filters are always visible — no toggle needed
+
     if (mode === 'general') {
       activeMedicalMode = null;
+      document.querySelectorAll('.med-card').forEach(c => {
+        c.classList.remove('active');
+        c.querySelector('[data-badge]').textContent = i18n[currentLang].badgeOff;
+      });
       document.getElementById('spiceSection').classList.remove('dimmed');
+      // btn requires a cuisine selection in general mode
+      document.getElementById('generateBtn').disabled = !selected;
     }
+
     if (mode === 'medical') {
-      activeFilters.clear();
-      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      // clear cuisine selection — not needed in medical mode
+      selected = null;
+      document.querySelectorAll('.cuisine-card').forEach(c => c.classList.remove('selected'));
+      // btn enabled only once a medical card is activated
+      document.getElementById('generateBtn').disabled = !activeMedicalMode;
     }
+
     document.getElementById('result').classList.remove('visible');
     document.getElementById('result').innerHTML = '';
   }
 
-  /* CUISINE */
+  /* CUISINE — only active in general mode */
   function selectCuisine(card) {
     document.querySelectorAll('.cuisine-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selected = card.dataset.cuisine;
-    document.getElementById('generateBtn').disabled = false;
+    if (currentMode === 'general') {
+      document.getElementById('generateBtn').disabled = false;
+    }
   }
 
   /* FILTERS / SPICE / SHOPPING */
@@ -883,14 +911,19 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
         document.querySelector('[data-spice="normal"]').classList.add('active');
         spiceLevel = 'normal';
       }
+      // medical mode doesn't require a cuisine — enable generate as soon as card is active
+      document.getElementById('generateBtn').disabled = false;
     } else {
       activeMedicalMode = null;
       document.getElementById('spiceSection').classList.remove('dimmed');
+      // no card active and no cuisine selected — disable until user picks a card
+      document.getElementById('generateBtn').disabled = true;
     }
   }
 
-  /* SURPRISE */
+  /* SURPRISE — switches to general mode, picks a random cuisine, and generates */
   function surpriseMe() {
+    if (currentMode !== 'general') setMode('general');
     const cards = document.querySelectorAll('.cuisine-card');
     const random = cards[Math.floor(Math.random() * cards.length)];
     selectCuisine(random);
@@ -934,7 +967,7 @@ MENU TO AUDIT:
 
 INSTRUCTIONS:
 1. Go through every ingredient in every course, including those implied by dish names.
-2. If a course contains a forbidden ingredient — replace that entire course with a compliant ${selected} cuisine alternative in ${lang}. Keep the same cuisine style.
+2. If a course contains a forbidden ingredient — replace that entire course with a fully compliant alternative in ${lang}, drawing from any world cuisine.
 3. If the shopping list contains forbidden ingredients — remove them and add compliant replacements.
 4. If nothing is forbidden — return the menu exactly as given, unchanged.
 5. Do NOT add explanations or comments. Return ONLY the JSON.
@@ -979,13 +1012,19 @@ Respond with ONLY this JSON:
     const historyBan = generationHistory.length > 0
       ? `\nDO NOT repeat any of these recently generated dishes: ${generationHistory.slice(-9).join(', ')}.`
       : '';
-    const defaultBan = defaultDishBans[selected]
+    // defaultBan only applies in general mode (medical mode has no fixed cuisine)
+    const defaultBan = (!activeMedicalMode && defaultDishBans[selected])
       ? `\nNEVER generate these overused ${selected} clichés: ${defaultDishBans[selected]}.`
       : '';
 
-    // Extra variety nudge for medical diets (limited ingredients = high repetition risk)
+    // Medical mode: draw from the full world cuisine pool for maximum variety
+    const cuisineInstruction = activeMedicalMode
+      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Italian, Japanese, Mexican, Indian, French, Chinese, American, Thai, Greek, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
+      : `Design a ${selected} cuisine menu for today`;
+
+    // Variety nudge: medical diets need extra encouragement to explore formats
     const medicalVarietyNote = activeMedicalMode
-      ? `\nMEDICAL DIET VARIETY: Despite restricted ingredients there are many distinct dish formats — soups, steamed dishes, stuffed vegetables (capsicum, zucchini), fish preparations, egg-based dishes, grain bowls, yogurt-based starters, poached or baked fruit desserts. Pick a different format every time. NEVER default to the same dish type you would use as a "safe" choice.`
+      ? `\nWORLD CUISINE VARIETY: You have the entire world of cuisines to draw from. Use this freedom — don't keep returning to the same cuisine or the same dish format. Consider soups, steamed dishes, stuffed vegetables, fish preparations, egg-based dishes, grain bowls, yogurt-based starters, poached fruit desserts, and dishes from cuisines you haven't used in recent generations.`
       : '';
 
     try {
@@ -998,7 +1037,7 @@ Respond with ONLY this JSON:
           system:`You are a creative, knowledgeable chef who designs beautiful 3-course menus. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,
           messages:[{
             role:'user',
-            content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert.
+            content:`${cuisineInstruction} with a starter, main course, and dessert.
 
 ${medicalNote}
 ${dietaryNote}
@@ -1011,8 +1050,7 @@ COURSE FORMAT — these are hard requirements, not suggestions:
 Think imaginatively within these formats. If the format doesn't suit an obvious dish, invent a lesser-known regional alternative that fits.
 
 VARIETY RULES — these are hard rules, not guidelines:
-- Think like a home cook or regional chef — not a travel brochure about ${selected} food.
-- Pick dishes a local family would actually eat at home, not what tourists expect.${defaultBan}${historyBan}${medicalVarietyNote}
+${activeMedicalMode ? '- Each course should feel like it could come from a different cuisine tradition.' : `- Think like a home cook or regional chef — not a travel brochure about ${selected} food.\n- Pick dishes a local family would actually eat at home, not what tourists expect.`}${defaultBan}${historyBan}${medicalVarietyNote}
 - No ingredient should appear in more than one course.
 - Seed: ${Math.random().toString(36).slice(2,9)}
 
@@ -1073,7 +1111,9 @@ Respond with ONLY this JSON:
       ? `<span style="background:rgba(192,79,27,0.12);color:var(--rust);border-radius:50px;padding:3px 10px;font-size:11px;">${spiceLevel==='extra spicy'?'🔥':spiceLevel==='spicy'?'🌶️':'😌'} ${t['spice'+spiceLevel.split(' ').map((w,i)=>i?w[0].toUpperCase()+w.slice(1):w).join('')]||spiceLevel}</span>`
       : '';
     const allTags = [medTag,filterTags,spiceTag].filter(Boolean).join(' ');
-    const cuisineLabel = t['cuisine'+selected] || selected;
+    const cuisineLabel = activeMedicalMode
+      ? (t.worldCuisines || 'World Cuisines')
+      : `${t['cuisine'+selected] || selected} ${t.cuisineWord}`;
     const shoppingHTML = (wantsShopping && menu.shoppingList?.length) ? `
       <div class="shopping-block">
         <p class="shopping-title">${t.shoppingListTitle}</p>
@@ -1084,7 +1124,7 @@ Respond with ONLY this JSON:
       <div class="result-card">
         <div class="result-header">
           <div>
-            <p class="result-cuisine-tag">${cuisineLabel} ${t.cuisineWord}</p>
+            <p class="result-cuisine-tag">${cuisineLabel}</p>
             <h2 class="result-title">${menu.menuTitle}</h2>
             ${allTags?`<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">${allTags}</div>`:''}
           </div>
