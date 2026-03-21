@@ -43,7 +43,19 @@
   .pill-sep { width:1px; height:16px; background:var(--border); flex-shrink:0; }
 
   /* CONTAINER */
-  .container { max-width:860px; margin:0 auto; padding:88px 24px 80px; position:relative; z-index:1; }
+  .container { max-width:1320px; margin:0 auto; padding:88px 24px 80px; position:relative; z-index:1; }
+
+  /* TWO-COLUMN LAYOUT */
+  .layout { display:flex; gap:48px; align-items:flex-start; }
+  .panel-left { flex:0 0 460px; min-width:0; }
+  .panel-right { flex:1; min-width:0; position:sticky; top:100px; max-height:calc(100vh - 112px); overflow-y:auto; }
+
+  /* EMPTY STATE — shown in right panel before first generation */
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:460px; color:var(--ink3); text-align:center; border:1.5px dashed var(--border); border-radius:20px; padding:40px; transition:border-color var(--T); }
+  .empty-state-icon { font-size:52px; margin-bottom:16px; opacity:0.5; }
+  .empty-state-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-style:italic; color:var(--ink2); margin-bottom:8px; }
+  .empty-state-desc { font-size:12.5px; font-weight:300; line-height:1.6; max-width:220px; }
+  #result.visible ~ .empty-state { display:none; }
 
   /* HEADER */
   header { text-align:center; margin-bottom:44px; animation:fadeDown 0.7s ease both; }
@@ -257,6 +269,14 @@
   @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
   @keyframes spin     { to{transform:rotate(360deg)} }
 
+  @media(max-width:900px){
+    .container { max-width:860px; }
+    .layout { flex-direction:column; gap:0; }
+    .panel-left { flex:none; width:100%; }
+    .panel-right { position:static; max-height:none; overflow-y:visible; }
+    .empty-state { display:none; }
+  }
+
   @media(max-width:600px){
     .topbar{padding:9px 14px;gap:6px;}
     .toggle-pill button{padding:5px 10px;font-size:11px;}
@@ -298,6 +318,9 @@
     <h1 class="logo"><em>Afiyet</em></h1>
     <p class="subtitle" data-i18n="subtitle">Pick a cuisine and a 3-course menu will be yours: Starter, main, dessert.</p>
   </header>
+
+  <div class="layout">
+  <div class="panel-left">
 
   <div class="mode-switcher">
     <div class="mode-btn active" id="modeGeneral" onclick="setMode('general')">
@@ -492,14 +515,26 @@
     <button class="surprise-btn" onclick="surpriseMe()">🎲 <span data-i18n="surpriseBtn">Surprise Me</span></button>
   </div>
 
-  <div class="loading-area" id="loadingArea">
-    <div class="loading-spinner"></div>
-    <p class="loading-text" data-i18n="loading">Crafting your perfect menu…</p>
-  </div>
+  </div><!-- /panel-left -->
 
-  <div id="result"></div>
+  <div class="panel-right">
+    <div class="loading-area" id="loadingArea">
+      <div class="loading-spinner"></div>
+      <p class="loading-text" data-i18n="loading">Crafting your perfect menu…</p>
+    </div>
 
-</div>
+    <div id="result"></div>
+
+    <div class="empty-state">
+      <div class="empty-state-icon">🍳</div>
+      <p class="empty-state-title">Your menu will appear here</p>
+      <p class="empty-state-desc">Choose your options on the left and hit Generate</p>
+    </div>
+  </div><!-- /panel-right -->
+
+  </div><!-- /layout -->
+
+</div><!-- /container -->
 
 <script>
   let selected = null;
@@ -921,17 +956,20 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     }
   }
 
-  /* SURPRISE — switches to general mode, picks a random cuisine, and generates */
+  /* SURPRISE */
   function surpriseMe() {
-  if (currentMode === 'medical') {
-    generateMenu();
-  } else {
-    const cards = document.querySelectorAll('.cuisine-card');
-    const random = cards[Math.floor(Math.random() * cards.length)];
-    selectCuisine(random);
-    generateMenu();
+    if (currentMode === 'medical') {
+      // In medical mode, the world cuisine pool already makes every generation a surprise
+      // Just regenerate — keep the active medical card and dietary filters intact
+      generateMenu();
+    } else {
+      // In general mode, pick a random cuisine and generate
+      const cards = document.querySelectorAll('.cuisine-card');
+      const random = cards[Math.floor(Math.random() * cards.length)];
+      selectCuisine(random);
+      generateMenu();
+    }
   }
-}
 
   /* AI VALIDATION LAYER
      A second API call that audits the generated menu against the active medical
@@ -993,6 +1031,7 @@ Respond with ONLY this JSON:
 
   /* GENERATE */
   async function generateMenu() {
+    // In medical mode a cuisine isn't required — the world cuisine pool is used instead
     if (!selected && !activeMedicalMode) return;
     document.getElementById('loadingArea').classList.add('visible');
     document.getElementById('result').classList.remove('visible');
@@ -1157,7 +1196,10 @@ Respond with ONLY this JSON:
         </div>
       </div>`;
     document.getElementById('result').classList.add('visible');
-    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+    // On mobile only — scroll result into view (on desktop it's already in the right panel)
+    if (window.innerWidth < 900) {
+      document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
+    }
   }
 
   function renderError() {
