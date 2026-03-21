@@ -540,6 +540,7 @@
       tbR1:'No alcohol', tbR2:'No raw/undercooked food', tbR3:'High calorie + protein', tbR4:'Vitamins A, C, E + zinc',
       shoppingBtn:'Include shopping list', generateBtn:'Generate My Menu',
       surpriseBtn:'Surprise Me', loading:'Crafting your perfect menu…',
+      validating:'Verifying dietary safety…',
       badgeOff:'Off', badgeActive:'Active',
       starter:'Starter', mainCourse:'Main Course', dessert:'Dessert',
       shoppingListTitle:'🛒 Shopping List',
@@ -582,6 +583,7 @@
       tbR1:'Alkol yok', tbR2:'Çiğ/az pişmiş yemek yok', tbR3:'Yüksek kalori + protein', tbR4:'A, C, E vitamini + çinko',
       shoppingBtn:'Alışveriş listesi ekle', generateBtn:'Menümü Oluştur',
       surpriseBtn:'Şansıma Bırak', loading:'Mükemmel menün hazırlanıyor…',
+      validating:'Diyet güvenliği doğrulanıyor…',
       badgeOff:'Kapalı', badgeActive:'Aktif',
       starter:'Başlangıç', mainCourse:'Ana Yemek', dessert:'Tatlı',
       shoppingListTitle:'🛒 Alışveriş Listesi',
@@ -717,6 +719,17 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     tuberculosis: { en:'🫁 TB Recovery Diet',      tr:'🫁 TB İyileşme Diyeti' }
   };
 
+  // Compact forbidden-ingredient lists used by the AI validation layer.
+  // Each entry is a plain-text summary that gets injected into the validator prompt.
+  const medicalForbiddenLists = {
+    chemo: `Root/underground vegetables (carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beetroot, radishes, turnips, parsnips, celeriac), cruciferous vegetables (broccoli, cauliflower, cabbage, Brussels sprouts, kale, rocket, kohlrabi), ALL legumes (lentils, mercimek, chickpeas, kidney beans, black beans, white beans, peas, edamame, soy), ALL poultry except skinless turkey breast (no chicken, duck), red meat (beef, lamb, pork), high-sugar fruits (banana, grapes, mango, fig, date, pineapple, watermelon), fried foods, spices (chili, black pepper, paprika, cumin, curry, coriander), grains (wheat, rice, oats, barley, bulgur, corn, bread, pasta, couscous, quinoa, semolina), dairy except small amounts of plain strained yogurt, caffeine, carbonated drinks`,
+    hypoglycemia: `Refined sugars (sugar, honey, maple syrup, sweets, chocolate except >85% dark, sugary sauces), high-GI carbs (white bread, white rice, white pasta, instant oats, corn flakes, rice cakes, packaged cereals), sugary drinks, fruit juice, soda, energy drinks, high-sugar fruits (watermelon, grapes, ripe banana, dates, figs, mango, pineapple, lychee), alcohol, excess caffeine`,
+    diabetes: `Refined sugar, honey, syrup, sweets, sugary sauces or dressings, high-GI starches (white bread, white rice, white pasta, instant mashed potato, corn flakes, rice cakes, crackers), sugary drinks (juice, soda, sports drinks, sweetened tea or coffee), processed/packaged foods (biscuits, cake, pastry, crisps, fast food), high-sugar fruits (watermelon, grapes, ripe banana, dates, mango, pineapple), full-fat dairy (cream, butter, full-fat cheese)`,
+    heart: `Saturated fats (butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese), trans fats (margarine, shortening, packaged pastry, fried fast food), high-sodium foods (processed meats, sausage, salami, ham, bacon, canned soups, pickles, soy sauce, excess table salt, crisps), red and processed meat (beef, lamb, pork, veal, hot dogs, deli meats), refined carbs and sugar (white bread, sugary cereals, pastry, sweets, sugary drinks), deep-fried foods`,
+    gout: `Organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster, high-purine meats (beef, lamb, pork, veal, game meat, goose), all alcohol especially beer, fructose drinks (fruit juice, soda, energy drinks, sweetened beverages), refined carbs and sugary snacks`,
+    tuberculosis: `All alcohol, raw or undercooked meat/eggs/fish (everything must be fully cooked), packaged junk food with no nutritional value, excess caffeine (more than 1 cup per day)`
+  };
+
   const cuisineEmojis = {
     Turkish:'🫙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
     Indian:'🍛', French:'🥐', Chinese:'🥟', American:'🍔',
@@ -828,6 +841,64 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     generateMenu();
   }
 
+  /* AI VALIDATION LAYER
+     A second API call that audits the generated menu against the active medical
+     diet's forbidden-ingredient list. If any violations are found (including ones
+     implied by a dish name, e.g. "lentil soup" → lentils), the model replaces
+     the offending course(s) with compliant alternatives and returns corrected JSON.
+     Only runs when a medical diet mode is active. -------------------------------- */
+  async function validateMenu(menu, medicalMode) {
+    const forbiddenList = medicalForbiddenLists[medicalMode];
+    if (!forbiddenList) return menu;
+
+    const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
+    const shoppingSchema = (wantsShopping && menu.shoppingList)
+      ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2", "..."]`
+      : '';
+
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gemini-2.5-flash-lite',
+        max_tokens: 1400,
+        system: `You are a clinical nutrition safety auditor. You review AI-generated menus for a patient on a strict medical diet and correct any ingredient violations. Always respond ONLY with valid JSON — no markdown, no extra text.`,
+        messages: [{
+          role: 'user',
+          content: `You are auditing a menu for a patient on a strict medical diet. Your job is to ensure no forbidden ingredient appears anywhere in the menu — including ingredients implied by a dish name (e.g. "Lentil Soup" implies lentils, "Garlic Bread" implies garlic).
+
+STRICTLY FORBIDDEN INGREDIENTS FOR THIS DIET:
+${forbiddenList}
+
+MENU TO AUDIT:
+- Title: ${menu.menuTitle}
+- Starter: ${menu.starter.name} — ${menu.starter.description}
+- Main: ${menu.main.name} — ${menu.main.description}
+- Dessert: ${menu.dessert.name} — ${menu.dessert.description}${(wantsShopping && menu.shoppingList) ? `\n- Shopping list: ${menu.shoppingList.join(', ')}` : ''}
+
+INSTRUCTIONS:
+1. Go through every ingredient in every course, including those implied by dish names.
+2. If a course contains a forbidden ingredient — replace that entire course with a compliant ${selected} cuisine alternative in ${lang}. Keep the same cuisine style.
+3. If the shopping list contains forbidden ingredients — remove them and add compliant replacements.
+4. If nothing is forbidden — return the menu exactly as given, unchanged.
+5. Do NOT add explanations or comments. Return ONLY the JSON.
+
+Respond with ONLY this JSON:
+{
+  "menuTitle": "...",
+  "starter":  { "name": "...", "description": "..." },
+  "main":     { "name": "...", "description": "..." },
+  "dessert":  { "name": "...", "description": "..." }${shoppingSchema}
+}`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content[0].text.replace(/```json|```/g, '').trim();
+    return JSON.parse(raw);
+  }
+
   /* GENERATE */
   async function generateMenu() {
     if (!selected) return;
@@ -878,7 +949,14 @@ Respond with ONLY this JSON:
       });
       const data = await response.json();
       const raw = data.content[0].text.replace(/```json|```/g,'').trim();
-      const menu = JSON.parse(raw);
+      let menu = JSON.parse(raw);
+
+      // AI Validation Layer — only runs for medical diet modes
+      if (activeMedicalMode) {
+        document.querySelector('.loading-text').textContent = i18n[currentLang].validating;
+        menu = await validateMenu(menu, activeMedicalMode);
+      }
+
       renderMenu(menu);
     } catch(err) {
       renderError();
