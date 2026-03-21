@@ -923,12 +923,15 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
 
   /* SURPRISE — switches to general mode, picks a random cuisine, and generates */
   function surpriseMe() {
-    if (currentMode !== 'general') setMode('general');
+  if (currentMode === 'medical') {
+    generateMenu();
+  } else {
     const cards = document.querySelectorAll('.cuisine-card');
     const random = cards[Math.floor(Math.random() * cards.length)];
     selectCuisine(random);
     generateMenu();
   }
+}
 
   /* AI VALIDATION LAYER
      A second API call that audits the generated menu against the active medical
@@ -990,7 +993,7 @@ Respond with ONLY this JSON:
 
   /* GENERATE */
   async function generateMenu() {
-    if (!selected) return;
+    if (!selected && !activeMedicalMode) return;
     document.getElementById('loadingArea').classList.add('visible');
     document.getElementById('result').classList.remove('visible');
     document.getElementById('result').innerHTML = '';
