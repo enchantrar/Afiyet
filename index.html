@@ -503,6 +503,62 @@
   let currentMode = 'general';
   let currentLang = 'en';
 
+  // Session history — stores dish names from the last 3 generations to ban repeats
+  let generationHistory = [];
+
+  // Course type pools — one is picked at random each generation to force format variety
+  const starterTypePools = [
+    'a soup or broth-based dish',
+    'a warm dip, spread, or vegetable purée',
+    'a stuffed vegetable or pastry parcel',
+    'a grilled or pan-seared appetiser',
+    'a cold salad or dressed raw preparation',
+    'a fritter, patty, or pan-fried bite',
+    'a steamed or poached starter',
+    'a cured, marinated, or lightly pickled preparation'
+  ];
+  const mainTypePools = [
+    'a slowly braised or stewed dish',
+    'a stuffed or filled main (e.g. stuffed pepper, rolled meat, filled pastry)',
+    'a baked casserole or oven-roasted dish',
+    'a pan-seared or grilled protein with a sauce or side',
+    'a noodle, grain, or rice-centred dish',
+    'a hearty soup or potage served as a main course',
+    'a wrapped or rolled main (dolma, roulade, wrap)',
+    'a one-pot or tagine-style preparation'
+  ];
+  const dessertTypePools = [
+    'a chilled or frozen dessert (NOT ice cream or the obvious frozen option for this cuisine)',
+    'a warm baked dessert (NOT the most iconic baked sweet for this cuisine)',
+    'a fruit-based dessert — poached, roasted, caramelised, or served fresh with a creative element',
+    'a milk or cream-based pudding, custard, or blancmange',
+    'a pastry or dough-based sweet that is NOT the most well-known pastry of this cuisine',
+    'a semolina, rice, or grain-based sweet preparation',
+    'a mousse, parfait, or layered dessert served in a glass',
+    'a nut-based or seed-based confection or sweet bite',
+    'a steamed or boiled sweet dumpling or pudding',
+    'a simple regional sweet that most people outside the country have never heard of'
+  ];
+
+  function pickRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // Overused default dishes to explicitly ban per cuisine.
+  // Covers starters, mains AND desserts — the three most repeated categories.
+  const defaultDishBans = {
+    Turkish:  'plain mercimek çorbası, hummus, standard shish/adana kebab, plain döner, cacık as starter, baklava, plain künefe, standard sütlaç',
+    Italian:  'spaghetti bolognese, plain bruschetta, margherita pizza, Caesar salad, tiramisu, panna cotta, plain cannoli, affogato',
+    Japanese: 'California roll, plain miso soup, chicken teriyaki, edamame as starter, gyoza (as the only starter option), matcha ice cream, mochi (plain), dorayaki',
+    Mexican:  'plain guacamole with chips, tacos al pastor, nachos, plain quesadilla, standard churros, tres leches cake (plain), fried ice cream',
+    Indian:   'butter chicken, chicken tikka masala, plain naan, standard samosa, aloo gobi, gulab jamun (plain), kheer (plain), jalebi',
+    French:   'French onion soup, standard ratatouille, plain croissant, baguette and cheese plate, crème brûlée, tarte tatin (plain), plain mousse au chocolat, madeleine',
+    Chinese:  'kung pao chicken, plain fried rice, standard spring rolls, sweet and sour pork, wonton soup (plain), plain almond jelly, mango pudding, sesame balls, red bean soup',
+    American: 'cheeseburger, mac and cheese, Buffalo wings, Caesar salad, plain apple pie, chocolate brownie, chocolate chip cookies, banana split',
+    Thai:     'pad thai, standard green curry, plain tom yum, spring rolls, mango sticky rice, coconut ice cream, plain banana in coconut milk',
+    Greek:    'plain hummus, standard Greek salad, spanakopita, plain tzatziki with pita, baklava, plain loukoumades, galaktoboureko (plain), yogurt with honey'
+  };
+
   const i18n = {
     en: {
       tagline:'Your Daily Food Inspiration',
@@ -914,14 +970,32 @@ Respond with ONLY this JSON:
     const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
     const shoppingSchema = wantsShopping ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2"]` : '';
 
+    // Pick a random course format for this generation
+    const starterType = pickRandom(starterTypePools);
+    const mainType    = pickRandom(mainTypePools);
+    const dessertType = pickRandom(dessertTypePools);
+
+    // Build a ban list from recent generations + known overused defaults
+    const historyBan = generationHistory.length > 0
+      ? `\nDO NOT repeat any of these recently generated dishes: ${generationHistory.slice(-9).join(', ')}.`
+      : '';
+    const defaultBan = defaultDishBans[selected]
+      ? `\nNEVER generate these overused ${selected} clichés: ${defaultDishBans[selected]}.`
+      : '';
+
+    // Extra variety nudge for medical diets (limited ingredients = high repetition risk)
+    const medicalVarietyNote = activeMedicalMode
+      ? `\nMEDICAL DIET VARIETY: Despite restricted ingredients there are many distinct dish formats — soups, steamed dishes, stuffed vegetables (capsicum, zucchini), fish preparations, egg-based dishes, grain bowls, yogurt-based starters, poached or baked fruit desserts. Pick a different format every time. NEVER default to the same dish type you would use as a "safe" choice.`
+      : '';
+
     try {
       const response = await fetch('/api/generate', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          model:'claude-sonnet-4-20250514',
+          model:'gemini-2.5-flash-lite',
           max_tokens:1400,
-          system:`You are a creative, knowledgeable chef who designs beautiful 3-course menus. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,          
+          system:`You are a creative, knowledgeable chef who designs beautiful 3-course menus. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,
           messages:[{
             role:'user',
             content:`Design a ${selected} cuisine menu for today with a starter, main course, and dessert.
@@ -930,12 +1004,17 @@ ${medicalNote}
 ${dietaryNote}
 ${spiceNote}
 ${shoppingNote}
-VARIETY RULES — strictly follow these:
-- Do NOT ALWAYS use the most famous or obvious dishes of this cuisine (no pad thai for Thai, no tiramisu for Italian, no hummus for Greek, no butter chicken for Indian, no kung pao for Chinese)
-- SOMETIMES pick lesser-known, regional, or seasonal dishes that a local would eat at home
-- No ingredient should appear in more than one course
-- Each generation must feel completely different from a typical menu
-- Rotation key: ${Math.random().toString(36).slice(2,9)}
+COURSE FORMAT — these are hard requirements, not suggestions:
+- Starter MUST be: ${starterType}
+- Main MUST be: ${mainType}
+- Dessert MUST be: ${dessertType}
+Think imaginatively within these formats. If the format doesn't suit an obvious dish, invent a lesser-known regional alternative that fits.
+
+VARIETY RULES — these are hard rules, not guidelines:
+- Think like a home cook or regional chef — not a travel brochure about ${selected} food.
+- Pick dishes a local family would actually eat at home, not what tourists expect.${defaultBan}${historyBan}${medicalVarietyNote}
+- No ingredient should appear in more than one course.
+- Seed: ${Math.random().toString(36).slice(2,9)}
 
 Respond with ONLY this JSON:
 {
@@ -958,6 +1037,12 @@ Respond with ONLY this JSON:
       }
 
       renderMenu(menu);
+
+      // Update session history so next generation avoids these exact dishes
+      if (menu.starter && menu.main && menu.dessert) {
+        generationHistory.push(menu.starter.name, menu.main.name, menu.dessert.name);
+        if (generationHistory.length > 9) generationHistory = generationHistory.slice(-9); // keep last 3 menus
+      }
     } catch(err) {
       renderError();
     } finally {
