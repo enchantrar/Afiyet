@@ -971,6 +971,29 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     }
   }
 
+  /* MEDICAL NOTE BUILDER
+     Wraps the base medical prompt with a dietary constraint preamble when filters
+     conflict with the medical diet's protein recommendations. The preamble is placed
+     BEFORE the medical prompt so the model reads the restriction before encountering
+     any explicit protein recommendations (e.g. "use turkey"). Without this, the model
+     anchors on the explicit named protein and ignores later override text. ---------- */
+  function buildMedicalNote(mode, filters) {
+    const base = medicalPrompts[mode]();
+    const f = filters instanceof Set ? filters : new Set(filters);
+
+    if (f.has('Vegan')) {
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGAN. Absolutely no animal products: no meat, no poultry (turkey is forbidden), no fish, no seafood, no eggs, no dairy. Every protein source mentioned below must be ignored and replaced with a compliant plant-based alternative (e.g. legumes if permitted by the medical diet, tofu if permitted, seeds, nuts). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+    }
+    if (f.has('Vegetarian')) {
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGETARIAN. No meat, no poultry, and no fish of any kind — this explicitly includes turkey, which appears as a "preferred" protein in the guidelines below. Ignore all turkey/poultry/fish/meat protein recommendations. Use only eggs, plain yogurt or dairy (if not forbidden by the medical diet), legumes (if not forbidden), or tofu (if not forbidden). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+    }
+    if (f.has('Pescetarian')) {
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is PESCETARIAN. No meat and no poultry of any kind — this explicitly includes turkey, which appears as a "preferred" protein in the guidelines below. Ignore all turkey/poultry/meat recommendations. Use only fish, seafood, eggs, or dairy as animal proteins (subject to the medical diet's own restrictions). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+    }
+
+    return base;
+  }
+
   /* DIETARY NOTE BUILDER
      When dietary filters are combined with a medical diet, a simple "please follow
      Vegetarian rules" note is overridden by the medical prompt's explicit protein
@@ -1077,7 +1100,7 @@ Respond with ONLY this JSON:
     document.getElementById('generateBtn').disabled = true;
 
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
-    const medicalNote = activeMedicalMode ? medicalPrompts[activeMedicalMode]() : '';
+    const medicalNote = activeMedicalMode ? buildMedicalNote(activeMedicalMode, activeFilters) : '';
     const dietaryNote = activeFilters.size > 0 ? buildDietaryNote([...activeFilters], activeMedicalMode) : '';
     const spiceNote = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode)) ? `Spice level: ${spiceLevel}.` : '';
     const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
