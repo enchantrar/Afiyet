@@ -984,40 +984,34 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     const f = filters instanceof Set ? filters : new Set(filters);
 
     if (f.has('Vegan')) {
-      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGAN. Absolutely no animal products: no meat, no poultry (turkey is forbidden), no fish, no seafood, no eggs, no dairy. Every protein source mentioned below must be ignored and replaced with a compliant plant-based alternative (e.g. legumes if permitted by the medical diet, tofu if permitted, seeds, nuts). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGAN. Absolutely no animal products of any kind. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy. Every protein source mentioned below must be ignored and replaced with a compliant plant-based alternative (e.g. legumes if permitted by the medical diet, tofu if permitted, seeds, nuts). This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
     if (f.has('Vegetarian')) {
-      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGETARIAN. No meat, no poultry, and no fish of any kind — this explicitly includes turkey, which appears as a "preferred" protein in the guidelines below. Ignore all turkey/poultry/fish/meat protein recommendations. Use only eggs, plain yogurt or dairy (if not forbidden by the medical diet), legumes (if not forbidden), or tofu (if not forbidden). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below — all fish and seafood. Ignore all meat/poultry/fish protein recommendations. Use only eggs, plain yogurt or dairy (if not forbidden by the medical diet), legumes (if not forbidden), or tofu (if not forbidden). This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
     if (f.has('Pescetarian')) {
-      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is PESCETARIAN. No meat and no poultry of any kind — this explicitly includes turkey, which appears as a "preferred" protein in the guidelines below. Ignore all turkey/poultry/meat recommendations. Use only fish, seafood, eggs, or dairy as animal proteins (subject to the medical diet's own restrictions). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is PESCETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below. Ignore all meat and poultry recommendations. Use only fish, seafood, eggs, or dairy as animal proteins (subject to the medical diet's own restrictions). This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
 
     return base;
   }
 
   /* DIETARY NOTE BUILDER
-     When dietary filters are combined with a medical diet, a simple "please follow
-     Vegetarian rules" note is overridden by the medical prompt's explicit protein
-     preferences (e.g. "use turkey"). This function injects a hard OVERRIDE that
-     explicitly forbids conflicting proteins so the medical prompt can't win. ------ */
+     Injects a hard dietary override whenever Vegan, Vegetarian, or Pescetarian is
+     active — regardless of whether a medical mode is also active. Without this,
+     general mode uses a single weak sentence that the model ignores when cuisine
+     context implies a meat protein (e.g. Turkish cuisine suggesting hindi/turkey). */
   function buildDietaryNote(filters, medMode) {
     const f = new Set(filters);
     let note = `Dietary requirements: ${filters.join(', ')}. All dishes must comply.`;
 
-    if (medMode) {
-      // Vegan: no animal products whatsoever — overrides any "preferred" protein in the medical prompt
-      if (f.has('Vegan')) {
-        note += `\n\nVEGAN OVERRIDE — HARD RULE: The patient is VEGAN. This completely overrides any protein preferences listed in the medical diet above. ALL of the following are FORBIDDEN regardless of what the medical diet says: meat (beef, lamb, pork, veal), poultry (chicken, turkey, duck — including turkey breast which may be listed as preferred), fish, seafood, eggs, dairy (milk, yogurt, cheese, cream). Use ONLY plant-based proteins that are also compliant with the medical diet rules (e.g. legumes if permitted, tofu if permitted, seeds, nuts).`;
-      }
-      // Vegetarian: no meat, poultry, or fish — overrides turkey/fish preferences
-      else if (f.has('Vegetarian')) {
-        note += `\n\nVEGETARIAN OVERRIDE — HARD RULE: The patient is VEGETARIAN. This completely overrides any meat or poultry preferences listed in the medical diet above. ALL of the following are FORBIDDEN: meat (beef, lamb, pork), poultry (chicken, turkey, duck — including turkey breast which may be listed as "preferred"), fish, and seafood. Permitted proteins: eggs, plain yogurt, dairy (unless also forbidden by the medical diet), legumes (unless forbidden), tofu (unless forbidden).`;
-      }
-      // Pescetarian: no meat or poultry — overrides turkey preference specifically
-      else if (f.has('Pescetarian')) {
-        note += `\n\nPESCETARIAN OVERRIDE — HARD RULE: The patient is PESCETARIAN. ALL meat and poultry are FORBIDDEN — including turkey and chicken, even if listed as "preferred" in the medical diet above. Only fish, seafood, eggs, and dairy are permitted as animal proteins (subject to the medical diet's own restrictions on those items).`;
-      }
+    // Always apply strong override for protein-conflicting filters — not just in medical mode
+    if (f.has('Vegan')) {
+      note += `\n\nVEGAN — HARD RULE: This menu must be 100% vegan. Absolutely FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish and seafood, eggs, all dairy (milk, yogurt, cheese, cream, butter), honey. Use ONLY plant-based proteins: legumes (lentils, chickpeas, beans), tofu, tempeh, seitan, nuts, seeds.${medMode ? ' Apply this on top of the medical diet rules.' : ''}`;
+    } else if (f.has('Vegetarian')) {
+      note += `\n\nVEGETARIAN — HARD RULE: This menu must be fully vegetarian. Absolutely FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek), all fish and seafood. Permitted proteins: eggs, dairy, legumes, tofu.${medMode ? ' Apply this on top of the medical diet rules.' : ''}`;
+    } else if (f.has('Pescetarian')) {
+      note += `\n\nPESCETARIAN — HARD RULE: This menu must be pescetarian. Absolutely FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek). Only fish, seafood, eggs, and dairy are permitted as animal proteins.${medMode ? ' Apply this on top of the medical diet rules.' : ''}`;
     }
 
     return note;
@@ -1037,11 +1031,11 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     const df = dietaryFilters || new Set();
     let dietaryForbidden = '';
     if (df.has('Vegan')) {
-      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGAN): All meat, poultry (including turkey), fish, seafood, eggs, dairy.`;
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy (milk, yogurt, cheese, butter). Any dish containing any of these — even as a minor ingredient — must be replaced with a fully plant-based alternative.`;
     } else if (df.has('Vegetarian')) {
-      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGETARIAN): All meat (beef, lamb, pork), poultry (chicken, turkey, duck), fish, seafood.`;
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek), all fish, all seafood. Replace any violation with an egg- or dairy-based alternative.`;
     } else if (df.has('Pescetarian')) {
-      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (PESCETARIAN): All meat (beef, lamb, pork) and poultry (chicken, turkey, duck).`;
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (PESCETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek). Replace any violation with fish, seafood, eggs, or dairy.`;
     }
 
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
