@@ -615,7 +615,7 @@
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       spiceNormal:'Normal', spiceMild:'Mild', spiceSpicy:'Spicy', spiceExtra:'Extra Spicy',
-      medicalIntro:'For patients managing a medical condition: tap a card to activate. Menus draw from all world cuisines for maximum variety.',
+      medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
       worldCuisines:'World Cuisines',
       medChemoTitle:'GI Chemotherapy Diet',
       medChemoDesc:'Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.',
@@ -659,7 +659,7 @@
       filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Pesketaryen', filterKeto:'Keto',
       filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
       spiceNormal:'Normal', spiceMild:'Az Baharatlı', spiceSpicy:'Baharatlı', spiceExtra:'Çok Baharatlı',
-      medicalIntro:'Tıbbi durumunu yöneten hastalar için: bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
+      medicalIntro:'Tıbbi durumunu yöneten hastalar için — bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
       worldCuisines:'Dünya Mutfakları',
       medChemoTitle:'GİS Kemoterapi Diyeti',
       medChemoDesc:'Kemoterapi sürecindeki GİS kanser hastaları için sıkı diyet. Kök sebze, kümes hayvanı, baklagil, tahıl, baharat, kızartma yok.',
@@ -971,15 +971,53 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     }
   }
 
+  /* DIETARY NOTE BUILDER
+     When dietary filters are combined with a medical diet, a simple "please follow
+     Vegetarian rules" note is overridden by the medical prompt's explicit protein
+     preferences (e.g. "use turkey"). This function injects a hard OVERRIDE that
+     explicitly forbids conflicting proteins so the medical prompt can't win. ------ */
+  function buildDietaryNote(filters, medMode) {
+    const f = new Set(filters);
+    let note = `Dietary requirements: ${filters.join(', ')}. All dishes must comply.`;
+
+    if (medMode) {
+      // Vegan: no animal products whatsoever — overrides any "preferred" protein in the medical prompt
+      if (f.has('Vegan')) {
+        note += `\n\nVEGAN OVERRIDE — HARD RULE: The patient is VEGAN. This completely overrides any protein preferences listed in the medical diet above. ALL of the following are FORBIDDEN regardless of what the medical diet says: meat (beef, lamb, pork, veal), poultry (chicken, turkey, duck — including turkey breast which may be listed as preferred), fish, seafood, eggs, dairy (milk, yogurt, cheese, cream). Use ONLY plant-based proteins that are also compliant with the medical diet rules (e.g. legumes if permitted, tofu if permitted, seeds, nuts).`;
+      }
+      // Vegetarian: no meat, poultry, or fish — overrides turkey/fish preferences
+      else if (f.has('Vegetarian')) {
+        note += `\n\nVEGETARIAN OVERRIDE — HARD RULE: The patient is VEGETARIAN. This completely overrides any meat or poultry preferences listed in the medical diet above. ALL of the following are FORBIDDEN: meat (beef, lamb, pork), poultry (chicken, turkey, duck — including turkey breast which may be listed as "preferred"), fish, and seafood. Permitted proteins: eggs, plain yogurt, dairy (unless also forbidden by the medical diet), legumes (unless forbidden), tofu (unless forbidden).`;
+      }
+      // Pescetarian: no meat or poultry — overrides turkey preference specifically
+      else if (f.has('Pescetarian')) {
+        note += `\n\nPESCETARIAN OVERRIDE — HARD RULE: The patient is PESCETARIAN. ALL meat and poultry are FORBIDDEN — including turkey and chicken, even if listed as "preferred" in the medical diet above. Only fish, seafood, eggs, and dairy are permitted as animal proteins (subject to the medical diet's own restrictions on those items).`;
+      }
+    }
+
+    return note;
+  }
+
   /* AI VALIDATION LAYER
      A second API call that audits the generated menu against the active medical
      diet's forbidden-ingredient list. If any violations are found (including ones
      implied by a dish name, e.g. "lentil soup" → lentils), the model replaces
      the offending course(s) with compliant alternatives and returns corrected JSON.
      Only runs when a medical diet mode is active. -------------------------------- */
-  async function validateMenu(menu, medicalMode) {
+  async function validateMenu(menu, medicalMode, dietaryFilters) {
     const forbiddenList = medicalForbiddenLists[medicalMode];
     if (!forbiddenList) return menu;
+
+    // Build a dietary extension to the forbidden list
+    const df = dietaryFilters || new Set();
+    let dietaryForbidden = '';
+    if (df.has('Vegan')) {
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGAN): All meat, poultry (including turkey), fish, seafood, eggs, dairy.`;
+    } else if (df.has('Vegetarian')) {
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGETARIAN): All meat (beef, lamb, pork), poultry (chicken, turkey, duck), fish, seafood.`;
+    } else if (df.has('Pescetarian')) {
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (PESCETARIAN): All meat (beef, lamb, pork) and poultry (chicken, turkey, duck).`;
+    }
 
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
     const shoppingSchema = (wantsShopping && menu.shoppingList)
@@ -998,7 +1036,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
           content: `You are auditing a menu for a patient on a strict medical diet. Your job is to ensure no forbidden ingredient appears anywhere in the menu — including ingredients implied by a dish name (e.g. "Lentil Soup" implies lentils, "Garlic Bread" implies garlic).
 
 STRICTLY FORBIDDEN INGREDIENTS FOR THIS DIET:
-${forbiddenList}
+${forbiddenList}${dietaryForbidden}
 
 MENU TO AUDIT:
 - Title: ${menu.menuTitle}
@@ -1040,7 +1078,7 @@ Respond with ONLY this JSON:
 
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
     const medicalNote = activeMedicalMode ? medicalPrompts[activeMedicalMode]() : '';
-    const dietaryNote = activeFilters.size > 0 ? `Additional dietary requirements: ${[...activeFilters].join(', ')}. All dishes must comply.` : '';
+    const dietaryNote = activeFilters.size > 0 ? buildDietaryNote([...activeFilters], activeMedicalMode) : '';
     const spiceNote = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode)) ? `Spice level: ${spiceLevel}.` : '';
     const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
     const shoppingSchema = wantsShopping ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2"]` : '';
@@ -1113,7 +1151,7 @@ Respond with ONLY this JSON:
       // AI Validation Layer — only runs for medical diet modes
       if (activeMedicalMode) {
         document.querySelector('.loading-text').textContent = i18n[currentLang].validating;
-        menu = await validateMenu(menu, activeMedicalMode);
+        menu = await validateMenu(menu, activeMedicalMode, activeFilters);
       }
 
       renderMenu(menu);
