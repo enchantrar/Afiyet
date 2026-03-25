@@ -547,6 +547,8 @@
 
   // Session history — stores dish names from the last 3 generations to ban repeats
   let generationHistory = [];
+  // Ingredient history — stores key ingredients used so they can be banned next generation
+  let ingredientHistory = [];
 
   // Course type pools — one is picked at random each generation to force format variety
   const starterTypePools = [
@@ -1115,6 +1117,9 @@ Respond with ONLY this JSON:
     const historyBan = generationHistory.length > 0
       ? `\nDO NOT repeat any of these recently generated dishes: ${generationHistory.slice(-9).join(', ')}.`
       : '';
+    const ingredientBan = ingredientHistory.length > 0
+      ? `\nDO NOT use these recently used ingredients — pick completely different ones: ${ingredientHistory.slice(-18).join(', ')}.`
+      : '';
     // defaultBan only applies in general mode (medical mode has no fixed cuisine)
     const defaultBan = (!activeMedicalMode && defaultDishBans[selected])
       ? `\nNEVER generate these overused ${selected} clichés: ${defaultDishBans[selected]}.`
@@ -1153,7 +1158,7 @@ COURSE FORMAT — these are hard requirements, not suggestions:
 Think imaginatively within these formats. If the format doesn't suit an obvious dish, invent a lesser-known regional alternative that fits.
 
 VARIETY RULES — these are hard rules, not guidelines:
-${activeMedicalMode ? '- Each course should feel like it could come from a different cuisine tradition.' : `- Think like a home cook or regional chef — not a travel brochure about ${selected} food.\n- Pick dishes a local family would actually eat at home, not what tourists expect.`}${defaultBan}${historyBan}${medicalVarietyNote}
+${activeMedicalMode ? '- Each course should feel like it could come from a different cuisine tradition.' : `- Think like a home cook or regional chef — not a travel brochure about ${selected} food.\n- Pick dishes a local family would actually eat at home, not what tourists expect.`}${defaultBan}${historyBan}${ingredientBan}${medicalVarietyNote}
 - No ingredient should appear in more than one course.
 - Seed: ${Math.random().toString(36).slice(2,9)}
 
@@ -1162,7 +1167,8 @@ Respond with ONLY this JSON:
   "menuTitle": "A poetic 3-5 word title in ${lang}",
   "starter":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
   "main":     { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
-  "dessert":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" }${shoppingSchema}
+  "dessert":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
+  "keyIngredients": ["list", "8-10", "main", "ingredients", "used", "across", "all", "courses"]${shoppingSchema}
 }`
           }]
         })
@@ -1179,10 +1185,14 @@ Respond with ONLY this JSON:
 
       renderMenu(menu);
 
-      // Update session history so next generation avoids these exact dishes
+      // Update session history so next generation avoids these exact dishes and ingredients
       if (menu.starter && menu.main && menu.dessert) {
         generationHistory.push(menu.starter.name, menu.main.name, menu.dessert.name);
-        if (generationHistory.length > 9) generationHistory = generationHistory.slice(-9); // keep last 3 menus
+        if (generationHistory.length > 9) generationHistory = generationHistory.slice(-9);
+      }
+      if (Array.isArray(menu.keyIngredients) && menu.keyIngredients.length > 0) {
+        ingredientHistory.push(...menu.keyIngredients);
+        if (ingredientHistory.length > 18) ingredientHistory = ingredientHistory.slice(-18); // keep last ~2 menus worth
       }
     } catch(err) {
       renderError();
