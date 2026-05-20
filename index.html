@@ -1,399 +1,3 @@
-
-afiyet.com
-/
-Claude finished the response
-Let's get back to our development, it's been long, and I'm not sure where we're left, but I got lots of feedback and ideas to imrove from friends and family. Let's see where we left and keep imroving
-
-12:06 PM
-
-Relevant chats
-Relevant chats
-Welcome back! Good to pick this up again. Here's a quick summary of where we left off with Afiyet (afiyet.vercel.app):
-
-What was built:
-
-A cuisine-based menu generator (3-course: starter, main, dessert)
-Powered by Gemini via a Vercel serverless /api/generate route
-6 medical diet modes — chemo/GIS, hypoglycemia, diabetes, tuberculosis, heart, gout — each with explicit allowed/forbidden ingredient lists
-medicalPrompts converted to arrow functions (so cuisine is correctly injected at generation time)
-Variety logic with explicit bans on repetitive default dishes
-Last known issues being worked on:
-
-Forbidden ingredients still occasionally appearing in GIS/medical menus
-Repetition in generated menus across sessions
-Key working rules we established:
-
-Never push to Notion without explicit instruction
-Never trim or modify preferred ingredient lists without permission
-Finalize everything in conversation before any external action
-Now — what feedback and ideas did your friends and family bring? Share them and we'll figure out what to tackle first!
-
-Afiyet
-
-Cooking for n(how many people)? option
-Weekly menu pre save
-Weekly shopping and leftover ingredients list
-This will be the most intricate feature as we want to know whats left in the fridge and what we can cook or shop for
-Mix and match menus, and health conditions
-Health condition + cuisine
-On off more colorful and apparent
-Recipes
-Turkish cuisine (kavanoz) symbol what else
-Multiple spice selection let's also add these to notion to keep track which is finished and which to keep going, we already had a page for these things, this list should go there? do you need any specific directions for this.
-Also some of these may require research, for instance cooking pizza for 1 may require 200 grams of flour, but for 4 500, i made up the numbers, but we should come up with a system that AI can scrape this info from a cooking webpage or someway else, needs ideation
-
-Show more
-12:12 PM
-Great feedback list! Let me first find the right Notion page to add these to.
-
-
-Loaded tools, used Notion integration
-Loaded tools, used Notion integration
-Found it. Let me fetch the Task Tracker to see what's already there before adding the new items.
-
-
-Loaded tools, used Notion integration
-Loaded tools, used Notion integration
-Got the schema. Now I'll add all the new feature requests as tasks. I'll categorize them thoughtfully — the "fridge/leftovers" system is complex enough to be Phase 3 (Backend), most others are Phase 2 (Features).
-
-
-Create pages in Markdown
-Create pages in Markdown
-All 11 tasks are now in Notion ✅. Here's a summary of how I organized them:
-
-Phase 1 — Web MVP (quick wins):
-
-🔴 High — UI toggles more colorful & apparent
-🟢 Low — Turkish kavanoz symbol + cuisine icons
-Phase 2 — Features:
-
-🔴 High — Serving size (cooking for N people)
-🔴 High — Weekly menu planner with pre-save
-🔴 High — Full recipe view per dish
-🟡 Medium — Mix and match cuisines + health conditions
-🟡 Medium — Health condition + cuisine pairing
-🟡 Medium — Multiple spice level selection
-Phase 3 — Backend (complex/research):
-
-🔴 High — Weekly shopping list + leftover tracker
-🟡 Medium — Fridge inventory / "what can I cook?" mode
-🟡 Medium — Ingredient scaling research system
-On your scaling question — you're right to flag this. Here's the ideation:
-
-The cleanest approach is actually a two-step AI call: first generate the menu, then when the user requests the recipe, send a second prompt like "Give me the recipe for [dish] for [N] people with exact gram measurements". Gemini's training data is rich enough for common dishes to return accurate quantities. We don't need web scraping for v1 — just smart prompting.
-
-For edge cases (baking, spice-heavy dishes), we add a prompt instruction: "Scale spices conservatively — do not multiply linearly."
-
-Scraping would be a Phase 3 enhancement if accuracy becomes a concern after real user testing.
-
-Where do you want to start? The toggle UI fix is the fastest win and something you can ship today. Or we could dive into the recipe feature since it unlocks the scaling system naturally.
-
-let's fix the UI first
-
-12:20 PM
-Share the current index.html code and I'll take a look at exactly what the toggles look like now before making any changes.
-
-
-index.html
-html
-
-12:21 PM
-
-Viewed 2 files
-Viewed 2 files
-Good, I have a clear picture now. The issues are:
-
-Med card badges just say "Off" in a small badge — not obvious at all when active
-Filter chips & spice buttons go green/rust when active but the change is subtle
-Mode switcher (General vs Medical) has a thin amber border when active — easy to miss
-Shopping toggle is similar — amber only on hover/active
-Let me build the improved version now.
-
-
-Read the rest of the truncated section
-Read the rest of the truncated section
-Now I have everything I need. I already see the Turkish cuisine already has 🫙 (the kavanoz jar) — great, that's already done! Let me now make all the targeted UI improvements:
-
-
-Edited 4 files, ran a command
-Edited 4 files, ran a command
-Now the big one — the medical card badges. Currently they say "Off" and flip to some colour. Let's make the active state dramatic and the badge clearly say "ON" with a glowing indicator:
-
-
-Edited 2 files
-Edited 2 files
-Now update the JS that toggles the badge text from "Off" to "ON" — let me find that:
-
-
-Viewed 3 files
-Viewed 3 files
-Now update the badge text logic to say "● ON" / "OFF" and also update the badge colours for the active state per theme:
-
-
-Update badge text to be clearer ON/OFF
-Update badge text to be clearer ON/OFF
-Also update the i18n badge texts to be cleaner:
-
-
-Viewed 2 files, edited 2 files
-Viewed 2 files, edited 2 files
-Now also make the cuisine card selected state more obvious with a stronger highlight:
-
-
-Improve cuisine card selected state visibility
-Improve cuisine card selected state visibility
-Now copy to output:
-
-
-Ran a command, read a file
-Ran a command, read a file
-Here's what changed and why:
-
-Mode switcher (General / Medical)
-
-Active button now has a gradient background, stronger amber glow, and a small pulsing dot indicator in the corner — impossible to miss
-Cuisine cards
-
-Selected card now shows the cuisine name in amber and a stronger shadow — clear at a glance which is picked
-Filter chips (Vegetarian, Vegan, etc.)
-
-Active chips now have a ✓ checkmark prefix, bolder weight, and a drop shadow — you can scan the row and instantly see what's on
-Spice buttons
-
-Active button gets a stronger rust glow/shadow — the selected level is now clearly the "lit up" one
-Medical diet cards
-
-Badge now says "● ON" (with a coloured dot) in white on a solid colour background when active, vs a faint bordered "Off" when inactive — night and day difference
-Active card gets a stronger coloured box-shadow (glow effect)
-Shopping list toggle
-
-Same treatment as spice — amber glow when on
-Drop this index.html into your Vercel repo and deploy. Let me know how it looks and we can tweak anything further before moving on to the next feature!
-
-
-Index
-Code · HTML 
-Med card badges just say "Off" — no colour, no visual weight when active 
-
-it does say active and color gets more vivid when i pick, can this be an incostent bug
-12:28 PM
-Let me look at the badge styling more carefully.
-
-
-Check badge CSS in the output file
-Check badge CSS in the output file
-Found the bug. Lines 187–191 apply background colour to all badges unconditionally — so even the "Off" state has a coloured background, but opacity:0.45 washes it out. When active, opacity goes to 1, which is why the colour gets more vivid. It works, just very subtly.
-
-The inconsistency is because opacity:0.45 on the whole badge also fades the text and border, making it look like "no colour, no weight" on some screens/themes. The fix is to separate the inactive and active states properly — no opacity trick, explicit styles for each.
-
-
-Fix badge styling - remove opacity hack, use explicit inactive/active states
-Fix badge styling - remove opacity hack, use explicit inactive/active states
-Also remove the inline badge.style.background from the JS since CSS handles it now:
-
-
-Remove inline style from JS - CSS handles badge colour now
-Remove inline style from JS - CSS handles badge colour now
-Also clean up the reset loop — remove the inline style reset since it's no longer needed:
-
-
-Edited a file, read a file
-Edited a file, read a file
-The root cause: the old code used opacity: 0.45 on the badge to fake an "off" look, but opacity fades the entire element including text and border — so on some screens it just looked like a washed-out blob with no clear state. When active it went to opacity: 1, which was the "more vivid" effect you noticed — it was working, just not reliably visible.
-
-The fix replaces that with explicit CSS rules:
-
-Off state: neutral grey pill (--bg2 background, --ink3 text, subtle border) — clearly inactive
-On state: solid colour background per theme (blue/purple/red/green/orange) with white text — unmistakably active
-No more opacity tricks, no JS inline styles, just clean CSS. The "● ON" dot prefix stays too for extra clarity.
-
-
-Index
-Code · HTML 
-another change before push is changing the jar, people asked why turkish food has jar emoji
-
-12:29 PM
-Fair point! The jar (🫙) was added as the "kavanoz" symbol from the earlier feedback, but without context it's just confusing. Let me change it to something more instantly recognizable as Turkish food.
-
-
-Change Turkish cuisine emoji from jar to something more recognizable
-Change Turkish cuisine emoji from jar to something more recognizable
-I went with 🥙 (stuffed flatbread/dürüm) — universally associated with Turkish/Middle Eastern food. Other options if you prefer:
-
-🍢 — şiş kebab skewer
-🫓 — flatbread (pide/lavash)
-🥗 — feels too generic
-The kavanoz idea is still a good one for a future feature — like a "saved recipes" or "pantry" icon — where the jar metaphor actually makes sense in context. Want to keep 🥙 or swap to one of the others?
-
-maybe a döner wrap looking emoji like dürüm?
-
-12:30 PM
-🥙 actually already is the dürüm/döner wrap emoji — that's exactly what it depicts! It should already be in the file. Want me to present the updated file so you can verify it looks right before pushing?
-
-okay let's see
-
-12:32 PM
-
-Presented file
-Presented file
-There you go! Check the Turkish card — it should show 🥙. If it looks good, this is ready to push to Vercel.
-
-
-Index
-Code · HTML 
-wonderful
-
-12:33 PM
-Great, push it! 🚀
-
-Once it's live, let's tackle the next item. Based on priority I'd suggest recipes — it's high value on its own and also naturally sets up the serving size (N people) feature since a recipe needs quantities. Want to start there?
-
-next item!
-
-12:35 PM
-Recipes it is. Before we write any code, let me think through how this should work so we align first.
-
-The feature: user sees the generated menu (starter, main, dessert) → taps any dish → gets the full recipe with ingredients + steps.
-
-Two design decisions to make:
-
-1. Where does the recipe appear?
-
-A) Expands inline below the dish card
-B) Opens as a modal/overlay on top of the menu
-C) Replaces the menu card entirely (with a back button)
-2. How do we call the AI for it?
-
-A) On demand — user taps the dish, we fire a second API call to Gemini at that moment
-B) Pre-generated — when the menu generates, we also silently fetch all 3 recipes in the background
-Option B for the AI call means faster response when they tap, but 3x the API cost on every generation even if they never look at a recipe. I'd lean toward on-demand (A) — tap to fetch, show a small spinner on that dish only.
-
-For the UI I'd lean toward modal (B) — keeps the menu intact, feels like a natural "drill down", and works well on both mobile and desktop.
-
-What do you think on both points?
-
-A
-A
-12:49 PM
-Perfect, inline expand + on-demand fetch. Clean and simple.
-
-One more thing to align on before coding — what should the recipe contain?
-
-My suggestion:
-
-Ingredients list with quantities (for the default 1 serving for now, scaling comes later)
-Step-by-step instructions (numbered, clear)
-Prep + cook time (quick to generate, adds real value)
-A "Close recipe" collapse button to fold it back up
-Anything to add or remove from that list?
-
-Nope, all good. You can actually apply Caire Saffitz Dessert person recipe structure for this part
-
-12:50 PM
-Love that reference — Claire Saffitz's recipe style is very specific and great. Just to make sure I'm applying it faithfully:
-
-Yield + timing upfront (makes X, prep Xmin, cook Xmin)
-Ingredients grouped by component (e.g. "For the dough", "For the filling") where relevant
-Weight measurements alongside volume (grams + cups/tbsp)
-Detailed descriptive steps — not just "bake until done" but "bake until deep golden brown and a skewer comes out clean, 35–40 minutes"
-Visual/sensory cues in each step so you know what to look for
-Tips or notes at the end (substitutions, make-ahead, what can go wrong)
-Should this structure apply to all 3 courses (starter, main, dessert) or just dessert? Because the grouped-components and weight measurements style works beautifully for baking but can feel a bit heavy for a simple starter like a salad.
-
-My suggestion: apply the full Claire structure to desserts, and a slightly lighter version (timing + sensory cues + tips, but simpler ingredient grouping) for starters and mains. Thoughts?
-
-This isn't about the dessert at all, I just mean that her recipe structure is great, be careful not to copy dessert baking directly to any cooking style, just the recipe structure to each course please :)
-
-12:52 PM
-You're right, apologies for the over-literal read! The structure is what's great — the clarity, the sensory cues, the "why" behind each step, the notes at the end. Applied appropriately to whatever the dish actually is.
-
-So for all 3 courses:
-
-Yield + timing upfront
-Ingredients grouped by component where it makes sense
-Descriptive steps with sensory cues ("cook until the onions are soft and jammy, about 8 minutes")
-Tips/notes at the end
-Measurements will be metric (grams/ml) since the app is Turkey-based, with volume where more natural (tbsp, tsp).
-
-Ready to code — let me pull the current file and build it in.
-
-
-Viewed 2 files
-Viewed 2 files
-Good, I have everything I need. Now I'll add the recipe feature — a "View Recipe" button on each course block that expands inline with the full recipe fetched on demand.
-
-
-Edited 2 files
-Edited 2 files
-Now update the renderMenu function to add recipe buttons and panels to each course block:
-
-
-Add recipe buttons and panels to each course block in renderMenu
-Add recipe buttons and panels to each course block in renderMenu
-Now add the fetchRecipe function and renderRecipe helper. I'll add it just before the closing </script> tag area, after renderError:
-
-
-Ran 3 commands, viewed 2 files, edited a file
-Ran 3 commands, viewed 2 files, edited a file
-Now add the i18n strings for recipe buttons:
-
-
-Edited 2 files
-Edited 2 files
-Now let's verify the file looks clean:
-
-
-Ran a command, read a file
-Ran a command, read a file
-Here's what was added:
-
-"View Recipe" button appears under each dish description. Tapping it:
-
-Shows a small loading state ("⏳ Fetching recipe…")
-Fires a second Gemini call with a structured prompt
-Expands inline with the full recipe
-Recipe structure (Claire Saffitz-inspired applied to all dishes):
-
-⏱ Prep time · 🔥 Cook time · 🍽 Yield — upfront
-Ingredients grouped by component where relevant (e.g. "For the sauce" / "For the base"), single group otherwise
-Numbered steps with sensory cues — what to look for, not just what to do
-Notes block at the bottom — substitutions, tips, what can go wrong
-Smart behaviour:
-
-Recipe is cached after first fetch — tapping again just toggles it, no extra API call
-Button text flips to "✕ Close Recipe" when open
-Respects active medical diet and dietary filters in the recipe prompt
-Works in both EN and TR
-Push this alongside the badge fix and you've got two solid improvements in one deploy!
-
-
-Index
-Code · HTML 
-Couldn't load recipe error
-
-1:00 PM
-Can you open the browser console (F12 → Console) and share the error message? That'll tell us exactly where it's failing — whether it's the API call, the JSON parsing, or something else.
-
-nothing
-
-1:02 PM
-No console error usually means the fetch itself is failing silently — likely the request to /api/generate is working but the response shape is unexpected. Let me add some debug logging to pinpoint it.
-
-
-Ran 2 commands, edited a file, viewed a file
-Ran 2 commands, edited a file, viewed a file
-Push this, then try tapping "View Recipe" again with the console open (F12 → Console tab). You should now see two [Recipe] log lines — share what they say and I'll know exactly what's breaking.
-
-
-Index
-Code · HTML 
-
-
-
-
-
-Claude is AI and can make mistakes. Please double-check responses.
-Index · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -403,7 +7,7 @@ Index · HTML
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   :root {
     --bg:#FAF6EF; --bg2:#F0E8D8; --surface:#FFFFFF;
     --ink:#1A1208; --ink2:#5C3D1E; --ink3:#7A6A55;
@@ -413,7 +17,7 @@ Index · HTML
     --header-bg:linear-gradient(135deg,#1A1208 0%,#3A2510 100%);
     --T:0.3s ease;
   }
- 
+
   body.dark {
     --bg:#12100D; --bg2:#1C1812; --surface:#231E17;
     --ink:#F5EFE4; --ink2:#C4A882; --ink3:#9A8A72;
@@ -422,130 +26,130 @@ Index · HTML
     --grad1:rgba(232,160,32,0.06); --grad2:rgba(212,103,58,0.06);
     --header-bg:linear-gradient(135deg,#0A0806 0%,#201508 100%);
   }
- 
+
   body { background:var(--bg); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; transition:background var(--T),color var(--T); }
- 
+
   body::before { content:''; position:fixed; inset:0; background-image:radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 50%); pointer-events:none; z-index:0; }
- 
+
   /* TOPBAR */
   .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:flex-end; align-items:center; gap:8px; padding:12px 24px; background:var(--bg); border-bottom:1px solid var(--border); transition:background var(--T),border-color var(--T); }
- 
+
   .toggle-pill { display:flex; align-items:center; background:var(--bg2); border:1.5px solid var(--border); border-radius:50px; overflow:hidden; transition:all var(--T); }
- 
+
   .toggle-pill button { background:none; border:none; padding:6px 13px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--ink3); cursor:pointer; border-radius:50px; transition:all 0.18s ease; }
- 
+
   .toggle-pill button.active { background:var(--ink); color:var(--bg); }
- 
+
   .pill-sep { width:1px; height:16px; background:var(--border); flex-shrink:0; }
- 
+
   /* CONTAINER */
   .container { max-width:1320px; margin:0 auto; padding:88px 24px 80px; position:relative; z-index:1; }
- 
+
   /* TWO-COLUMN LAYOUT */
   .layout { display:flex; gap:48px; align-items:flex-start; }
   .panel-left { flex:0 0 460px; min-width:0; }
   .panel-right { flex:1; min-width:0; position:sticky; top:100px; max-height:calc(100vh - 112px); overflow-y:auto; }
- 
+
   /* EMPTY STATE — shown in right panel before first generation */
   .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:460px; color:var(--ink3); text-align:center; border:1.5px dashed var(--border); border-radius:20px; padding:40px; transition:border-color var(--T); }
   .empty-state-icon { font-size:52px; margin-bottom:16px; opacity:0.5; }
   .empty-state-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-style:italic; color:var(--ink2); margin-bottom:8px; }
   .empty-state-desc { font-size:12.5px; font-weight:300; line-height:1.6; max-width:220px; }
   #result.visible ~ .empty-state { display:none; }
- 
+
   /* HEADER */
   header { text-align:center; margin-bottom:44px; animation:fadeDown 0.7s ease both; }
- 
+
   .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; transition:color var(--T); }
- 
+
   .logo { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:700; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); }
- 
+
   .logo em { font-style:italic; color:var(--rust); transition:color var(--T); }
- 
+
   .subtitle { font-size:14.5px; color:var(--ink3); font-weight:300; max-width:400px; margin:0 auto; line-height:1.6; transition:color var(--T); }
- 
+
   /* MODE SWITCHER */
   .mode-switcher { display:flex; gap:10px; margin-bottom:44px; animation:fadeUp 0.7s 0.15s ease both; }
- 
+
   .mode-btn { flex:1; padding:16px 14px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; }
- 
+
   .mode-btn:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 8px 24px var(--shadow); }
- 
+
   .mode-btn.active { border-color:var(--amber); background:linear-gradient(135deg,rgba(212,137,10,0.13),rgba(192,79,27,0.08)); box-shadow:0 4px 18px rgba(212,137,10,0.18), inset 0 0 0 1px rgba(212,137,10,0.25); transform:translateY(-1px); }
- 
+
   .mode-btn.active .mode-btn-title { color:var(--amber); }
- 
+
   .mode-btn.active::after { content:''; position:absolute; top:10px; right:10px; width:8px; height:8px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 3px rgba(212,137,10,0.2); animation:pulse-dot 2s infinite; }
- 
+
   @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 3px rgba(212,137,10,0.2)} 50%{box-shadow:0 0 0 6px rgba(212,137,10,0.08)} }
- 
+
   .mode-btn-icon { font-size:26px; flex-shrink:0; }
- 
+
   .mode-btn-title { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:3px; transition:color var(--T); }
- 
+
   .mode-btn-desc { font-size:11.5px; color:var(--ink3); font-weight:300; line-height:1.4; transition:color var(--T); }
- 
+
   /* SECTION LABEL */
   .section-label { font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink2); margin-bottom:18px; display:flex; align-items:center; gap:12px; transition:color var(--T); }
- 
+
   .section-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
- 
+
   /* CUISINE GRID */
   .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(138px,1fr)); gap:10px; margin-bottom:38px; animation:fadeUp 0.7s 0.2s ease both; }
- 
+
   .cuisine-card { background:var(--surface); border:1.5px solid var(--border); border-radius:12px; padding:17px 13px; cursor:pointer; transition:all 0.2s ease; text-align:center; user-select:none; }
- 
+
   .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 6px 20px var(--shadow); }
- 
+
   .cuisine-card.selected { border-color:var(--amber); background:var(--bg2); box-shadow:0 4px 16px rgba(212,137,10,0.22); }
- 
+
   .cuisine-card.selected .cuisine-name { color:var(--amber); font-weight:600; }
- 
+
   .cuisine-card.selected .cuisine-emoji { transform:scale(1.15); }
- 
+
   .cuisine-emoji { font-size:28px; display:block; margin-bottom:7px; transition:transform 0.2s ease; }
- 
+
   .cuisine-name { font-size:12px; font-weight:500; color:var(--ink); transition:color var(--T); }
- 
+
   /* FILTER CHIPS */
   .filters-section { margin-bottom:30px; animation:fadeUp 0.7s 0.25s ease both; }
- 
+
   .filter-grid { display:flex; flex-wrap:wrap; gap:7px; }
- 
+
   .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
- 
+
   .filter-chip:hover { border-color:var(--sage); color:var(--sage); background:rgba(90,122,92,0.06); }
- 
+
   .filter-chip.active { background:var(--sage); border-color:var(--sage); color:white; font-weight:600; box-shadow:0 3px 10px rgba(90,122,92,0.35); transform:translateY(-1px); }
- 
+
   .filter-chip.active::before { content:'✓ '; font-size:11px; }
- 
+
   /* SPICE */
   .spice-section { margin-bottom:34px; animation:fadeUp 0.7s 0.28s ease both; }
- 
+
   .spice-row { display:flex; gap:7px; flex-wrap:wrap; }
- 
+
   .spice-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 16px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
- 
+
   .spice-btn:hover { border-color:var(--rust); color:var(--rust); background:rgba(192,79,27,0.06); }
- 
+
   .spice-btn.active { background:var(--rust); border-color:var(--rust); color:white; font-weight:600; box-shadow:0 3px 12px rgba(192,79,27,0.4); transform:translateY(-1px); }
- 
+
   .spice-section.dimmed { opacity:0.3; pointer-events:none; }
- 
+
   /* MEDICAL CARDS */
   .medical-section { margin-bottom:16px; animation:fadeUp 0.7s 0.27s ease both; }
- 
+
   .medical-intro { font-size:12.5px; color:var(--ink3); font-weight:300; margin-bottom:14px; line-height:1.6; }
- 
+
   .medical-grid { display:flex; flex-direction:column; gap:10px; }
- 
+
   .med-card { border-radius:14px; padding:15px 19px; cursor:pointer; transition:all 0.22s ease; display:flex; align-items:flex-start; gap:13px; user-select:none; border:1.5px solid transparent; }
- 
+
   .med-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px var(--shadow); }
- 
+
   .med-card.active { transform:translateY(-2px); }
- 
+
   body:not(.dark) .med-card.theme-blue   { background:#f0f7ff; border-color:#b8d8f0; }
   body:not(.dark) .med-card.theme-blue.active   { background:#d0eafa; border-color:#4a9cc7; box-shadow:0 6px 24px rgba(74,156,199,0.35); }
   body:not(.dark) .med-card.theme-purple { background:#f7f0ff; border-color:#d0b8f0; }
@@ -556,7 +160,7 @@ Index · HTML
   body:not(.dark) .med-card.theme-green.active  { background:#c8f0d8; border-color:#2a9c52; box-shadow:0 6px 24px rgba(42,156,82,0.35); }
   body:not(.dark) .med-card.theme-orange { background:#fff8f0; border-color:#f0d0b8; }
   body:not(.dark) .med-card.theme-orange.active { background:#fae4c8; border-color:#c7784a; box-shadow:0 6px 24px rgba(199,120,74,0.35); }
- 
+
   body.dark .med-card.theme-blue   { background:rgba(74,156,199,0.08); border-color:rgba(74,156,199,0.22); }
   body.dark .med-card.theme-blue.active   { background:rgba(74,156,199,0.18); border-color:#4a9cc7; }
   body.dark .med-card.theme-purple { background:rgba(122,76,199,0.08); border-color:rgba(122,76,199,0.22); }
@@ -567,17 +171,17 @@ Index · HTML
   body.dark .med-card.theme-green.active  { background:rgba(42,156,82,0.18); border-color:#2a9c52; }
   body.dark .med-card.theme-orange { background:rgba(199,120,74,0.08); border-color:rgba(199,120,74,0.22); }
   body.dark .med-card.theme-orange.active { background:rgba(199,120,74,0.18); border-color:#c7784a; }
- 
+
   .med-icon { font-size:23px; flex-shrink:0; margin-top:2px; }
- 
+
   .med-body { flex:1; }
- 
+
   .med-title-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
- 
+
   .med-title { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--ink); transition:color var(--T); }
- 
+
   .med-badge { font-family:'DM Sans',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:3px 9px; border-radius:50px; transition:all 0.2s ease; background:var(--bg2); color:var(--ink3); border:1.5px solid var(--border); }
- 
+
   .theme-blue   .med-card.active .med-badge,
   .med-card.theme-blue.active   .med-badge { background:#4a9cc7; color:white; border-color:#4a9cc7; }
   .theme-purple .med-card.active .med-badge,
@@ -588,130 +192,130 @@ Index · HTML
   .med-card.theme-green.active  .med-badge { background:#2a9c52; color:white; border-color:#2a9c52; }
   .theme-orange .med-card.active .med-badge,
   .med-card.theme-orange.active .med-badge { background:#c7784a; color:white; border-color:#c7784a; }
- 
+
   .med-desc { font-size:12px; line-height:1.55; font-weight:300; color:var(--ink3); transition:color var(--T); }
- 
+
   .med-rules { display:none; margin-top:9px; padding-top:9px; border-top:1px solid var(--border); flex-wrap:wrap; gap:5px; }
- 
+
   .med-card.active .med-rules { display:flex; }
- 
+
   .med-rule-tag { font-size:11px; font-weight:500; border-radius:50px; padding:3px 9px; }
- 
+
   .theme-blue   .med-rule-tag { background:rgba(74,156,199,0.12); color:#1a5a7a; }
   .theme-purple .med-rule-tag { background:rgba(122,76,199,0.12); color:#3a1a7a; }
   .theme-red    .med-rule-tag { background:rgba(199,74,74,0.12); color:#7a1a1a; }
   .theme-green  .med-rule-tag { background:rgba(42,156,82,0.12); color:#0a4a1a; }
   .theme-orange .med-rule-tag { background:rgba(199,120,74,0.12); color:#5a2a0a; }
   body.dark .med-rule-tag { opacity:1; color:#e8dcc8; }
- 
+
   /* SHOPPING TOGGLE */
   .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
- 
+
   .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); background:rgba(212,137,10,0.06); }
- 
+
   .shopping-toggle.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:600; box-shadow:0 3px 12px rgba(212,137,10,0.4); transform:translateY(-1px); }
- 
+
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
- 
+
   .generate-btn { display:inline-flex; align-items:center; gap:9px; background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:14px 36px; font-family:'DM Sans',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer; transition:all 0.25s ease; }
- 
+
   .generate-btn:hover:not(:disabled) { background:var(--rust); transform:scale(1.03); box-shadow:0 8px 28px var(--shadow); }
- 
+
   .generate-btn:disabled { opacity:0.4; cursor:not-allowed; }
- 
+
   .surprise-btn { background:none; border:1.5px solid var(--border); color:var(--ink2); border-radius:50px; padding:10px 24px; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s ease; margin-left:10px; }
- 
+
   .surprise-btn:hover { border-color:var(--amber); color:var(--amber); }
- 
+
   /* RESULT */
   #result { display:none; animation:fadeUp 0.6s ease both; }
   #result.visible { display:block; }
- 
+
   .result-card { background:var(--surface); border-radius:20px; overflow:hidden; box-shadow:0 20px 60px var(--shadow); border:1px solid var(--border); transition:background var(--T),border-color var(--T); }
- 
+
   .result-header { background:var(--header-bg); padding:30px 34px; display:flex; justify-content:space-between; align-items:flex-start; }
- 
+
   .result-cuisine-tag { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); font-weight:500; margin-bottom:7px; }
- 
+
   .result-title { font-family:'Playfair Display',serif; font-size:1.65rem; color:#FAF6EF; font-weight:700; }
- 
+
   .result-emoji { font-size:42px; }
- 
+
   .result-body { padding:34px; }
- 
+
   .course-block { margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--border); }
- 
+
   .course-block:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
- 
+
   .course-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:5px; transition:color var(--T); }
- 
+
   .course-name { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
- 
+
   .course-desc { font-size:13.5px; color:var(--ink3); line-height:1.6; font-weight:300; transition:color var(--T); }
- 
+
   .result-footer { padding:17px 34px; background:var(--bg2); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); }
- 
+
   .regen-btn { background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:9px 21px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s ease; }
- 
+
   .regen-btn:hover { background:var(--rust); }
- 
+
   .other-btn { background:var(--surface); color:var(--ink2); border:1.5px solid var(--border); border-radius:50px; padding:9px 21px; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:all 0.2s ease; }
- 
+
   .other-btn:hover { border-color:var(--amber); color:var(--amber); }
- 
+
   /* RECIPE */
   .recipe-btn { display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'DM Sans',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
   .recipe-btn:hover { border-color:var(--amber); color:var(--amber); }
   .recipe-btn.loading { opacity:0.5; pointer-events:none; }
- 
+
   .recipe-panel { display:none; margin-top:18px; padding-top:18px; border-top:1px solid var(--border); animation:fadeUp 0.3s ease both; }
   .recipe-panel.visible { display:block; }
- 
+
   .recipe-meta { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
   .recipe-meta-item { font-size:11.5px; color:var(--ink3); display:flex; align-items:center; gap:5px; }
   .recipe-meta-item strong { color:var(--ink2); font-weight:600; }
- 
+
   .recipe-group { margin-bottom:18px; }
   .recipe-group-title { font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); margin-bottom:9px; }
- 
+
   .recipe-ingredients { list-style:none; display:flex; flex-direction:column; gap:5px; }
   .recipe-ingredients li { font-size:13px; color:var(--ink2); font-weight:300; display:flex; gap:8px; line-height:1.5; }
   .recipe-ingredients li::before { content:'—'; color:var(--border); flex-shrink:0; }
- 
+
   .recipe-steps { display:flex; flex-direction:column; gap:13px; }
   .recipe-step { display:flex; gap:13px; }
   .recipe-step-num { flex-shrink:0; width:22px; height:22px; border-radius:50%; background:var(--bg2); border:1px solid var(--border); font-size:11px; font-weight:600; color:var(--ink2); display:flex; align-items:center; justify-content:center; margin-top:1px; transition:background var(--T); }
   .recipe-step-text { font-size:13px; color:var(--ink2); line-height:1.65; font-weight:300; }
- 
+
   .recipe-notes { margin-top:16px; padding:13px 16px; background:var(--bg2); border-radius:10px; border-left:3px solid var(--amber); font-size:12.5px; color:var(--ink3); line-height:1.65; font-weight:300; transition:background var(--T); }
   .recipe-notes strong { color:var(--ink2); font-weight:600; display:block; margin-bottom:4px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; }
- 
+
   .recipe-close { display:inline-flex; align-items:center; gap:5px; margin-top:16px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'DM Sans',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
   .recipe-close:hover { border-color:var(--rust); color:var(--rust); }
- 
+
   .shopping-block { margin-top:4px; padding-top:24px; border-top:1px solid var(--border); }
- 
+
   .shopping-title { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; }
- 
+
   .shopping-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:6px 14px; list-style:none; }
- 
+
   .shopping-list li { font-size:13px; color:var(--ink3); font-weight:300; display:flex; align-items:center; gap:7px; line-height:1.5; }
- 
+
   .shopping-list li::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--amber); flex-shrink:0; }
- 
+
   /* LOADING */
   .loading-area { display:none; text-align:center; padding:46px 24px; }
   .loading-area.visible { display:block; }
   .loading-spinner { width:38px; height:38px; border:3px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 14px; }
   .loading-text { font-family:'Playfair Display',serif; font-size:1.05rem; font-style:italic; color:var(--ink2); }
- 
+
   .hidden-section { display:none; }
- 
+
   @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
   @keyframes spin     { to{transform:rotate(360deg)} }
- 
+
   @media(max-width:900px){
     .container { max-width:860px; }
     .layout { flex-direction:column; gap:0; }
@@ -719,7 +323,7 @@ Index · HTML
     .panel-right { position:static; max-height:none; overflow-y:visible; }
     .empty-state { display:none; }
   }
- 
+
   @media(max-width:600px){
     .topbar{padding:9px 14px;gap:6px;}
     .toggle-pill button{padding:5px 10px;font-size:11px;}
@@ -740,7 +344,7 @@ Index · HTML
 </style>
 </head>
 <body>
- 
+
 <div class="topbar">
   <div class="toggle-pill" id="langToggle">
     <button class="active" onclick="setLang('en')">EN</button>
@@ -753,18 +357,18 @@ Index · HTML
     <button onclick="setTheme('dark')">🌙</button>
   </div>
 </div>
- 
+
 <div class="container">
- 
+
   <header>
     <p class="tagline" data-i18n="tagline">Your Daily Food Inspiration </p>
     <h1 class="logo"><em>Afiyet</em></h1>
     <p class="subtitle" data-i18n="subtitle">Pick a cuisine and a 3-course menu will be yours: Starter, main, dessert.</p>
   </header>
- 
+
   <div class="layout">
   <div class="panel-left">
- 
+
   <div class="mode-switcher">
     <div class="mode-btn active" id="modeGeneral" onclick="setMode('general')">
       <div class="mode-btn-icon">🍽️</div>
@@ -781,7 +385,7 @@ Index · HTML
       </div>
     </div>
   </div>
- 
+
   <!-- CUISINE SECTION — general mode only -->
   <div id="cuisineSection">
     <p class="section-label" data-i18n="labelCuisine">Choose your cuisine</p>
@@ -798,7 +402,7 @@ Index · HTML
       <div class="cuisine-card" data-cuisine="Greek"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineGreek">Greek</span></div>
     </div>
   </div>
- 
+
   <!-- DIETARY FILTERS — shown in both modes -->
   <div id="dietarySection">
     <p class="section-label" data-i18n="labelDietary">Dietary preferences</p>
@@ -815,7 +419,7 @@ Index · HTML
       </div>
     </div>
   </div>
- 
+
   <!-- GENERAL ONLY — spice level -->
   <div id="generalSections">
     <p class="section-label" data-i18n="labelSpice">Spice level</p>
@@ -828,13 +432,13 @@ Index · HTML
       </div>
     </div>
   </div>
- 
+
   <!-- MEDICAL SECTIONS -->
   <div id="medicalSections" class="hidden-section">
     <div class="medical-section" style="margin-bottom:38px;">
       <p class="medical-intro" data-i18n="medicalIntro">For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.</p>
       <div class="medical-grid">
- 
+
         <div class="med-card theme-blue" data-mode="chemo" onclick="toggleMedical(this)">
           <div class="med-icon">🎗️</div>
           <div class="med-body">
@@ -856,7 +460,7 @@ Index · HTML
             </div>
           </div>
         </div>
- 
+
         <div class="med-card theme-purple" data-mode="hypoglycemia" onclick="toggleMedical(this)">
           <div class="med-icon">🩸</div>
           <div class="med-body">
@@ -873,7 +477,7 @@ Index · HTML
             </div>
           </div>
         </div>
- 
+
         <div class="med-card theme-red" data-mode="diabetes" onclick="toggleMedical(this)">
           <div class="med-icon">💉</div>
           <div class="med-body">
@@ -890,7 +494,7 @@ Index · HTML
             </div>
           </div>
         </div>
- 
+
         <div class="med-card theme-red" data-mode="heart" onclick="toggleMedical(this)">
           <div class="med-icon">❤️</div>
           <div class="med-body">
@@ -906,7 +510,7 @@ Index · HTML
             </div>
           </div>
         </div>
- 
+
         <div class="med-card theme-orange" data-mode="gout" onclick="toggleMedical(this)">
           <div class="med-icon">🦴</div>
           <div class="med-body">
@@ -922,7 +526,7 @@ Index · HTML
             </div>
           </div>
         </div>
- 
+
         <div class="med-card theme-green" data-mode="tuberculosis" onclick="toggleMedical(this)">
           <div class="med-icon">🫁</div>
           <div class="med-body">
@@ -939,46 +543,46 @@ Index · HTML
             </div>
           </div>
         </div>
- 
+
       </div>
     </div>
   </div>
- 
+
   <p class="section-label" data-i18n="labelExtras">Extras</p>
   <div style="margin-bottom:38px;">
     <div class="shopping-toggle" id="shoppingToggle" onclick="toggleShopping()">
       🛒 <span data-i18n="shoppingBtn">Include shopping list</span>
     </div>
   </div>
- 
+
   <div class="cta-area">
     <button class="generate-btn" id="generateBtn" onclick="generateMenu()" disabled>
       ✿ <span data-i18n="generateBtn">Generate My Menu</span>
     </button>
     <button class="surprise-btn" onclick="surpriseMe()">🎲 <span data-i18n="surpriseBtn">Surprise Me</span></button>
   </div>
- 
+
   </div><!-- /panel-left -->
- 
+
   <div class="panel-right">
     <div class="loading-area" id="loadingArea">
       <div class="loading-spinner"></div>
       <p class="loading-text" data-i18n="loading">Crafting your perfect menu…</p>
     </div>
- 
+
     <div id="result"></div>
- 
+
     <div class="empty-state">
       <div class="empty-state-icon">🍳</div>
       <p class="empty-state-title">Your menu will appear here</p>
       <p class="empty-state-desc">Choose your options on the left and hit Generate</p>
     </div>
   </div><!-- /panel-right -->
- 
+
   </div><!-- /layout -->
- 
+
 </div><!-- /container -->
- 
+
 <script>
   let selected = null;
   let activeFilters = new Set();
@@ -987,12 +591,12 @@ Index · HTML
   let activeMedicalMode = null;
   let currentMode = 'general';
   let currentLang = 'en';
- 
+
   // Session history — stores dish names from the last 3 generations to ban repeats
   let generationHistory = [];
   // Ingredient history — stores key ingredients used so they can be banned next generation
   let ingredientHistory = [];
- 
+
   // Course type pools — one is picked at random each generation to force format variety
   const starterTypePools = [
     'a soup or broth-based dish',
@@ -1026,11 +630,11 @@ Index · HTML
     'a steamed or boiled sweet dumpling or pudding',
     'a simple regional sweet that most people outside the country have never heard of'
   ];
- 
+
   function pickRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
- 
+
   // Overused default dishes to explicitly ban per cuisine.
   // Covers starters, mains AND desserts — the three most repeated categories.
   const defaultDishBans = {
@@ -1045,7 +649,7 @@ Index · HTML
     Thai:     'pad thai, standard green curry, plain tom yum, spring rolls, mango sticky rice, coconut ice cream, plain banana in coconut milk',
     Greek:    'plain hummus, standard Greek salad, spanakopita, plain tzatziki with pita, baklava, plain loukoumades, galaktoboureko (plain), yogurt with honey'
   };
- 
+
   const i18n = {
     en: {
       tagline:'Your Daily Food Inspiration',
@@ -1138,11 +742,11 @@ Index · HTML
       cuisineWord:'Mutfağı',
     }
   };
- 
+
   const medicalPrompts = {
- 
+
   chemo: () =>`MEDICAL DIET — GI CANCER / CHEMO: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
- 
+
 - Root/underground vegetables: carrots, potatoes, sweet potatoes, onions, garlic, leeks, shallots, beetroot, radishes, turnips, parsnips, celeriac
 - Cruciferous vegetables: broccoli, cauliflower, cabbage, Brussels sprouts, kale, rocket, kohlrabi and others that doesn't cause bloating
 - ALL legumes: lentils (mercimek), chickpeas, kidney beans, black beans, white beans, peas, edamame, soy — cause dangerous gas and gut irritation for GI cancer patients
@@ -1155,37 +759,37 @@ Index · HTML
 - Dairy (except small amount of plain strained yogurt if tolerated)
 - Caffeine and carbonated drinks
 Before writing the menu: mentally check every ingredient against the list above and replace any that appear.
- 
+
 PREFERRED INGREDIENTS:
 - Protein: turkey (lean, gentle, clinically recommended for GI patients) — white fish second (sea bass, cod, sole — steamed or baked only) — soft eggs third, vegan cheese, lamb
 - Vegetables (cooked only, never raw): zucchini, spinach, green beans, pumpkin, peeled cucumber, asparagus and other veggies that doesn't cause bloating
 - Carbs: white rice, plain gluten-free pasta, gluten-free toast, smooth oats
 - Fat: olive oil, avocado oil, grape seed oil
 - Fruit: cooked peeled green apple or pear (unsweetened), blueberries, quince, and other such low sugar fruits 
- 
+
 SELF-VERIFICATION — before writing the menu, mentally list every ingredient in every course and confirm none appear in the FORBIDDEN list above. If any do, replace them before outputting.`,
- 
- 
+
+
   hypoglycemia: () => `MEDICAL DIET — HYPOGLYCAEMIA: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
- 
+
 STRICTLY FORBIDDEN:
 - All refined sugars: sugar, honey, maple syrup, sweets, chocolate (except >85% dark), sugary sauces
 - High-GI carbs: white bread, white rice, white pasta, instant oats, corn flakes, rice cakes, most packaged cereals
 - Sugary drinks, fruit juice, soda, energy drinks
 - High-sugar fruits: watermelon, grapes, ripe banana, dates, figs, mango, pineapple, lychee
 - Alcohol, excess caffeine
- 
+
 PREFERRED INGREDIENTS:
 - Protein (ranked): turkey (lean, slows glucose absorption), eggs, white fish, plain Greek yogurt, legumes (lentils/chickpeas — low GI + high protein, fine here), low-fat red meat, cheese
 - Carbs (GI <55 only): rolled oats, sweet potato, quinoa, whole grain bread, basmati rice (small), bulgur
 - Vegetables: all non-starchy — spinach, zucchini, broccoli, cauliflower, green beans, cucumber, capsicum
 - Fruits: apple, pear, berries, orange — always paired with protein
- 
+
 RULE: Every course must pair carbohydrate with protein — never carbs alone.
 SELF-VERIFICATION — before writing the menu, check every ingredient is off the forbidden list and every course has protein.`,
- 
+
   diabetes: () => `MEDICAL DIET — TYPE 2 DIABETES: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
- 
+
 STRICTLY FORBIDDEN:
 - All refined sugar: sugar, honey, syrup, sweets, sugary sauces or dressings
 - High-GI starches: white bread, white rice, white pasta, instant mashed potato, corn flakes, rice cakes, crackers
@@ -1193,17 +797,17 @@ STRICTLY FORBIDDEN:
 - Processed/packaged foods: biscuits, cake, pastry, crisps, fast food
 - High-sugar fruits: watermelon, grapes, ripe banana, dates, mango, pineapple
 - Full-fat dairy: cream, butter, full-fat cheese
- 
+
 PREFERRED INGREDIENTS:
 - Protein (ranked): turkey (lean, low saturated fat, supports glucose stability), white fish (grilled/steamed), eggs, legumes (lentils, chickpeas — ideal for T2D: protein + fibre), plain 0% Greek yogurt, red meat, cheese
 - Carbs: oats, sweet potato, quinoa, bulgur, basmati rice (small portion), whole grain bread
 - Vegetables: all non-starchy — broccoli, spinach, zucchini, cauliflower, capsicum, cucumber, tomato, aubergine
- 
+
 RULE: Every course must include protein AND fibre. No carb-only dishes.
 SELF-VERIFICATION — before writing the menu, check every ingredient against the forbidden list. Specifically check for hidden sugars in sauces, marinades, or dressings.`,
- 
+
   heart: () =>`MEDICAL DIET — HEART-HEALTHY: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
- 
+
 STRICTLY FORBIDDEN:
 - Saturated fats: butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese
 - Trans fats: margarine, shortening, packaged pastry, fried fast food
@@ -1211,52 +815,52 @@ STRICTLY FORBIDDEN:
 - Red and processed meat: beef, lamb, pork, veal, hot dogs, deli meats
 - Refined carbs and sugar: white bread, sugary cereals, pastry, sweets, sugary drinks
 - Deep-fried anything
- 
+
 PREFERRED INGREDIENTS:
 - Protein (ranked): oily fish (salmon, mackerel, sardines — highest omega-3), turkey (lean, low saturated fat), legumes (soluble fibre lowers LDL), eggs (not fried), low-fat Greek yogurt
 - Carbs: oats (best for LDL), quinoa, whole grain bread, sweet potato, brown rice, bulgur
 - Fats: olive oil only, avocado, walnuts, almonds, flaxseed, chia seeds
 - Vegetables: all encouraged, especially garlic, spinach, broccoli, tomato, capsicum
- 
+
 RULE: At least one omega-3 source per menu. No added salt — use herbs. No frying.
 SELF-VERIFICATION — before writing the menu, check every ingredient. Specifically verify no hidden sodium in sauces or dressings.`,
- 
+
   gout: () =>`MEDICAL DIET — GOUT (LOW PURINE): Drawing from any world cuisine, strictly exclude the following ingredients from every course:
- 
+
 STRICTLY FORBIDDEN:
 - Very high purine (>200mg/100g): organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster
 - High purine meats: beef, lamb, pork, veal, game meat, goose
 - All alcohol (especially beer — highest gout trigger)
 - Fructose drinks: fruit juice, soda, energy drinks, sweetened beverages
 - Refined carbs and sugary snacks
- 
+
 PREFERRED INGREDIENTS:
 - Protein (ranked by low purine): eggs (very low purine), low-fat dairy — skim milk, low-fat yogurt (actively lowers uric acid), turkey skinless (moderate purine — small portions acceptable), white fish cod/sole (lower than oily fish), tofu
 - Carbs: whole grain bread, oats, sweet potato, brown rice, quinoa
 - Vegetables: zucchini, capsicum, cucumber, lettuce, carrot, green beans, tomato
 - Fruits: cherries (actively lower uric acid — include once), apple, pear, banana, citrus
- 
+
 RULE: Include cherries or cherry-containing ingredient once. Include low-fat dairy at least once. No red meat, organ meat, or shellfish.
 SELF-VERIFICATION — before writing the menu, verify no high-purine animal protein appears anywhere.`,
- 
+
   tuberculosis: () => `MEDICAL DIET — TUBERCULOSIS RECOVERY: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
- 
+
 STRICTLY FORBIDDEN:
 - All alcohol (damages liver already stressed by TB medication rifampicin)
 - Raw or undercooked meat, eggs, or fish — everything must be well-cooked (immune system is suppressed)
 - Packaged junk food with no nutritional value
 - Excess caffeine (max 1 cup/day)
- 
+
 PREFERRED INGREDIENTS:
 - Protein (high biological value for tissue repair, ranked): turkey (lean complete protein, immune-supportive), eggs (complete amino acids + vitamin D), white fish, legumes (lentils, chickpeas — protein + iron + zinc), full-fat dairy (yogurt, milk, cheese — caloric density needed for TB weight recovery), red meat
 - Carbs (calorie-dense): whole grain bread, oats, sweet potato, brown rice, pasta, bulgur
 - Vegetables: dark leafy greens (spinach, kale) for iron and vitamin A; tomatoes, capsicum, citrus for vitamin C
 - Fats: olive oil, avocado, nuts, seeds — add generously to increase caloric density
- 
+
 RULE: Caloric density is the priority. TB patients are often malnourished. Include a vitamin C source at lunch and dinner (aids iron absorption). Include a vitamin D source once (eggs, fish, or fortified dairy).
 SELF-VERIFICATION — before writing the menu, confirm protein appears in every course, vitamin C appears at main and dessert, and no alcohol or raw protein is used.`
 };
- 
+
   const medicalLabels = {
     chemo:        { en:'🎗️ GI Sensitive Diet',       tr:'🎗️ GİS Hassasiyetli Diyet' },
     hypoglycemia: { en:'🩸 Hypoglycaemia Diet',    tr:'🩸 Hipoglisemi Diyeti' },
@@ -1265,7 +869,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     gout:         { en:'🦴 Gout Diet',             tr:'🦴 Gut Diyeti' },
     tuberculosis: { en:'🫁 TB Recovery Diet',      tr:'🫁 TB İyileşme Diyeti' }
   };
- 
+
   // Compact forbidden-ingredient lists used by the AI validation layer.
   // Each entry is a plain-text summary that gets injected into the validator prompt.
   const medicalForbiddenLists = {
@@ -1276,13 +880,13 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     gout: `Organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster, high-purine meats (beef, lamb, pork, veal, game meat, goose), all alcohol especially beer, fructose drinks (fruit juice, soda, energy drinks, sweetened beverages), refined carbs and sugary snacks`,
     tuberculosis: `All alcohol, raw or undercooked meat/eggs/fish (everything must be fully cooked), packaged junk food with no nutritional value, excess caffeine (more than 1 cup per day)`
   };
- 
+
   const cuisineEmojis = {
     Turkish:'🫙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
     Indian:'🍛', French:'🥐', Chinese:'🥟', American:'🍔',
     Thai:'🍜', Greek:'🫒'
   };
- 
+
   /* LANGUAGE */
   function setLang(lang) {
     currentLang = lang;
@@ -1300,7 +904,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       badge.textContent = isActive ? t.badgeActive : t.badgeOff;
     });
   }
- 
+
   /* THEME */
   function setTheme(theme) {
     document.body.classList.toggle('dark', theme === 'dark');
@@ -1308,7 +912,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     btns[0].classList.toggle('active', theme === 'light');
     btns[1].classList.toggle('active', theme === 'dark');
   }
- 
+
   /* MODE */
   function setMode(mode) {
     currentMode = mode;
@@ -1321,7 +925,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     // medical cards only shown in medical mode
     document.getElementById('medicalSections').classList.toggle('hidden-section', mode !== 'medical');
     // dietary filters are always visible — no toggle needed
- 
+
     if (mode === 'general') {
       activeMedicalMode = null;
       document.querySelectorAll('.med-card').forEach(c => {
@@ -1332,7 +936,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       // btn requires a cuisine selection in general mode
       document.getElementById('generateBtn').disabled = !selected;
     }
- 
+
     if (mode === 'medical') {
       // clear cuisine selection — not needed in medical mode
       selected = null;
@@ -1340,11 +944,11 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       // btn enabled only once a medical card is activated
       document.getElementById('generateBtn').disabled = !activeMedicalMode;
     }
- 
+
     document.getElementById('result').classList.remove('visible');
     document.getElementById('result').innerHTML = '';
   }
- 
+
   /* CUISINE — only active in general mode */
   function selectCuisine(card) {
     document.querySelectorAll('.cuisine-card').forEach(c => c.classList.remove('selected'));
@@ -1354,25 +958,25 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       document.getElementById('generateBtn').disabled = false;
     }
   }
- 
+
   /* FILTERS / SPICE / SHOPPING */
   function toggleFilter(chip) {
     chip.classList.toggle('active');
     const f = chip.dataset.filter;
     activeFilters.has(f) ? activeFilters.delete(f) : activeFilters.add(f);
   }
- 
+
   function selectSpice(btn) {
     document.querySelectorAll('.spice-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     spiceLevel = btn.dataset.spice;
   }
- 
+
   function toggleShopping() {
     wantsShopping = !wantsShopping;
     document.getElementById('shoppingToggle').classList.toggle('active', wantsShopping);
   }
- 
+
   /* MEDICAL */
   function toggleMedical(card) {
     const mode = card.dataset.mode;
@@ -1404,7 +1008,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       document.getElementById('generateBtn').disabled = true;
     }
   }
- 
+
   /* SURPRISE */
   function surpriseMe() {
     if (currentMode === 'medical') {
@@ -1419,7 +1023,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       generateMenu();
     }
   }
- 
+
   /* MEDICAL NOTE BUILDER
      Wraps the base medical prompt with a dietary constraint preamble when filters
      conflict with the medical diet's protein recommendations. The preamble is placed
@@ -1429,7 +1033,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
   function buildMedicalNote(mode, filters) {
     const base = medicalPrompts[mode]();
     const f = filters instanceof Set ? filters : new Set(filters);
- 
+
     if (f.has('Vegan')) {
       return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGAN. Absolutely no animal products of any kind. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy. Every protein source mentioned below must be ignored and replaced with a compliant plant-based alternative (e.g. legumes if permitted by the medical diet, tofu if permitted, seeds, nuts). This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
@@ -1439,10 +1043,10 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     if (f.has('Pescetarian')) {
       return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is PESCETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below. Ignore all meat and poultry recommendations. Use only fish, seafood, eggs, or dairy as animal proteins (subject to the medical diet's own restrictions). This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
- 
+
     return base;
   }
- 
+
   /* DIETARY NOTE BUILDER
      Injects a hard dietary override whenever Vegan, Vegetarian, or Pescetarian is
      active — regardless of whether a medical mode is also active. Without this,
@@ -1451,7 +1055,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
   function buildDietaryNote(filters, medMode) {
     const f = new Set(filters);
     let note = `Dietary requirements: ${filters.join(', ')}. All dishes must comply.`;
- 
+
     // Always apply strong override for protein-conflicting filters — not just in medical mode
     if (f.has('Vegan')) {
       note += `\n\nVEGAN — HARD RULE: This menu must be 100% vegan. Absolutely FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish and seafood, eggs, all dairy (milk, yogurt, cheese, cream, butter), honey. Use ONLY plant-based proteins: legumes (lentils, chickpeas, beans), tofu, tempeh, seitan, nuts, seeds.${medMode ? ' Apply this on top of the medical diet rules.' : ''}`;
@@ -1460,10 +1064,10 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     } else if (f.has('Pescetarian')) {
       note += `\n\nPESCETARIAN — HARD RULE: This menu must be pescetarian. Absolutely FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek). Only fish, seafood, eggs, and dairy are permitted as animal proteins.${medMode ? ' Apply this on top of the medical diet rules.' : ''}`;
     }
- 
+
     return note;
   }
- 
+
   /* AI VALIDATION LAYER
      A second API call that audits the generated menu against the active medical
      diet's forbidden-ingredient list. If any violations are found (including ones
@@ -1473,7 +1077,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
   async function validateMenu(menu, medicalMode, dietaryFilters) {
     const forbiddenList = medicalForbiddenLists[medicalMode];
     if (!forbiddenList) return menu;
- 
+
     // Build a dietary extension to the forbidden list
     const df = dietaryFilters || new Set();
     let dietaryForbidden = '';
@@ -1484,12 +1088,12 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     } else if (df.has('Pescetarian')) {
       dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (PESCETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek). Replace any violation with fish, seafood, eggs, or dairy.`;
     }
- 
+
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
     const shoppingSchema = (wantsShopping && menu.shoppingList)
       ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2", "..."]`
       : '';
- 
+
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1500,23 +1104,23 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
         messages: [{
           role: 'user',
           content: `You are auditing a menu for a patient on a strict medical diet. Your job is to ensure no forbidden ingredient appears anywhere in the menu — including ingredients implied by a dish name (e.g. "Lentil Soup" implies lentils, "Garlic Bread" implies garlic).
- 
+
 STRICTLY FORBIDDEN INGREDIENTS FOR THIS DIET:
 ${forbiddenList}${dietaryForbidden}
- 
+
 MENU TO AUDIT:
 - Title: ${menu.menuTitle}
 - Starter: ${menu.starter.name} — ${menu.starter.description}
 - Main: ${menu.main.name} — ${menu.main.description}
 - Dessert: ${menu.dessert.name} — ${menu.dessert.description}${(wantsShopping && menu.shoppingList) ? `\n- Shopping list: ${menu.shoppingList.join(', ')}` : ''}
- 
+
 INSTRUCTIONS:
 1. Go through every ingredient in every course, including those implied by dish names.
 2. If a course contains a forbidden ingredient — replace that entire course with a fully compliant alternative in ${lang}, drawing from any world cuisine.
 3. If the shopping list contains forbidden ingredients — remove them and add compliant replacements.
 4. If nothing is forbidden — return the menu exactly as given, unchanged.
 5. Do NOT add explanations or comments. Return ONLY the JSON.
- 
+
 Respond with ONLY this JSON:
 {
   "menuTitle": "...",
@@ -1527,12 +1131,12 @@ Respond with ONLY this JSON:
         }]
       })
     });
- 
+
     const data = await response.json();
     const raw = data.content[0].text.replace(/```json|```/g, '').trim();
     return JSON.parse(raw);
   }
- 
+
   /* GENERATE */
   async function generateMenu() {
     // In medical mode a cuisine isn't required — the world cuisine pool is used instead
@@ -1541,19 +1145,19 @@ Respond with ONLY this JSON:
     document.getElementById('result').classList.remove('visible');
     document.getElementById('result').innerHTML = '';
     document.getElementById('generateBtn').disabled = true;
- 
+
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
     const medicalNote = activeMedicalMode ? buildMedicalNote(activeMedicalMode, activeFilters) : '';
     const dietaryNote = activeFilters.size > 0 ? buildDietaryNote([...activeFilters], activeMedicalMode) : '';
     const spiceNote = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode)) ? `Spice level: ${spiceLevel}.` : '';
     const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
     const shoppingSchema = wantsShopping ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2"]` : '';
- 
+
     // Pick a random course format for this generation
     const starterType = pickRandom(starterTypePools);
     const mainType    = pickRandom(mainTypePools);
     const dessertType = pickRandom(dessertTypePools);
- 
+
     // Build a ban list from recent generations + known overused defaults
     const historyBan = generationHistory.length > 0
       ? `\nDO NOT repeat any of these recently generated dishes: ${generationHistory.slice(-9).join(', ')}.`
@@ -1565,17 +1169,17 @@ Respond with ONLY this JSON:
     const defaultBan = (!activeMedicalMode && defaultDishBans[selected])
       ? `\nNEVER generate these overused ${selected} clichés: ${defaultDishBans[selected]}.`
       : '';
- 
+
     // Medical mode: draw from the full world cuisine pool for maximum variety
     const cuisineInstruction = activeMedicalMode
       ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Italian, Japanese, Mexican, Indian, French, Chinese, American, Thai, Greek, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
       : `Design a ${selected} cuisine menu for today`;
- 
+
     // Variety nudge: medical diets need extra encouragement to explore formats
     const medicalVarietyNote = activeMedicalMode
       ? `\nWORLD CUISINE VARIETY: You have the entire world of cuisines to draw from. Use this freedom — don't keep returning to the same cuisine or the same dish format. Consider soups, steamed dishes, stuffed vegetables, fish preparations, egg-based dishes, grain bowls, yogurt-based starters, poached fruit desserts, and dishes from cuisines you haven't used in recent generations.`
       : '';
- 
+
     try {
       const response = await fetch('/api/generate', {
         method:'POST',
@@ -1587,7 +1191,7 @@ Respond with ONLY this JSON:
           messages:[{
             role:'user',
             content:`${cuisineInstruction} with a starter, main course, and dessert.
- 
+
 ${medicalNote}
 ${dietaryNote}
 ${spiceNote}
@@ -1597,12 +1201,12 @@ COURSE FORMAT — these are hard requirements, not suggestions:
 - Main MUST be: ${mainType}
 - Dessert MUST be: ${dessertType}
 Think imaginatively within these formats. If the format doesn't suit an obvious dish, invent a lesser-known regional alternative that fits.
- 
+
 VARIETY RULES — these are hard rules, not guidelines:
 ${activeMedicalMode ? '- Each course should feel like it could come from a different cuisine tradition.' : `- Think like a home cook or regional chef — not a travel brochure about ${selected} food.\n- Pick dishes a local family would actually eat at home, not what tourists expect.`}${defaultBan}${historyBan}${ingredientBan}${medicalVarietyNote}
 - No ingredient should appear in more than one course.
 - Seed: ${Math.random().toString(36).slice(2,9)}
- 
+
 Respond with ONLY this JSON:
 {
   "menuTitle": "A poetic 3-5 word title in ${lang}",
@@ -1617,15 +1221,15 @@ Respond with ONLY this JSON:
       const data = await response.json();
       const raw = data.content[0].text.replace(/```json|```/g,'').trim();
       let menu = JSON.parse(raw);
- 
+
       // AI Validation Layer — only runs for medical diet modes
       if (activeMedicalMode) {
         document.querySelector('.loading-text').textContent = i18n[currentLang].validating;
         menu = await validateMenu(menu, activeMedicalMode, activeFilters);
       }
- 
+
       renderMenu(menu);
- 
+
       // Update session history so next generation avoids these exact dishes and ingredients
       if (menu.starter && menu.main && menu.dessert) {
         generationHistory.push(menu.starter.name, menu.main.name, menu.dessert.name);
@@ -1642,7 +1246,7 @@ Respond with ONLY this JSON:
       document.getElementById('generateBtn').disabled = false;
     }
   }
- 
+
   /* RENDER */
   function renderMenu(menu) {
     const t = i18n[currentLang];
@@ -1673,7 +1277,7 @@ Respond with ONLY this JSON:
         <p class="shopping-title">${t.shoppingListTitle}</p>
         <ul class="shopping-list">${menu.shoppingList.map(i=>`<li>${i}</li>`).join('')}</ul>
       </div>` : '';
- 
+
     document.getElementById('result').innerHTML = `
       <div class="result-card">
         <div class="result-header">
@@ -1719,7 +1323,7 @@ Respond with ONLY this JSON:
       document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
     }
   }
- 
+
   function renderError() {
     document.getElementById('result').innerHTML = `
       <div style="text-align:center;padding:40px;color:var(--ink2);">
@@ -1728,9 +1332,9 @@ Respond with ONLY this JSON:
       </div>`;
     document.getElementById('result').classList.add('visible');
   }
- 
+
   function scrollToTop() { window.scrollTo({top:0,behavior:'smooth'}); }
- 
+
   /* RECIPE */
   async function fetchRecipe(course, dishName, btn) {
     const panel = document.getElementById('recipe-' + course);
@@ -1773,7 +1377,7 @@ Respond with ONLY this JSON:
       btn.innerHTML = '\uD83D\uDCCB ' + (i18n[currentLang].recipeBtn || 'View Recipe');
     }
   }
- 
+
   function renderRecipe(panel, r) {
     const ingredientGroupsHTML = r.ingredientGroups.map(g => `
       <div class="recipe-group">
@@ -1800,7 +1404,7 @@ Respond with ONLY this JSON:
       ${r.notes ? '<div class="recipe-notes"><strong>Notes</strong>' + r.notes + '</div>' : ''}
       <button class="recipe-close" onclick="closeRecipe(this)">\u2715 Close Recipe</button>`;
   }
- 
+
   function closeRecipe(closeBtn) {
     const panel = closeBtn.closest('.recipe-panel');
     panel.classList.remove('visible');
@@ -1809,10 +1413,10 @@ Respond with ONLY this JSON:
     if (btn) btn.innerHTML = '\uD83D\uDCCB ' + (i18n[currentLang].recipeBtn || 'View Recipe');
   }
 </script>
- 
+
 <div style="text-align:center;padding:24px;font-size:11.5px;color:var(--ink3);max-width:560px;margin:0 auto 40px;line-height:1.6;">
   ⚕️ <strong>Medical disclaimer:</strong> AI generated menus are for inspiration only. Always consult your doctor or dietitian for medical dietary advice.
 </div>
- 
+
 </body>
 </html>
