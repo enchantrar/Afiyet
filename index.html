@@ -396,7 +396,7 @@
       <div class="cuisine-card" data-cuisine="Asian"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineAsian">Asian</span></div>
       <div class="cuisine-card" data-cuisine="African"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫔</span><span class="cuisine-name" data-i18n="cuisineAfrican">African</span></div>
       <div class="cuisine-card" data-cuisine="Americas" onclick="selectCuisine(this)"><span class="cuisine-emoji">🌎</span><span class="cuisine-name" data-i18n="cuisineAmericas">Americas</span></div>
-      <div class="cuisine-card" data-cuisine="Soviet"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineSoviet">Soviet & Eurasian</span></div>
+      <div class="cuisine-card" data-cuisine="Soviet"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineSoviet">Eurasian</span></div>
     </div>
   </div>
 
@@ -645,7 +645,7 @@
       cuisineTurkish:'Turkish', cuisineMediterranean:'Mediterranean',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
       cuisineAsian:'Asian', cuisineAfrican:'African',
-      cuisineAmericas:'Americas', cuisineSoviet:'Soviet & Eurasian',
+      cuisineAmericas:'Americas', cuisineSoviet:'Eurasian',
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
@@ -1236,7 +1236,7 @@ Respond with ONLY this JSON:
       Soviet:   'Draw from the rich culinary traditions of the former Soviet republics — Russian, Ukrainian, Georgian, Armenian, Azerbaijani, Uzbek, Kazakh, Kyrgyz, Moldovan, Belarusian, Baltic (Estonian, Latvian, Lithuanian). Mix regions freely across courses.'
     };
     const cuisineInstruction = activeMedicalMode
-      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Mediterranean, Mexican, Indian, French, Asian, African, Americas, Soviet & Eurasian, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
+      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Mediterranean, Mexican, Indian, French, Asian, African, Americas, Eurasian, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
       : `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}`;
 
     // Variety nudge: medical diets need extra encouragement to explore formats
