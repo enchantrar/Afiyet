@@ -1215,6 +1215,8 @@ Respond with ONLY this JSON:
   /* RENDER */
   function renderMenu(menu) {
     lastMenu = menu;
+    if (!lastMenu.recipes) lastMenu.recipes = {};
+    if (!lastMenu.openRecipes) lastMenu.openRecipes = new Set();
     const t = i18n[currentLang];
     const emoji = cuisineEmojis[selected] || '🍽️';
     const medColors = {
@@ -1281,6 +1283,21 @@ Respond with ONLY this JSON:
         </div>
       </div>`;
     document.getElementById('result').classList.add('visible');
+    // restore any previously fetched and open recipes
+    if (lastMenu.recipes) {
+      Object.entries(lastMenu.recipes).forEach(([course, recipe]) => {
+        const panel = document.getElementById('recipe-' + course);
+        if (!panel) return;
+        renderRecipe(panel, recipe);
+        panel.dataset.loaded = '1';
+        if (lastMenu.openRecipes && lastMenu.openRecipes.has(course)) {
+          panel.classList.add('visible');
+          const courseBlock = panel.closest('.course-block');
+          const btn = courseBlock && courseBlock.querySelector('.recipe-btn');
+          if (btn) btn.innerHTML = '\u2715 ' + (i18n[currentLang].recipeClose || 'Close Recipe');
+        }
+      });
+    }
     // On mobile only — scroll result into view (on desktop it's already in the right panel)
     if (window.innerWidth < 900) {
       document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
@@ -1304,6 +1321,7 @@ Respond with ONLY this JSON:
     if (panel.classList.contains('visible')) {
       panel.classList.remove('visible');
       btn.innerHTML = '\uD83D\uDCCB ' + (i18n[currentLang].recipeBtn || 'View Recipe');
+      if (lastMenu) lastMenu.openRecipes.delete(course);
       return;
     }
     if (panel.dataset.loaded) {
@@ -1324,15 +1342,15 @@ Respond with ONLY this JSON:
         body: JSON.stringify({ messages:[{ role:'user', content: prompt }], system: 'You are a professional recipe writer. Respond only with valid JSON, no markdown, no extra text.', max_tokens: 3000 })
       });
       const data = await response.json();
-      console.log('[Recipe] API raw response:', JSON.stringify(data).slice(0,600));
       const raw = data.content[0].text.replace(/```json|```/g,'').trim();
-      console.log('[Recipe] Parsed text:', raw.slice(0,400));
       const recipe = JSON.parse(raw);
       renderRecipe(panel, recipe);
       panel.dataset.loaded = '1';
       panel.classList.add('visible');
       btn.classList.remove('loading');
       btn.innerHTML = '\u2715 ' + (i18n[currentLang].recipeClose || 'Close Recipe');
+      // cache recipe data and mark as open
+      if (lastMenu) { lastMenu.recipes[course] = recipe; lastMenu.openRecipes.add(course); }
     } catch(e) {
       panel.innerHTML = '<p style="font-size:12.5px;color:var(--rust);padding:8px 0;">Couldn\'t load recipe. Please try again.</p>';
       panel.classList.add('visible');
@@ -1370,10 +1388,12 @@ Respond with ONLY this JSON:
 
   function closeRecipe(closeBtn) {
     const panel = closeBtn.closest('.recipe-panel');
+    const course = panel.id.replace('recipe-', '');
     panel.classList.remove('visible');
     const courseBlock = panel.closest('.course-block');
     const btn = courseBlock.querySelector('.recipe-btn');
     if (btn) btn.innerHTML = '\uD83D\uDCCB ' + (i18n[currentLang].recipeBtn || 'View Recipe');
+    if (lastMenu) lastMenu.openRecipes.delete(course);
   }
 </script>
 
