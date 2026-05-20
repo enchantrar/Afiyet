@@ -32,7 +32,12 @@
   body::before { content:''; position:fixed; inset:0; background-image:radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 50%); pointer-events:none; z-index:0; }
 
   /* TOPBAR */
-  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:flex-end; align-items:center; gap:8px; padding:12px 24px; background:var(--bg); border-bottom:1px solid var(--border); transition:background var(--T),border-color var(--T); }
+  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 24px; background:var(--bg); border-bottom:1px solid var(--border); transition:background var(--T),border-color var(--T); }
+
+  .topbar-brand { display:flex; align-items:baseline; gap:10px; flex-shrink:0; }
+  .topbar-logo { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; font-style:italic; color:var(--rust); letter-spacing:-0.01em; line-height:1; }
+  .topbar-tagline { font-size:10.5px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--amber); white-space:nowrap; }
+  .topbar-controls { display:flex; align-items:center; gap:8px; }
 
   .toggle-pill { display:flex; align-items:center; background:var(--bg2); border:1.5px solid var(--border); border-radius:50px; overflow:hidden; transition:all var(--T); }
 
@@ -58,7 +63,7 @@
   #result.visible ~ .empty-state { display:none; }
 
   /* HEADER */
-  header { text-align:center; margin-bottom:28px; animation:fadeDown 0.7s ease both; }
+  header { text-align:center; margin-bottom:20px; animation:fadeDown 0.7s ease both; }
 
   .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; transition:color var(--T); }
 
@@ -320,6 +325,7 @@
 
   @media(max-width:600px){
     .topbar{padding:9px 14px;gap:6px;}
+    .topbar-tagline{display:none;}
     .toggle-pill button{padding:5px 10px;font-size:11px;}
     .cuisine-grid{grid-template-columns:repeat(3,1fr);gap:6px;}
     .cuisine-card{padding:9px 6px;}
@@ -340,23 +346,27 @@
 <body>
 
 <div class="topbar">
-  <div class="toggle-pill" id="langToggle">
-    <button class="active" onclick="setLang('en')">EN</button>
-    <div class="pill-sep"></div>
-    <button onclick="setLang('tr')">TR</button>
+  <div class="topbar-brand">
+    <span class="topbar-logo">Afiyet</span>
+    <span class="topbar-tagline" data-i18n="tagline">Your Daily Food Inspiration</span>
   </div>
-  <div class="toggle-pill" id="themeToggle">
-    <button class="active" onclick="setTheme('light')">☀️</button>
-    <div class="pill-sep"></div>
-    <button onclick="setTheme('dark')">🌙</button>
+  <div class="topbar-controls">
+    <div class="toggle-pill" id="langToggle">
+      <button class="active" onclick="setLang('en')">EN</button>
+      <div class="pill-sep"></div>
+      <button onclick="setLang('tr')">TR</button>
+    </div>
+    <div class="toggle-pill" id="themeToggle">
+      <button class="active" onclick="setTheme('light')">☀️</button>
+      <div class="pill-sep"></div>
+      <button onclick="setTheme('dark')">🌙</button>
+    </div>
   </div>
 </div>
 
 <div class="container">
 
   <header>
-    <p class="tagline" data-i18n="tagline">Your Daily Food Inspiration </p>
-    <h1 class="logo"><em>Afiyet</em></h1>
     <p class="subtitle" data-i18n="subtitle">Pick a cuisine and a 3-course menu will be yours: Starter, main, dessert.</p>
   </header>
 
@@ -396,7 +406,7 @@
       <div class="cuisine-card" data-cuisine="Asian"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineAsian">Asian</span></div>
       <div class="cuisine-card" data-cuisine="African"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫔</span><span class="cuisine-name" data-i18n="cuisineAfrican">African</span></div>
       <div class="cuisine-card" data-cuisine="Americas" onclick="selectCuisine(this)"><span class="cuisine-emoji">🌎</span><span class="cuisine-name" data-i18n="cuisineAmericas">Americas</span></div>
-      <div class="cuisine-card" data-cuisine="Soviet"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineSoviet">Eurasian</span></div>
+      <div class="cuisine-card" data-cuisine="Soviet"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineSoviet">Soviet & Eurasian</span></div>
     </div>
   </div>
 
@@ -645,7 +655,7 @@
       cuisineTurkish:'Turkish', cuisineMediterranean:'Mediterranean',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
       cuisineAsian:'Asian', cuisineAfrican:'African',
-      cuisineAmericas:'Americas', cuisineSoviet:'Eurasian',
+      cuisineAmericas:'Americas', cuisineSoviet:'Soviet & Eurasian',
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
@@ -1236,7 +1246,7 @@ Respond with ONLY this JSON:
       Soviet:   'Draw from the rich culinary traditions of the former Soviet republics — Russian, Ukrainian, Georgian, Armenian, Azerbaijani, Uzbek, Kazakh, Kyrgyz, Moldovan, Belarusian, Baltic (Estonian, Latvian, Lithuanian). Mix regions freely across courses.'
     };
     const cuisineInstruction = activeMedicalMode
-      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Mediterranean, Mexican, Indian, French, Asian, African, Americas, Eurasian, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
+      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Mediterranean, Mexican, Indian, French, Asian, African, Americas, Soviet & Eurasian, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
       : `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}`;
 
     // Variety nudge: medical diets need extra encouragement to explore formats
