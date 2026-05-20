@@ -124,18 +124,7 @@
 
   .filter-chip.active::before { content:'✓ '; font-size:11px; }
 
-  /* SPICE */
-  .spice-section { margin-bottom:34px; animation:fadeUp 0.7s 0.28s ease both; }
 
-  .spice-row { display:flex; gap:7px; flex-wrap:wrap; }
-
-  .spice-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 16px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
-
-  .spice-btn:hover { border-color:var(--rust); color:var(--rust); background:rgba(192,79,27,0.06); }
-
-  .spice-btn.active { background:var(--rust); border-color:var(--rust); color:white; font-weight:600; box-shadow:0 3px 12px rgba(192,79,27,0.4); transform:translateY(-1px); }
-
-  .spice-section.dimmed { opacity:0.3; pointer-events:none; }
 
   /* MEDICAL CARDS */
   .medical-section { margin-bottom:16px; animation:fadeUp 0.7s 0.27s ease both; }
@@ -420,18 +409,7 @@
     </div>
   </div>
 
-  <!-- GENERAL ONLY — spice level -->
-  <div id="generalSections">
-    <p class="section-label" data-i18n="labelSpice">Spice level</p>
-    <div class="spice-section" id="spiceSection">
-      <div class="spice-row">
-        <div class="spice-btn active" data-spice="normal"      onclick="selectSpice(this)">🌿 <span data-i18n="spiceNormal">Normal</span></div>
-        <div class="spice-btn"        data-spice="mild"        onclick="selectSpice(this)">😌 <span data-i18n="spiceMild">Mild</span></div>
-        <div class="spice-btn"        data-spice="spicy"       onclick="selectSpice(this)">🌶️ <span data-i18n="spiceSpicy">Spicy</span></div>
-        <div class="spice-btn"        data-spice="extra spicy" onclick="selectSpice(this)">🔥 <span data-i18n="spiceExtra">Extra Spicy</span></div>
-      </div>
-    </div>
-  </div>
+
 
   <!-- MEDICAL SECTIONS -->
   <div id="medicalSections" class="hidden-section">
@@ -574,8 +552,8 @@
 
     <div class="empty-state">
       <div class="empty-state-icon">🍳</div>
-      <p class="empty-state-title">Your menu will appear here</p>
-      <p class="empty-state-desc">Choose your options on the left and hit Generate</p>
+      <p class="empty-state-title" data-i18n="emptyTitle">Your menu will appear here</p>
+      <p class="empty-state-desc" data-i18n="emptyDesc">Choose your options on the left and hit Generate</p>
     </div>
   </div><!-- /panel-right -->
 
@@ -586,11 +564,11 @@
 <script>
   let selected = null;
   let activeFilters = new Set();
-  let spiceLevel = 'normal';
   let wantsShopping = false;
   let activeMedicalMode = null;
   let currentMode = 'general';
   let currentLang = 'en';
+  let lastMenu = null; // stores last generated menu for re-render on language switch
 
   // Session history — stores dish names from the last 3 generations to ban repeats
   let generationHistory = [];
@@ -657,15 +635,15 @@
       modeGeneralTitle:'General Cooking', modeGeneralDesc:'Everyday meals for any appetite',
       modeMedicalTitle:'Medical Diets', modeMedicalDesc:'Condition-specific dietary rules',
       labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences',
-      labelSpice:'Spice level', labelExtras:'Extras',
       cuisineTurkish:'Turkish', cuisineItalian:'Italian', cuisineJapanese:'Japanese',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
       cuisineChinese:'Chinese', cuisineAmerican:'American', cuisineThai:'Thai', cuisineGreek:'Greek',
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
-      spiceNormal:'Normal', spiceMild:'Mild', spiceSpicy:'Spicy', spiceExtra:'Extra Spicy',
       medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
       worldCuisines:'World Cuisines',
+      emptyTitle:'Your menu will appear here',
+      emptyDesc:'Choose your options on the left and hit Generate',
       medChemoTitle:'GI Chemotherapy Diet',
       medChemoDesc:'Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.',
       medHypoTitle:'Hypoglycaemia (Low Blood Sugar)',
@@ -702,15 +680,15 @@
       modeGeneralTitle:'Genel Yemek', modeGeneralDesc:'Her damak zevkine uygun günlük yemekler',
       modeMedicalTitle:'Tıbbi Diyetler', modeMedicalDesc:'Hastalığa özel beslenme kuralları',
       labelCuisine:'Mutfak seçin', labelDietary:'Beslenme tercihleri',
-      labelSpice:'Baharatlı mı?', labelExtras:'Ekstralar',
       cuisineTurkish:'Türk', cuisineItalian:'İtalyan', cuisineJapanese:'Japon',
       cuisineMexican:'Meksika', cuisineIndian:'Hint', cuisineFrench:'Fransız',
       cuisineChinese:'Çin', cuisineAmerican:'Amerikan', cuisineThai:'Tayland', cuisineGreek:'Yunan',
       filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Pesketaryen', filterKeto:'Keto',
       filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
-      spiceNormal:'Normal', spiceMild:'Az Baharatlı', spiceSpicy:'Baharatlı', spiceExtra:'Çok Baharatlı',
       medicalIntro:'Tıbbi durumunu yöneten hastalar için — bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
       worldCuisines:'Dünya Mutfakları',
+      emptyTitle:'Menün burada görünecek',
+      emptyDesc:'Soldaki seçenekleri belirle ve Oluştur\'a bas',
       medChemoTitle:'GİS Kemoterapi Diyeti',
       medChemoDesc:'Kemoterapi sürecindeki GİS kanser hastaları için sıkı diyet. Kök sebze, kümes hayvanı, baklagil, tahıl, baharat, kızartma yok.',
       medHypoTitle:'Hipoglisemi (Düşük Kan Şekeri)',
@@ -901,8 +879,12 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     });
     document.querySelectorAll('[data-badge]').forEach(badge => {
       const isActive = badge.closest('.med-card')?.classList.contains('active');
-      badge.textContent = isActive ? t.badgeActive : t.badgeOff;
+      badge.textContent = isActive ? ('● ' + t.badgeActive) : t.badgeOff;
     });
+    // re-render existing menu in new language if one is visible
+    if (lastMenu && document.getElementById('result').classList.contains('visible')) {
+      renderMenu(lastMenu);
+    }
   }
 
   /* THEME */
@@ -921,7 +903,6 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     // cuisine grid only shown in general mode
     document.getElementById('cuisineSection').classList.toggle('hidden-section', mode !== 'general');
     // spice level only shown in general mode
-    document.getElementById('generalSections').classList.toggle('hidden-section', mode !== 'general');
     // medical cards only shown in medical mode
     document.getElementById('medicalSections').classList.toggle('hidden-section', mode !== 'medical');
     // dietary filters are always visible — no toggle needed
@@ -932,7 +913,6 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
         c.classList.remove('active');
         c.querySelector('[data-badge]').textContent = i18n[currentLang].badgeOff;
       });
-      document.getElementById('spiceSection').classList.remove('dimmed');
       // btn requires a cuisine selection in general mode
       document.getElementById('generateBtn').disabled = !selected;
     }
@@ -966,11 +946,6 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     activeFilters.has(f) ? activeFilters.delete(f) : activeFilters.add(f);
   }
 
-  function selectSpice(btn) {
-    document.querySelectorAll('.spice-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    spiceLevel = btn.dataset.spice;
-  }
 
   function toggleShopping() {
     wantsShopping = !wantsShopping;
@@ -992,18 +967,10 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       const badge = card.querySelector('[data-badge]');
       badge.textContent = '● ' + t.badgeActive;
       activeMedicalMode = mode;
-      const noSpice = ['chemo','heart'];
-      document.getElementById('spiceSection').classList.toggle('dimmed', noSpice.includes(mode));
-      if (noSpice.includes(mode)) {
-        document.querySelectorAll('.spice-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('[data-spice="normal"]').classList.add('active');
-        spiceLevel = 'normal';
-      }
       // medical mode doesn't require a cuisine — enable generate as soon as card is active
       document.getElementById('generateBtn').disabled = false;
     } else {
       activeMedicalMode = null;
-      document.getElementById('spiceSection').classList.remove('dimmed');
       // no card active and no cuisine selected — disable until user picks a card
       document.getElementById('generateBtn').disabled = true;
     }
@@ -1149,7 +1116,6 @@ Respond with ONLY this JSON:
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
     const medicalNote = activeMedicalMode ? buildMedicalNote(activeMedicalMode, activeFilters) : '';
     const dietaryNote = activeFilters.size > 0 ? buildDietaryNote([...activeFilters], activeMedicalMode) : '';
-    const spiceNote = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode)) ? `Spice level: ${spiceLevel}.` : '';
     const shoppingNote = wantsShopping ? `Also include a "shoppingList" array of 8-12 key ingredients.` : '';
     const shoppingSchema = wantsShopping ? `,\n  "shoppingList": ["ingredient 1", "ingredient 2"]` : '';
 
@@ -1194,7 +1160,6 @@ Respond with ONLY this JSON:
 
 ${medicalNote}
 ${dietaryNote}
-${spiceNote}
 ${shoppingNote}
 COURSE FORMAT — these are hard requirements, not suggestions:
 - Starter MUST be: ${starterType}
@@ -1249,6 +1214,7 @@ Respond with ONLY this JSON:
 
   /* RENDER */
   function renderMenu(menu) {
+    lastMenu = menu;
     const t = i18n[currentLang];
     const emoji = cuisineEmojis[selected] || '🍽️';
     const medColors = {
@@ -1265,10 +1231,7 @@ Respond with ONLY this JSON:
     const filterTags = [...activeFilters].map(f =>
       `<span style="background:rgba(90,122,92,0.15);color:var(--sage);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:500;">${f}</span>`
     ).join(' ');
-    const spiceTag = (spiceLevel !== 'normal' && !['chemo','heart'].includes(activeMedicalMode))
-      ? `<span style="background:rgba(192,79,27,0.12);color:var(--rust);border-radius:50px;padding:3px 10px;font-size:11px;">${spiceLevel==='extra spicy'?'🔥':spiceLevel==='spicy'?'🌶️':'😌'} ${t['spice'+spiceLevel.split(' ').map((w,i)=>i?w[0].toUpperCase()+w.slice(1):w).join('')]||spiceLevel}</span>`
-      : '';
-    const allTags = [medTag,filterTags,spiceTag].filter(Boolean).join(' ');
+    const allTags = [medTag,filterTags].filter(Boolean).join(' ');
     const cuisineLabel = activeMedicalMode
       ? (t.worldCuisines || 'World Cuisines')
       : `${t['cuisine'+selected] || selected} ${t.cuisineWord}`;
