@@ -1358,7 +1358,7 @@ Respond with ONLY this JSON:
       const response = await fetch('/api/generate', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ messages:[{ role:'user', content: prompt }], max_tokens: 1200 })
+        body: JSON.stringify({ messages:[{ role:'user', content: prompt }], system: 'You are a professional recipe writer. Respond only with valid JSON, no markdown, no extra text.', max_tokens: 3000 })
       });
       const data = await response.json();
       console.log('[Recipe] API raw response:', JSON.stringify(data).slice(0,600));
