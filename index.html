@@ -391,7 +391,6 @@
       <div class="cuisine-card" data-cuisine="Indian"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🍛</span><span class="cuisine-name" data-i18n="cuisineIndian">Indian</span></div>
       <div class="cuisine-card" data-cuisine="French"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥐</span><span class="cuisine-name" data-i18n="cuisineFrench">French</span></div>
       <div class="cuisine-card" data-cuisine="Chinese"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineChinese">Chinese</span></div>
-      <div class="cuisine-card" data-cuisine="American" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍔</span><span class="cuisine-name" data-i18n="cuisineAmerican">American</span></div>
       <div class="cuisine-card" data-cuisine="Thai"     onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineThai">Thai</span></div>
       <div class="cuisine-card" data-cuisine="Greek"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineGreek">Greek</span></div>
     </div>
@@ -628,7 +627,6 @@
     Indian:   'butter chicken, chicken tikka masala, plain naan, standard samosa, aloo gobi, gulab jamun (plain), kheer (plain), jalebi',
     French:   'French onion soup, standard ratatouille, plain croissant, baguette and cheese plate, crème brûlée, tarte tatin (plain), plain mousse au chocolat, madeleine',
     Chinese:  'kung pao chicken, plain fried rice, standard spring rolls, sweet and sour pork, wonton soup (plain), plain almond jelly, mango pudding, sesame balls, red bean soup',
-    American: 'cheeseburger, mac and cheese, Buffalo wings, Caesar salad, plain apple pie, chocolate brownie, chocolate chip cookies, banana split',
     Thai:     'pad thai, standard green curry, plain tom yum, spring rolls, mango sticky rice, coconut ice cream, plain banana in coconut milk',
     Greek:    'plain hummus, standard Greek salad, spanakopita, plain tzatziki with pita, baklava, plain loukoumades, galaktoboureko (plain), yogurt with honey'
   };
@@ -642,7 +640,7 @@
       labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences',
       cuisineTurkish:'Turkish', cuisineItalian:'Italian', cuisineJapanese:'Japanese',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
-      cuisineChinese:'Chinese', cuisineAmerican:'American', cuisineThai:'Thai', cuisineGreek:'Greek',
+      cuisineChinese:'Chinese', cuisineThai:'Thai', cuisineGreek:'Greek',
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
@@ -687,7 +685,7 @@
       labelCuisine:'Mutfak seçin', labelDietary:'Beslenme tercihleri',
       cuisineTurkish:'Türk', cuisineItalian:'İtalyan', cuisineJapanese:'Japon',
       cuisineMexican:'Meksika', cuisineIndian:'Hint', cuisineFrench:'Fransız',
-      cuisineChinese:'Çin', cuisineAmerican:'Amerikan', cuisineThai:'Tayland', cuisineGreek:'Yunan',
+      cuisineChinese:'Çin', cuisineThai:'Tayland', cuisineGreek:'Yunan',
       filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Pesketaryen', filterKeto:'Keto',
       filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
       medicalIntro:'Tıbbi durumunu yöneten hastalar için — bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
@@ -866,7 +864,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
 
   const cuisineEmojis = {
     Turkish:'🥙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
-    Indian:'🍛', French:'🥐', Chinese:'🥟', American:'🍔',
+    Indian:'🍛', French:'🥐', Chinese:'🥟',
     Thai:'🍜', Greek:'🫒'
   };
 
@@ -1225,7 +1223,7 @@ Respond with ONLY this JSON:
 
     // Medical mode: draw from the full world cuisine pool for maximum variety
     const cuisineInstruction = activeMedicalMode
-      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Italian, Japanese, Mexican, Indian, French, Chinese, American, Thai, Greek, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
+      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Italian, Japanese, Mexican, Indian, French, Chinese, Thai, Greek, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
       : `Design a ${selected} cuisine menu for today`;
 
     // Variety nudge: medical diets need extra encouragement to explore formats
