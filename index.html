@@ -385,14 +385,18 @@
     <p class="section-label" data-i18n="labelCuisine">Choose your cuisine</p>
     <div class="cuisine-grid">
       <div class="cuisine-card" data-cuisine="Turkish"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥙</span><span class="cuisine-name" data-i18n="cuisineTurkish">Turkish</span></div>
-      <div class="cuisine-card" data-cuisine="Italian"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🍝</span><span class="cuisine-name" data-i18n="cuisineItalian">Italian</span></div>
-      <div class="cuisine-card" data-cuisine="Japanese" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍱</span><span class="cuisine-name" data-i18n="cuisineJapanese">Japanese</span></div>
+
+
       <div class="cuisine-card" data-cuisine="Mexican"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🌮</span><span class="cuisine-name" data-i18n="cuisineMexican">Mexican</span></div>
       <div class="cuisine-card" data-cuisine="Indian"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🍛</span><span class="cuisine-name" data-i18n="cuisineIndian">Indian</span></div>
       <div class="cuisine-card" data-cuisine="French"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥐</span><span class="cuisine-name" data-i18n="cuisineFrench">French</span></div>
-      <div class="cuisine-card" data-cuisine="Chinese"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineChinese">Chinese</span></div>
-      <div class="cuisine-card" data-cuisine="Thai"     onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineThai">Thai</span></div>
-      <div class="cuisine-card" data-cuisine="Greek"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineGreek">Greek</span></div>
+
+
+      <div class="cuisine-card" data-cuisine="Mediterranean" onclick="selectCuisine(this)"><span class="cuisine-emoji">🫒</span><span class="cuisine-name" data-i18n="cuisineMediterranean">Mediterranean</span></div>
+      <div class="cuisine-card" data-cuisine="Asian"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineAsian">Asian</span></div>
+      <div class="cuisine-card" data-cuisine="African"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫔</span><span class="cuisine-name" data-i18n="cuisineAfrican">African</span></div>
+      <div class="cuisine-card" data-cuisine="Americas" onclick="selectCuisine(this)"><span class="cuisine-emoji">🌎</span><span class="cuisine-name" data-i18n="cuisineAmericas">Americas</span></div>
+      <div class="cuisine-card" data-cuisine="Soviet"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineSoviet">Soviet & Eurasian</span></div>
     </div>
   </div>
 
@@ -621,14 +625,14 @@
   // Covers starters, mains AND desserts — the three most repeated categories.
   const defaultDishBans = {
     Turkish:  'plain mercimek çorbası, hummus, standard shish/adana kebab, plain döner, cacık as starter, baklava, plain künefe, standard sütlaç',
-    Italian:  'spaghetti bolognese, plain bruschetta, margherita pizza, Caesar salad, tiramisu, panna cotta, plain cannoli, affogato',
-    Japanese: 'California roll, plain miso soup, chicken teriyaki, edamame as starter, gyoza (as the only starter option), matcha ice cream, mochi (plain), dorayaki',
     Mexican:  'plain guacamole with chips, tacos al pastor, nachos, plain quesadilla, standard churros, tres leches cake (plain), fried ice cream',
     Indian:   'butter chicken, chicken tikka masala, plain naan, standard samosa, aloo gobi, gulab jamun (plain), kheer (plain), jalebi',
     French:   'French onion soup, standard ratatouille, plain croissant, baguette and cheese plate, crème brûlée, tarte tatin (plain), plain mousse au chocolat, madeleine',
-    Chinese:  'kung pao chicken, plain fried rice, standard spring rolls, sweet and sour pork, wonton soup (plain), plain almond jelly, mango pudding, sesame balls, red bean soup',
-    Thai:     'pad thai, standard green curry, plain tom yum, spring rolls, mango sticky rice, coconut ice cream, plain banana in coconut milk',
-    Greek:    'plain hummus, standard Greek salad, spanakopita, plain tzatziki with pita, baklava, plain loukoumades, galaktoboureko (plain), yogurt with honey'
+    Mediterranean: 'spaghetti bolognese, margherita pizza, plain Greek salad, standard hummus with pita, plain tzatziki, standard tabbouleh, plain falafel, tiramisu, baklava',
+    Asian:    'plain sushi, pad thai, standard fried rice, chicken ramen, spring rolls, kung pao chicken, standard green curry, dumplings, mango sticky rice',
+    African:  'plain jollof rice, standard chicken tagine, plain injera with lentil stew, fufu with groundnut soup, plain suya skewers',
+    Americas: 'plain guacamole, standard tacos, nachos, plain empanada, plain ceviche, standard churrasco, plain rice and beans, standard feijoada',
+    Soviet:   'plain borscht, standard pelmeni, plain olivier salad, standard beef stroganoff, plain plov, blini with sour cream, standard shashlik'
   };
 
   const i18n = {
@@ -638,9 +642,10 @@
       modeGeneralTitle:'General Cooking', modeGeneralDesc:'Everyday meals for any appetite',
       modeMedicalTitle:'Medical Diets', modeMedicalDesc:'Condition-specific dietary rules',
       labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences',
-      cuisineTurkish:'Turkish', cuisineItalian:'Italian', cuisineJapanese:'Japanese',
+      cuisineTurkish:'Turkish', cuisineMediterranean:'Mediterranean',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
-      cuisineChinese:'Chinese', cuisineThai:'Thai', cuisineGreek:'Greek',
+      cuisineAsian:'Asian', cuisineAfrican:'African',
+      cuisineAmericas:'Americas', cuisineSoviet:'Soviet & Eurasian',
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
@@ -683,9 +688,10 @@
       modeGeneralTitle:'Genel Yemek', modeGeneralDesc:'Her damak zevkine uygun günlük yemekler',
       modeMedicalTitle:'Tıbbi Diyetler', modeMedicalDesc:'Hastalığa özel beslenme kuralları',
       labelCuisine:'Mutfak seçin', labelDietary:'Beslenme tercihleri',
-      cuisineTurkish:'Türk', cuisineItalian:'İtalyan', cuisineJapanese:'Japon',
-      cuisineMexican:'Meksika', cuisineIndian:'Hint', cuisineFrench:'Fransız',
-      cuisineChinese:'Çin', cuisineThai:'Tayland', cuisineGreek:'Yunan',
+      cuisineTurkish:'Türk', cuisineMediterranean:'Akdeniz', cuisineMexican:'Meksika',
+      cuisineIndian:'Hint', cuisineFrench:'Fransız',
+      cuisineAsian:'Asya', cuisineAfrican:'Afrika',
+      cuisineAmericas:'Amerikalar', cuisineSoviet:'Sovyet & Avrasya',
       filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Pesketaryen', filterKeto:'Keto',
       filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
       medicalIntro:'Tıbbi durumunu yöneten hastalar için — bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
@@ -863,9 +869,9 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
   };
 
   const cuisineEmojis = {
-    Turkish:'🥙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
-    Indian:'🍛', French:'🥐', Chinese:'🥟',
-    Thai:'🍜', Greek:'🫒'
+    Turkish:'🥙', Mediterranean:'🫒', Mexican:'🌮',
+    Indian:'🍛', French:'🥐',
+    Asian:'🍜', African:'🫔', Americas:'🌎', Soviet:'🥟'
   };
 
   /* LANGUAGE */
@@ -1222,9 +1228,16 @@ Respond with ONLY this JSON:
       : '';
 
     // Medical mode: draw from the full world cuisine pool for maximum variety
+    const cuisineExpansions = {
+      Mediterranean: 'Draw from the full Mediterranean basin — Italian, Greek, Lebanese, Spanish, Moroccan, Tunisian, Turkish coastal, Egyptian, Israeli/Palestinian, Cypriot. Prioritise variety across regions, mix countries across courses.',
+      Asian:    'Draw freely from East and Southeast Asian traditions — Japanese, Chinese, Thai, Korean, Vietnamese, Malay, Indonesian, Filipino. Mix across courses for variety.',
+      African:  'Draw from the full breadth of African cuisine — West African (Nigerian, Ghanaian, Senegalese), North African (Moroccan, Tunisian, Ethiopian), East African (Kenyan, Tanzanian), and Southern African (South African). Mix regions across courses.',
+      Americas: 'Prioritise the rich diversity of Latin and South America (Brazilian, Peruvian, Mexican, Colombian, Argentine, Chilean, Caribbean) but may include North American regional traditions. Mix countries across courses.',
+      Soviet:   'Draw from the rich culinary traditions of the former Soviet republics — Russian, Ukrainian, Georgian, Armenian, Azerbaijani, Uzbek, Kazakh, Kyrgyz, Moldovan, Belarusian, Baltic (Estonian, Latvian, Lithuanian). Mix regions freely across courses.'
+    };
     const cuisineInstruction = activeMedicalMode
-      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Italian, Japanese, Mexican, Indian, French, Chinese, Thai, Greek, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
-      : `Design a ${selected} cuisine menu for today`;
+      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Mediterranean, Mexican, Indian, French, Asian, African, Americas, Soviet & Eurasian, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
+      : `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}`;
 
     // Variety nudge: medical diets need extra encouragement to explore formats
     const medicalVarietyNote = activeMedicalMode
