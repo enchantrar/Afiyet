@@ -223,6 +223,11 @@
 
   .result-card { background:var(--surface); border-radius:20px; overflow:hidden; box-shadow:0 20px 60px var(--shadow); border:1px solid var(--border); transition:background var(--T),border-color var(--T); }
 
+  .translate-overlay { position:absolute; inset:0; border-radius:20px; background:rgba(var(--overlay-rgb,250,246,239),0.82); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; z-index:10; animation:fadeUp 0.2s ease both; }
+  body.dark .translate-overlay { background:rgba(18,16,13,0.82); }
+  .translate-overlay-spinner { width:28px; height:28px; border:2.5px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; }
+  .translate-overlay-text { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; color:var(--ink2); }
+
   .result-header { background:var(--header-bg); padding:30px 34px; display:flex; justify-content:space-between; align-items:flex-start; }
 
   .result-cuisine-tag { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); font-weight:500; margin-bottom:7px; }
@@ -860,7 +865,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
   };
 
   const cuisineEmojis = {
-    Turkish:'🫙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
+    Turkish:'🥙', Italian:'🍝', Japanese:'🍱', Mexican:'🌮',
     Indian:'🍛', French:'🥐', Chinese:'🥟', American:'🍔',
     Thai:'🍜', Greek:'🫒'
   };
@@ -911,14 +916,16 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       });
     }
 
-    // show a subtle translating indicator on the result card
-    const resultEl = document.getElementById('result');
-    const indicator = document.createElement('div');
-    indicator.id = 'translate-indicator';
-    indicator.style.cssText = 'position:absolute;top:12px;right:14px;font-size:11px;color:var(--ink3);font-family:DM Sans,sans-serif;opacity:0.7;';
-    indicator.textContent = lang === 'tr' ? 'Çeviriliyor…' : 'Translating…';
-    resultEl.style.position = 'relative';
-    resultEl.appendChild(indicator);
+    // show frosted overlay on the result card while translating
+    const resultCard = document.querySelector('#result .result-card');
+    if (resultCard) {
+      resultCard.style.position = 'relative';
+      const overlay = document.createElement('div');
+      overlay.id = 'translate-indicator';
+      overlay.className = 'translate-overlay';
+      overlay.innerHTML = `<div class="translate-overlay-spinner"></div><p class="translate-overlay-text">${lang === 'tr' ? 'Çeviriliyor…' : 'Translating…'}</p>`;
+      resultCard.appendChild(overlay);
+    }
 
     try {
       const prompt = `Translate the following JSON content into ${targetLang}. 
