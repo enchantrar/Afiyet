@@ -209,6 +209,15 @@
 
   .shopping-toggle.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:600; box-shadow:0 3px 12px rgba(212,137,10,0.4); transform:translateY(-1px); }
 
+
+  /* SERVING SIZE */
+  .serving-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .serving-label { font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink2); white-space:nowrap; }
+  .serving-btns { display:flex; gap:6px; }
+  .serving-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; }
+  .serving-btn:hover { border-color:var(--amber); color:var(--amber); }
+  .serving-btn.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:700; box-shadow:0 3px 10px rgba(212,137,10,0.35); }
+
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
 
@@ -406,7 +415,7 @@
       <div class="cuisine-card" data-cuisine="Asian"    onclick="selectCuisine(this)"><span class="cuisine-emoji">🍜</span><span class="cuisine-name" data-i18n="cuisineAsian">Asian</span></div>
       <div class="cuisine-card" data-cuisine="African"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫔</span><span class="cuisine-name" data-i18n="cuisineAfrican">African</span></div>
       <div class="cuisine-card" data-cuisine="Americas" onclick="selectCuisine(this)"><span class="cuisine-emoji">🌎</span><span class="cuisine-name" data-i18n="cuisineAmericas">Americas</span></div>
-      <div class="cuisine-card" data-cuisine="Soviet"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineSoviet">Soviet & Eurasian</span></div>
+      <div class="cuisine-card" data-cuisine="Eurasian"   onclick="selectCuisine(this)"><span class="cuisine-emoji">🥟</span><span class="cuisine-name" data-i18n="cuisineEurasian">Eurasian</span></div>
     </div>
   </div>
 
@@ -551,6 +560,16 @@
     </div>
   </div>
 
+  <div class="serving-row">
+    <span class="serving-label" data-i18n="labelServing">Serves</span>
+    <div class="serving-btns">
+      <div class="serving-btn active" data-serves="1" onclick="selectServing(this)">1</div>
+      <div class="serving-btn" data-serves="2" onclick="selectServing(this)">2</div>
+      <div class="serving-btn" data-serves="4" onclick="selectServing(this)">4</div>
+      <div class="serving-btn" data-serves="6" onclick="selectServing(this)">6</div>
+    </div>
+  </div>
+
   <div class="cta-area">
     <button class="generate-btn" id="generateBtn" onclick="generateMenu()" disabled>
       ✿ <span data-i18n="generateBtn">Generate My Menu</span>
@@ -586,7 +605,8 @@
   let activeMedicalMode = null;
   let currentMode = 'general';
   let currentLang = 'en';
-  let lastMenu = null; // stores last generated menu for re-render on language switch
+  let lastMenu = null;
+  let servingSize = 1; // stores last generated menu for re-render on language switch
 
   // Session history — stores dish names from the last 3 generations to ban repeats
   let generationHistory = [];
@@ -642,7 +662,7 @@
     Asian:    'plain sushi, pad thai, standard fried rice, chicken ramen, spring rolls, kung pao chicken, standard green curry, dumplings, mango sticky rice',
     African:  'plain jollof rice, standard chicken tagine, plain injera with lentil stew, fufu with groundnut soup, plain suya skewers',
     Americas: 'plain guacamole, standard tacos, nachos, plain empanada, plain ceviche, standard churrasco, plain rice and beans, standard feijoada',
-    Soviet:   'plain borscht, standard pelmeni, plain olivier salad, standard beef stroganoff, plain plov, blini with sour cream, standard shashlik'
+    Eurasian:   'plain borscht, standard pelmeni, plain olivier salad, standard beef stroganoff, plain plov, blini with sour cream, standard shashlik'
   };
 
   const i18n = {
@@ -655,12 +675,13 @@
       cuisineTurkish:'Turkish', cuisineMediterranean:'Mediterranean',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
       cuisineAsian:'Asian', cuisineAfrican:'African',
-      cuisineAmericas:'Americas', cuisineSoviet:'Soviet & Eurasian',
+      cuisineAmericas:'Americas', cuisineEurasian:'Eurasian',
       filterVeg:'Vegetarian', filterVegan:'Vegan', filterPesc:'Pescetarian', filterKeto:'Keto',
       filterCoeliac:'Coeliac', filterGluten:'Gluten-free', filterLactose:'Lactose-free', filterGlucose:'Glucose-free',
       medicalIntro:'For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.',
       worldCuisines:'World Cuisines',
       emptyTitle:'Your menu will appear here',
+      labelServing:'Serves',
       emptyDesc:'Choose your options on the left and hit Generate',
       medChemoTitle:'GI Chemotherapy Diet',
       medChemoDesc:'Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.',
@@ -701,12 +722,13 @@
       cuisineTurkish:'Türk', cuisineMediterranean:'Akdeniz', cuisineMexican:'Meksika',
       cuisineIndian:'Hint', cuisineFrench:'Fransız',
       cuisineAsian:'Asya', cuisineAfrican:'Afrika',
-      cuisineAmericas:'Amerikalar', cuisineSoviet:'Sovyet & Avrasya',
+      cuisineAmericas:'Amerikalar', cuisineEurasian:'Avrasya',
       filterVeg:'Vejetaryen', filterVegan:'Vegan', filterPesc:'Pesketaryen', filterKeto:'Keto',
       filterCoeliac:'Çölyak', filterGluten:'Glutensiz', filterLactose:'Laktozsuz', filterGlucose:'Şekersiz',
       medicalIntro:'Tıbbi durumunu yöneten hastalar için — bir karta dokunarak aktifleştir. Menüler, çeşitlilik için tüm dünya mutfaklarından oluşturulur.',
       worldCuisines:'Dünya Mutfakları',
       emptyTitle:'Menün burada görünecek',
+      labelServing:'Kişi sayısı',
       emptyDesc:'Soldaki seçenekleri belirle ve Oluştur\'a bas',
       medChemoTitle:'GİS Kemoterapi Diyeti',
       medChemoDesc:'Kemoterapi sürecindeki GİS kanser hastaları için sıkı diyet. Kök sebze, kümes hayvanı, baklagil, tahıl, baharat, kızartma yok.',
@@ -881,7 +903,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
   const cuisineEmojis = {
     Turkish:'🥙', Mediterranean:'🫒', Mexican:'🌮',
     Indian:'🍛', French:'🥐',
-    Asian:'🍜', African:'🫔', Americas:'🌎', Soviet:'🥟'
+    Asian:'🍜', African:'🫔', Americas:'🌎', Eurasian:'🥟'
   };
 
   /* LANGUAGE */
@@ -1002,7 +1024,8 @@ ${JSON.stringify(toTranslate)}`;
     document.getElementById('modeGeneral').classList.toggle('active', mode === 'general');
     document.getElementById('modeMedical').classList.toggle('active', mode === 'medical');
     // cuisine grid only shown in general mode
-    document.getElementById('cuisineSection').classList.toggle('hidden-section', mode !== 'general');
+    // cuisine grid shown in both modes
+    document.getElementById('cuisineSection').classList.remove('hidden-section');
     // spice level only shown in general mode
     // medical cards only shown in medical mode
     document.getElementById('medicalSections').classList.toggle('hidden-section', mode !== 'medical');
@@ -1019,11 +1042,8 @@ ${JSON.stringify(toTranslate)}`;
     }
 
     if (mode === 'medical') {
-      // clear cuisine selection — not needed in medical mode
-      selected = null;
-      document.querySelectorAll('.cuisine-card').forEach(c => c.classList.remove('selected'));
-      // btn enabled only once a medical card is activated
-      document.getElementById('generateBtn').disabled = !activeMedicalMode;
+      // keep cuisine selection if already made, require both cuisine + medical card
+      document.getElementById('generateBtn').disabled = !(activeMedicalMode && selected);
     }
 
     document.getElementById('result').classList.remove('visible');
@@ -1038,6 +1058,12 @@ ${JSON.stringify(toTranslate)}`;
     if (currentMode === 'general') {
       document.getElementById('generateBtn').disabled = false;
     }
+  }
+
+  function selectServing(btn) {
+    document.querySelectorAll('.serving-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    servingSize = parseInt(btn.dataset.serves);
   }
 
   /* FILTERS / SPICE / SHOPPING */
@@ -1068,8 +1094,8 @@ ${JSON.stringify(toTranslate)}`;
       const badge = card.querySelector('[data-badge]');
       badge.textContent = '● ' + t.badgeActive;
       activeMedicalMode = mode;
-      // medical mode doesn't require a cuisine — enable generate as soon as card is active
-      document.getElementById('generateBtn').disabled = false;
+      // require both medical card and cuisine selection
+      document.getElementById('generateBtn').disabled = !selected;
     } else {
       activeMedicalMode = null;
       // no card active and no cuisine selected — disable until user picks a card
@@ -1232,8 +1258,8 @@ Respond with ONLY this JSON:
     const ingredientBan = ingredientHistory.length > 0
       ? `\nDO NOT use these recently used ingredients — pick completely different ones: ${ingredientHistory.slice(-18).join(', ')}.`
       : '';
-    // defaultBan only applies in general mode (medical mode has no fixed cuisine)
-    const defaultBan = (!activeMedicalMode && defaultDishBans[selected])
+    // defaultBan applies in both modes now that medical mode also requires a cuisine
+    const defaultBan = defaultDishBans[selected]
       ? `\nNEVER generate these overused ${selected} clichés: ${defaultDishBans[selected]}.`
       : '';
 
@@ -1243,15 +1269,15 @@ Respond with ONLY this JSON:
       Asian:    'Draw freely from East and Southeast Asian traditions — Japanese, Chinese, Thai, Korean, Vietnamese, Malay, Indonesian, Filipino. Mix across courses for variety.',
       African:  'Draw from the full breadth of African cuisine — West African (Nigerian, Ghanaian, Senegalese), North African (Moroccan, Tunisian, Ethiopian), East African (Kenyan, Tanzanian), and Southern African (South African). Mix regions across courses.',
       Americas: 'Prioritise the rich diversity of Latin and South America (Brazilian, Peruvian, Mexican, Colombian, Argentine, Chilean, Caribbean) but may include North American regional traditions. Mix countries across courses.',
-      Soviet:   'Draw from the rich culinary traditions of the former Soviet republics — Russian, Ukrainian, Georgian, Armenian, Azerbaijani, Uzbek, Kazakh, Kyrgyz, Moldovan, Belarusian, Baltic (Estonian, Latvian, Lithuanian). Mix regions freely across courses.'
+      Eurasian:   'Draw from the rich culinary traditions of the former Soviet republics — Russian, Ukrainian, Georgian, Armenian, Azerbaijani, Uzbek, Kazakh, Kyrgyz, Moldovan, Belarusian, Baltic (Estonian, Latvian, Lithuanian). Mix regions freely across courses.'
     };
     const cuisineInstruction = activeMedicalMode
-      ? `Design a menu drawing freely from the full spectrum of world cuisines — Turkish, Mediterranean, Mexican, Indian, French, Asian, African, Americas, Soviet & Eurasian, Mediterranean, Middle Eastern, Moroccan, Korean, Vietnamese, and beyond. You may mix different cuisines across courses to find the best compliant dishes.`
+      ? `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}. Apply the medical diet rules below strictly.`
       : `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}`;
 
-    // Variety nudge: medical diets need extra encouragement to explore formats
+    // Variety nudge: medical diets need extra encouragement to explore formats within the chosen cuisine
     const medicalVarietyNote = activeMedicalMode
-      ? `\nWORLD CUISINE VARIETY: You have the entire world of cuisines to draw from. Use this freedom — don't keep returning to the same cuisine or the same dish format. Consider soups, steamed dishes, stuffed vegetables, fish preparations, egg-based dishes, grain bowls, yogurt-based starters, poached fruit desserts, and dishes from cuisines you haven't used in recent generations.`
+      ? `\nCUISINE VARIETY: Stay within ${selected} cuisine traditions but explore lesser-known dishes — don't default to the most obvious dishes. Consider soups, steamed dishes, stuffed vegetables, fish preparations, egg-based dishes, grain bowls, yogurt-based starters, and poached fruit desserts.`
       : '';
 
     try {
@@ -1264,7 +1290,7 @@ Respond with ONLY this JSON:
           system:`You are a creative, knowledgeable chef who designs beautiful 3-course menus. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,
           messages:[{
             role:'user',
-            content:`${cuisineInstruction} with a starter, main course, and dessert.
+            content:`${cuisineInstruction} with a starter, main course, and dessert. This menu is for ${servingSize} ${servingSize === 1 ? 'person' : 'people'}.
 
 ${medicalNote}
 ${dietaryNote}
@@ -1342,9 +1368,7 @@ Respond with ONLY this JSON:
       `<span style="background:rgba(90,122,92,0.15);color:var(--sage);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:500;">${f}</span>`
     ).join(' ');
     const allTags = [medTag,filterTags].filter(Boolean).join(' ');
-    const cuisineLabel = activeMedicalMode
-      ? (t.worldCuisines || 'World Cuisines')
-      : `${t['cuisine'+selected] || selected} ${t.cuisineWord}`;
+    const cuisineLabel = `${t['cuisine'+selected] || selected} ${t.cuisineWord}`;
     const shoppingHTML = (wantsShopping && menu.shoppingList?.length) ? `
       <div class="shopping-block">
         <p class="shopping-title">${t.shoppingListTitle}</p>
@@ -1442,7 +1466,7 @@ Respond with ONLY this JSON:
     const lang = currentLang === 'tr' ? 'Turkish' : 'English';
     const dietCtx = activeMedicalMode ? 'This dish is part of a ' + activeMedicalMode + ' medical diet — the recipe must strictly respect all dietary restrictions for that condition.' : '';
     const filterCtx = activeFilters.size ? 'Dietary filters active: ' + [...activeFilters].join(', ') + '.' : '';
-    const prompt = 'Write a detailed recipe for "' + dishName + '" serving 2 people, in ' + lang + '.\n\n' + dietCtx + ' ' + filterCtx + '\n\nRespond ONLY with this JSON (no markdown, no extra text):\n{\n  "yield": "Serves 2",\n  "prepTime": "X mins",\n  "cookTime": "X mins",\n  "ingredientGroups": [\n    {\n      "groupName": "group name or null if single group",\n      "ingredients": ["200g item", "1 tbsp item", "etc"]\n    }\n  ],\n  "steps": [\n    "Step written with sensory cues — describe what to look for, smell, texture. Include timing within the step."\n  ],\n  "notes": "Tips, substitutions, make-ahead advice, or what can go wrong. 2-4 sentences."\n}\n\nRules:\n- Measurements in grams/ml, with tsp/tbsp for small amounts\n- Steps should be descriptive and sensory — not just cook until done but cook stirring occasionally until the onions are deeply golden and jammy about 12 minutes\n- ingredientGroups: use multiple groups only if the dish genuinely has distinct components. Otherwise use a single group with groupName null.\n- Minimum 4 steps, written as a skilled home cook would explain them';
+    const prompt = 'Write a detailed recipe for "' + dishName + '" serving ' + servingSize + ' ' + (servingSize === 1 ? 'person' : 'people') + ', in ' + lang + '.\n\n' + dietCtx + ' ' + filterCtx + '\n\nRespond ONLY with this JSON (no markdown, no extra text):\n{\n  "yield": "Serves 2",\n  "prepTime": "X mins",\n  "cookTime": "X mins",\n  "ingredientGroups": [\n    {\n      "groupName": "group name or null if single group",\n      "ingredients": ["200g item", "1 tbsp item", "etc"]\n    }\n  ],\n  "steps": [\n    "Step written with sensory cues — describe what to look for, smell, texture. Include timing within the step."\n  ],\n  "notes": "Tips, substitutions, make-ahead advice, or what can go wrong. 2-4 sentences."\n}\n\nRules:\n- Measurements in grams/ml, with tsp/tbsp for small amounts\n- Steps should be descriptive and sensory — not just cook until done but cook stirring occasionally until the onions are deeply golden and jammy about 12 minutes\n- ingredientGroups: use multiple groups only if the dish genuinely has distinct components. Otherwise use a single group with groupName null.\n- Minimum 4 steps, written as a skilled home cook would explain them';
     try {
       const response = await fetch('/api/generate', {
         method:'POST',
@@ -1484,7 +1508,7 @@ Respond with ONLY this JSON:
       <div class="recipe-meta">
         <span class="recipe-meta-item">\u23F1 <strong>${r.prepTime}</strong> prep</span>
         <span class="recipe-meta-item">\uD83D\uDD25 <strong>${r.cookTime}</strong> cook</span>
-        <span class="recipe-meta-item">\uD83C\uDF7D ${r.yield}</span>
+        <span class="recipe-meta-item">\uD83C\uDF7D Serves ${servingSize}</span>
       </div>
       <p class="recipe-group-title">Ingredients</p>
       ${ingredientGroupsHTML}
