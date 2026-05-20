@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🍳Afiyet</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,7 +27,7 @@
     --header-bg:linear-gradient(135deg,#0A0806 0%,#201508 100%);
   }
 
-  body { background:var(--bg); color:var(--ink); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; transition:background var(--T),color var(--T); }
+  body { background:var(--bg); color:var(--ink); font-family:'Montserrat',sans-serif; min-height:100vh; letter-spacing:0.01em; overflow-x:hidden; transition:background var(--T),color var(--T); }
 
   body::before { content:''; position:fixed; inset:0; background-image:radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 50%); pointer-events:none; z-index:0; }
 
@@ -35,13 +35,13 @@
   .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 24px; background:var(--bg); border-bottom:1px solid var(--border); transition:background var(--T),border-color var(--T); }
 
   .topbar-brand { display:flex; align-items:baseline; gap:10px; flex-shrink:0; }
-  .topbar-logo { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; font-style:italic; color:var(--rust); letter-spacing:-0.01em; line-height:1; }
+  .topbar-logo { font-family:'Lora',serif; font-size:1.35rem; font-weight:600; font-style:italic; color:var(--rust); letter-spacing:0em; line-height:1; }
   .topbar-tagline { font-size:10.5px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--amber); white-space:nowrap; }
   .topbar-controls { display:flex; align-items:center; gap:8px; }
 
   .toggle-pill { display:flex; align-items:center; background:var(--bg2); border:1.5px solid var(--border); border-radius:50px; overflow:hidden; transition:all var(--T); }
 
-  .toggle-pill button { background:none; border:none; padding:6px 13px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--ink3); cursor:pointer; border-radius:50px; transition:all 0.18s ease; }
+  .toggle-pill button { background:none; border:none; padding:6px 13px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:500; color:var(--ink3); cursor:pointer; border-radius:50px; transition:all 0.18s ease; }
 
   .toggle-pill button.active { background:var(--ink); color:var(--bg); }
 
@@ -58,23 +58,23 @@
   /* EMPTY STATE — shown in right panel before first generation */
   .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:460px; color:var(--ink3); text-align:center; border:1.5px dashed var(--border); border-radius:20px; padding:40px; transition:border-color var(--T); }
   .empty-state-icon { font-size:52px; margin-bottom:16px; opacity:0.5; }
-  .empty-state-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-style:italic; color:var(--ink2); margin-bottom:8px; }
+  .empty-state-title { font-family:'Montserrat',sans-serif; font-size:1.1rem; font-style:italic; color:var(--ink2); margin-bottom:8px; }
   .empty-state-desc { font-size:12.5px; font-weight:300; line-height:1.6; max-width:220px; }
   #result.visible ~ .empty-state { display:none; }
 
   /* HEADER */
-  header { text-align:center; margin-bottom:20px; animation:fadeDown 0.7s ease both; }
+  header { text-align:center; margin-bottom:12px; animation:fadeDown 0.7s ease both; }
 
   .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; transition:color var(--T); }
 
-  .logo { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:700; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); }
+  .logo { font-family:'Lora',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:700; letter-spacing:-0.01em; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); }
 
   .logo em { font-style:italic; color:var(--rust); transition:color var(--T); }
 
   .subtitle { font-size:14.5px; color:var(--ink3); font-weight:300; max-width:400px; margin:0 auto; line-height:1.6; transition:color var(--T); }
 
   /* MODE SWITCHER */
-  .mode-switcher { display:flex; gap:10px; margin-bottom:28px; animation:fadeUp 0.7s 0.15s ease both; }
+  .mode-switcher { display:flex; gap:10px; margin-bottom:16px; animation:fadeUp 0.7s 0.15s ease both; }
 
   .mode-btn { flex:1; padding:11px 13px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; }
 
@@ -90,9 +90,24 @@
 
   .mode-btn-icon { font-size:22px; flex-shrink:0; }
 
-  .mode-btn-title { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:3px; transition:color var(--T); }
+  .mode-btn-title { font-family:'Montserrat',sans-serif; font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:3px; transition:color var(--T); }
 
   .mode-btn-desc { font-size:11.5px; color:var(--ink3); font-weight:300; line-height:1.4; transition:color var(--T); }
+
+
+  /* COLLAPSIBLE SECTIONS */
+  .collapsible-header { display:flex; align-items:center; justify-content:space-between; padding:9px 13px; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); cursor:pointer; transition:all 0.18s ease; user-select:none; margin-bottom:8px; }
+  .collapsible-header:hover { border-color:var(--amber); }
+  .collapsible-header.open { border-color:var(--amber); background:var(--bg2); }
+  .collapsible-header-left { display:flex; align-items:center; gap:8px; }
+  .collapsible-header-title { font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink2); transition:color var(--T); }
+  .collapsible-header.open .collapsible-header-title { color:var(--amber); }
+  .collapsible-badge { font-size:10px; font-weight:700; padding:1px 7px; border-radius:50px; background:var(--amber); color:white; display:none; }
+  .collapsible-badge.visible { display:inline-block; }
+  .collapsible-arrow { font-size:10px; color:var(--ink3); transition:transform 0.2s ease; }
+  .collapsible-header.open .collapsible-arrow { transform:rotate(180deg); }
+  .collapsible-body { overflow:hidden; max-height:0; transition:max-height 0.3s ease, opacity 0.2s ease; opacity:0; }
+  .collapsible-body.open { max-height:1200px; opacity:1; }
 
   /* SECTION LABEL */
   .section-label { font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink2); margin-bottom:12px; display:flex; align-items:center; gap:12px; transition:color var(--T); }
@@ -100,7 +115,7 @@
   .section-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
 
   /* CUISINE GRID */
-  .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:7px; margin-bottom:24px; animation:fadeUp 0.7s 0.2s ease both; }
+  .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:7px; margin-bottom:14px; animation:fadeUp 0.7s 0.2s ease both; }
 
   .cuisine-card { background:var(--surface); border:1.5px solid var(--border); border-radius:10px; padding:11px 9px; cursor:pointer; transition:all 0.2s ease; text-align:center; user-select:none; }
 
@@ -117,11 +132,11 @@
   .cuisine-name { font-size:11px; font-weight:500; color:var(--ink); transition:color var(--T); }
 
   /* FILTER CHIPS */
-  .filters-section { margin-bottom:20px; animation:fadeUp 0.7s 0.25s ease both; }
+  .filters-section { margin-bottom:10px; animation:fadeUp 0.7s 0.25s ease both; }
 
   .filter-grid { display:flex; flex-wrap:wrap; gap:7px; }
 
-  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
 
   .filter-chip:hover { border-color:var(--sage); color:var(--sage); background:rgba(90,122,92,0.06); }
 
@@ -172,9 +187,9 @@
 
   .med-title-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
 
-  .med-title { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--ink); transition:color var(--T); }
+  .med-title { font-family:'Montserrat',sans-serif; font-size:0.9rem; font-weight:700; color:var(--ink); transition:color var(--T); }
 
-  .med-badge { font-family:'DM Sans',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:3px 9px; border-radius:50px; transition:all 0.2s ease; background:var(--bg2); color:var(--ink3); border:1.5px solid var(--border); }
+  .med-badge { font-family:'Montserrat',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:3px 9px; border-radius:50px; transition:all 0.2s ease; background:var(--bg2); color:var(--ink3); border:1.5px solid var(--border); }
 
   .theme-blue   .med-card.active .med-badge,
   .med-card.theme-blue.active   .med-badge { background:#4a9cc7; color:white; border-color:#4a9cc7; }
@@ -203,7 +218,7 @@
   body.dark .med-rule-tag { opacity:1; color:#e8dcc8; }
 
   /* SHOPPING TOGGLE */
-  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
 
   .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); background:rgba(212,137,10,0.06); }
 
@@ -211,23 +226,23 @@
 
 
   /* SERVING SIZE */
-  .serving-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .serving-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .serving-label { font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink2); white-space:nowrap; }
   .serving-btns { display:flex; gap:6px; }
-  .serving-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; }
+  .serving-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:var(--surface); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:500; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; }
   .serving-btn:hover { border-color:var(--amber); color:var(--amber); }
   .serving-btn.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:700; box-shadow:0 3px 10px rgba(212,137,10,0.35); }
 
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
 
-  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:14px 36px; font-family:'DM Sans',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer; transition:all 0.25s ease; }
+  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:14px 36px; font-family:'Montserrat',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer; transition:all 0.25s ease; }
 
   .generate-btn:hover:not(:disabled) { background:var(--rust); transform:scale(1.03); box-shadow:0 8px 28px var(--shadow); }
 
   .generate-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
-  .surprise-btn { background:none; border:1.5px solid var(--border); color:var(--ink2); border-radius:50px; padding:10px 24px; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s ease; margin-left:10px; }
+  .surprise-btn { background:none; border:1.5px solid var(--border); color:var(--ink2); border-radius:50px; padding:10px 24px; font-family:'Montserrat',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s ease; margin-left:10px; }
 
   .surprise-btn:hover { border-color:var(--amber); color:var(--amber); }
 
@@ -240,13 +255,13 @@
   .translate-overlay { position:absolute; inset:0; border-radius:20px; background:rgba(var(--overlay-rgb,250,246,239),0.82); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; z-index:10; animation:fadeUp 0.2s ease both; }
   body.dark .translate-overlay { background:rgba(18,16,13,0.82); }
   .translate-overlay-spinner { width:28px; height:28px; border:2.5px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; }
-  .translate-overlay-text { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; color:var(--ink2); }
+  .translate-overlay-text { font-family:'Montserrat',sans-serif; font-style:italic; font-size:0.95rem; color:var(--ink2); }
 
   .result-header { background:var(--header-bg); padding:30px 34px; display:flex; justify-content:space-between; align-items:flex-start; }
 
   .result-cuisine-tag { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); font-weight:500; margin-bottom:7px; }
 
-  .result-title { font-family:'Playfair Display',serif; font-size:1.65rem; color:#FAF6EF; font-weight:700; }
+  .result-title { font-family:'Montserrat',sans-serif; font-size:1.65rem; color:#FAF6EF; font-weight:700; }
 
   .result-emoji { font-size:42px; }
 
@@ -258,22 +273,48 @@
 
   .course-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:5px; transition:color var(--T); }
 
-  .course-name { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
+  .course-name { font-family:'Montserrat',sans-serif; font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
 
   .course-desc { font-size:13.5px; color:var(--ink3); line-height:1.6; font-weight:300; transition:color var(--T); }
 
   .result-footer { padding:17px 34px; background:var(--bg2); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); }
 
-  .regen-btn { background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:9px 21px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s ease; }
+  .regen-btn { background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:9px 21px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s ease; }
 
   .regen-btn:hover { background:var(--rust); }
 
-  .other-btn { background:var(--surface); color:var(--ink2); border:1.5px solid var(--border); border-radius:50px; padding:9px 21px; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:all 0.2s ease; }
+  .other-btn { background:var(--surface); color:var(--ink2); border:1.5px solid var(--border); border-radius:50px; padding:9px 21px; font-family:'Montserrat',sans-serif; font-size:13px; cursor:pointer; transition:all 0.2s ease; }
 
   .other-btn:hover { border-color:var(--amber); color:var(--amber); }
 
+
+  /* COLLAPSIBLE */
+  function toggleCollapsible(id) {
+    const header = document.getElementById(id + 'Header');
+    const body   = document.getElementById(id + 'Body');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    header.classList.toggle('open', !isOpen);
+  }
+
+  function updateDietaryBadge() {
+    const badge = document.getElementById('dietaryBadge');
+    if (!badge) return;
+    const count = activeFilters.size;
+    badge.textContent = count;
+    badge.classList.toggle('visible', count > 0);
+  }
+
+  function updateMedicalBadge() {
+    const badge = document.getElementById('medicalBadge');
+    if (!badge) return;
+    const hasActive = !!activeMedicalMode;
+    badge.textContent = '●';
+    badge.classList.toggle('visible', hasActive);
+  }
+
   /* RECIPE */
-  .recipe-btn { display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'DM Sans',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
+  .recipe-btn { display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'Montserrat',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
   .recipe-btn:hover { border-color:var(--amber); color:var(--amber); }
   .recipe-btn.loading { opacity:0.5; pointer-events:none; }
 
@@ -299,7 +340,7 @@
   .recipe-notes { margin-top:16px; padding:13px 16px; background:var(--bg2); border-radius:10px; border-left:3px solid var(--amber); font-size:12.5px; color:var(--ink3); line-height:1.65; font-weight:300; transition:background var(--T); }
   .recipe-notes strong { color:var(--ink2); font-weight:600; display:block; margin-bottom:4px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; }
 
-  .recipe-close { display:inline-flex; align-items:center; gap:5px; margin-top:16px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'DM Sans',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
+  .recipe-close { display:inline-flex; align-items:center; gap:5px; margin-top:16px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'Montserrat',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
   .recipe-close:hover { border-color:var(--rust); color:var(--rust); }
 
   .shopping-block { margin-top:4px; padding-top:24px; border-top:1px solid var(--border); }
@@ -316,7 +357,7 @@
   .loading-area { display:none; text-align:center; padding:46px 24px; }
   .loading-area.visible { display:block; }
   .loading-spinner { width:38px; height:38px; border:3px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 14px; }
-  .loading-text { font-family:'Playfair Display',serif; font-size:1.05rem; font-style:italic; color:var(--ink2); }
+  .loading-text { font-family:'Montserrat',sans-serif; font-size:1.05rem; font-style:italic; color:var(--ink2); }
 
   .hidden-section { display:none; }
 
@@ -419,19 +460,27 @@
     </div>
   </div>
 
-  <!-- DIETARY FILTERS — shown in both modes -->
+  <!-- DIETARY FILTERS — collapsible -->
   <div id="dietarySection">
-    <p class="section-label" data-i18n="labelDietary">Dietary preferences</p>
-    <div class="filters-section">
-      <div class="filter-grid">
-        <div class="filter-chip" data-filter="Vegetarian"   onclick="toggleFilter(this)">🥦 <span data-i18n="filterVeg">Vegetarian</span></div>
-        <div class="filter-chip" data-filter="Vegan"        onclick="toggleFilter(this)">🌱 <span data-i18n="filterVegan">Vegan</span></div>
-        <div class="filter-chip" data-filter="Pescetarian"  onclick="toggleFilter(this)">🐟 <span data-i18n="filterPesc">Pescetarian</span></div>
-        <div class="filter-chip" data-filter="Keto"         onclick="toggleFilter(this)">🥑 <span data-i18n="filterKeto">Keto</span></div>
-        <div class="filter-chip" data-filter="Coeliac"      onclick="toggleFilter(this)">🌾 <span data-i18n="filterCoeliac">Coeliac</span></div>
-        <div class="filter-chip" data-filter="Gluten-free"  onclick="toggleFilter(this)">🚫 <span data-i18n="filterGluten">Gluten-free</span></div>
-        <div class="filter-chip" data-filter="Lactose-free" onclick="toggleFilter(this)">🥛 <span data-i18n="filterLactose">Lactose-free</span></div>
-        <div class="filter-chip" data-filter="Glucose-free" onclick="toggleFilter(this)">🍬 <span data-i18n="filterGlucose">Glucose-free</span></div>
+    <div class="collapsible-header" id="dietaryHeader" onclick="toggleCollapsible('dietary')">
+      <div class="collapsible-header-left">
+        <span class="collapsible-header-title" data-i18n="labelDietary">Dietary preferences</span>
+        <span class="collapsible-badge" id="dietaryBadge"></span>
+      </div>
+      <span class="collapsible-arrow">▼</span>
+    </div>
+    <div class="collapsible-body" id="dietaryBody">
+      <div class="filters-section">
+        <div class="filter-grid">
+          <div class="filter-chip" data-filter="Vegetarian"   onclick="toggleFilter(this)">🥦 <span data-i18n="filterVeg">Vegetarian</span></div>
+          <div class="filter-chip" data-filter="Vegan"        onclick="toggleFilter(this)">🌱 <span data-i18n="filterVegan">Vegan</span></div>
+          <div class="filter-chip" data-filter="Pescetarian"  onclick="toggleFilter(this)">🐟 <span data-i18n="filterPesc">Pescetarian</span></div>
+          <div class="filter-chip" data-filter="Keto"         onclick="toggleFilter(this)">🥑 <span data-i18n="filterKeto">Keto</span></div>
+          <div class="filter-chip" data-filter="Coeliac"      onclick="toggleFilter(this)">🌾 <span data-i18n="filterCoeliac">Coeliac</span></div>
+          <div class="filter-chip" data-filter="Gluten-free"  onclick="toggleFilter(this)">🚫 <span data-i18n="filterGluten">Gluten-free</span></div>
+          <div class="filter-chip" data-filter="Lactose-free" onclick="toggleFilter(this)">🥛 <span data-i18n="filterLactose">Lactose-free</span></div>
+          <div class="filter-chip" data-filter="Glucose-free" onclick="toggleFilter(this)">🍬 <span data-i18n="filterGlucose">Glucose-free</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -440,8 +489,15 @@
 
   <!-- MEDICAL SECTIONS -->
   <div id="medicalSections" class="hidden-section">
-    <div class="medical-section" style="margin-bottom:38px;">
-      <p class="medical-intro" data-i18n="medicalIntro">For patients managing a medical condition — tap a card to activate. Menus draw from all world cuisines for maximum variety.</p>
+    <div class="collapsible-header" id="medicalHeader" onclick="toggleCollapsible('medical')">
+      <div class="collapsible-header-left">
+        <span class="collapsible-header-title" data-i18n="labelMedical">Medical diet</span>
+        <span class="collapsible-badge" id="medicalBadge"></span>
+      </div>
+      <span class="collapsible-arrow">▼</span>
+    </div>
+    <div class="collapsible-body" id="medicalBody">
+    <div class="medical-section" style="margin-bottom:12px; padding-top:4px;">
       <div class="medical-grid">
 
         <div class="med-card theme-blue" data-mode="chemo" onclick="toggleMedical(this)">
@@ -551,10 +607,10 @@
 
       </div>
     </div>
+    </div><!-- /collapsible-body -->
   </div>
 
-  <p class="section-label" data-i18n="labelExtras">Extras</p>
-  <div style="margin-bottom:38px;">
+  <div style="margin-bottom:16px;">
     <div class="shopping-toggle" id="shoppingToggle" onclick="toggleShopping()">
       🛒 <span data-i18n="shoppingBtn">Include shopping list</span>
     </div>
@@ -671,7 +727,7 @@
       subtitle:'Pick a cuisine and a 3-course menu will be yours: Starter, main, dessert.',
       modeGeneralTitle:'General Cooking', modeGeneralDesc:'Everyday meals for any appetite',
       modeMedicalTitle:'Medical Diets', modeMedicalDesc:'Condition-specific dietary rules',
-      labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences',
+      labelCuisine:'Choose your cuisine', labelDietary:'Dietary preferences', labelMedical:'Medical diet',
       cuisineTurkish:'Turkish', cuisineMediterranean:'Mediterranean',
       cuisineMexican:'Mexican', cuisineIndian:'Indian', cuisineFrench:'French',
       cuisineAsian:'Asian', cuisineAfrican:'African',
@@ -718,7 +774,7 @@
       subtitle:'Bir mutfak seç, sana başlangıç, ana yemek ve tatlıdan oluşan tam bir menü hazırlayalım.',
       modeGeneralTitle:'Genel Yemek', modeGeneralDesc:'Her damak zevkine uygun günlük yemekler',
       modeMedicalTitle:'Tıbbi Diyetler', modeMedicalDesc:'Hastalığa özel beslenme kuralları',
-      labelCuisine:'Mutfak seçin', labelDietary:'Beslenme tercihleri',
+      labelCuisine:'Mutfak seçin', labelDietary:'Beslenme tercihleri', labelMedical:'Tıbbi diyet',
       cuisineTurkish:'Türk', cuisineMediterranean:'Akdeniz', cuisineMexican:'Meksika',
       cuisineIndian:'Hint', cuisineFrench:'Fransız',
       cuisineAsian:'Asya', cuisineAfrican:'Afrika',
@@ -1033,6 +1089,7 @@ ${JSON.stringify(toTranslate)}`;
 
     if (mode === 'general') {
       activeMedicalMode = null;
+      updateMedicalBadge();
       document.querySelectorAll('.med-card').forEach(c => {
         c.classList.remove('active');
         c.querySelector('[data-badge]').textContent = i18n[currentLang].badgeOff;
@@ -1071,6 +1128,7 @@ ${JSON.stringify(toTranslate)}`;
     chip.classList.toggle('active');
     const f = chip.dataset.filter;
     activeFilters.has(f) ? activeFilters.delete(f) : activeFilters.add(f);
+    updateDietaryBadge();
   }
 
 
@@ -1094,6 +1152,7 @@ ${JSON.stringify(toTranslate)}`;
       const badge = card.querySelector('[data-badge]');
       badge.textContent = '● ' + t.badgeActive;
       activeMedicalMode = mode;
+      updateMedicalBadge();
       // require both medical card and cuisine selection
       document.getElementById('generateBtn').disabled = !selected;
     } else {
@@ -1440,12 +1499,38 @@ Respond with ONLY this JSON:
     document.getElementById('result').innerHTML = `
       <div style="text-align:center;padding:40px;color:var(--ink2);">
         <p style="font-size:30px;margin-bottom:12px;">😕</p>
-        <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;">Something went wrong. Please try again.</p>
+        <p style="font-family:'Montserrat',sans-serif;font-size:1.05rem;font-style:italic;">Something went wrong. Please try again.</p>
       </div>`;
     document.getElementById('result').classList.add('visible');
   }
 
   function scrollToTop() { window.scrollTo({top:0,behavior:'smooth'}); }
+
+
+  /* COLLAPSIBLE */
+  function toggleCollapsible(id) {
+    const header = document.getElementById(id + 'Header');
+    const body   = document.getElementById(id + 'Body');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    header.classList.toggle('open', !isOpen);
+  }
+
+  function updateDietaryBadge() {
+    const badge = document.getElementById('dietaryBadge');
+    if (!badge) return;
+    const count = activeFilters.size;
+    badge.textContent = count;
+    badge.classList.toggle('visible', count > 0);
+  }
+
+  function updateMedicalBadge() {
+    const badge = document.getElementById('medicalBadge');
+    if (!badge) return;
+    const hasActive = !!activeMedicalMode;
+    badge.textContent = '●';
+    badge.classList.toggle('visible', hasActive);
+  }
 
   /* RECIPE */
   async function fetchRecipe(course, dishName, btn) {
