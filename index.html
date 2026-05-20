@@ -71,11 +71,17 @@
   /* MODE SWITCHER */
   .mode-switcher { display:flex; gap:10px; margin-bottom:44px; animation:fadeUp 0.7s 0.15s ease both; }
 
-  .mode-btn { flex:1; padding:16px 14px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; }
+  .mode-btn { flex:1; padding:16px 14px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; }
 
   .mode-btn:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 8px 24px var(--shadow); }
 
-  .mode-btn.active { border-color:var(--amber); background:var(--bg2); }
+  .mode-btn.active { border-color:var(--amber); background:linear-gradient(135deg,rgba(212,137,10,0.13),rgba(192,79,27,0.08)); box-shadow:0 4px 18px rgba(212,137,10,0.18), inset 0 0 0 1px rgba(212,137,10,0.25); transform:translateY(-1px); }
+
+  .mode-btn.active .mode-btn-title { color:var(--amber); }
+
+  .mode-btn.active::after { content:''; position:absolute; top:10px; right:10px; width:8px; height:8px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 3px rgba(212,137,10,0.2); animation:pulse-dot 2s infinite; }
+
+  @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 3px rgba(212,137,10,0.2)} 50%{box-shadow:0 0 0 6px rgba(212,137,10,0.08)} }
 
   .mode-btn-icon { font-size:26px; flex-shrink:0; }
 
@@ -95,7 +101,9 @@
 
   .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 6px 20px var(--shadow); }
 
-  .cuisine-card.selected { border-color:var(--amber); background:var(--bg2); }
+  .cuisine-card.selected { border-color:var(--amber); background:var(--bg2); box-shadow:0 4px 16px rgba(212,137,10,0.22); }
+
+  .cuisine-card.selected .cuisine-name { color:var(--amber); font-weight:600; }
 
   .cuisine-card.selected .cuisine-emoji { transform:scale(1.15); }
 
@@ -108,22 +116,24 @@
 
   .filter-grid { display:flex; flex-wrap:wrap; gap:7px; }
 
-  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
 
-  .filter-chip:hover { border-color:var(--sage); color:var(--sage); }
+  .filter-chip:hover { border-color:var(--sage); color:var(--sage); background:rgba(90,122,92,0.06); }
 
-  .filter-chip.active { background:var(--sage); border-color:var(--sage); color:white; font-weight:500; }
+  .filter-chip.active { background:var(--sage); border-color:var(--sage); color:white; font-weight:600; box-shadow:0 3px 10px rgba(90,122,92,0.35); transform:translateY(-1px); }
+
+  .filter-chip.active::before { content:'✓ '; font-size:11px; }
 
   /* SPICE */
   .spice-section { margin-bottom:34px; animation:fadeUp 0.7s 0.28s ease both; }
 
   .spice-row { display:flex; gap:7px; flex-wrap:wrap; }
 
-  .spice-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 15px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  .spice-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 16px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
 
-  .spice-btn:hover { border-color:var(--rust); color:var(--rust); }
+  .spice-btn:hover { border-color:var(--rust); color:var(--rust); background:rgba(192,79,27,0.06); }
 
-  .spice-btn.active { background:var(--rust); border-color:var(--rust); color:white; font-weight:500; }
+  .spice-btn.active { background:var(--rust); border-color:var(--rust); color:white; font-weight:600; box-shadow:0 3px 12px rgba(192,79,27,0.4); transform:translateY(-1px); }
 
   .spice-section.dimmed { opacity:0.3; pointer-events:none; }
 
@@ -134,20 +144,22 @@
 
   .medical-grid { display:flex; flex-direction:column; gap:10px; }
 
-  .med-card { border-radius:14px; padding:15px 19px; cursor:pointer; transition:all 0.2s ease; display:flex; align-items:flex-start; gap:13px; user-select:none; border:1.5px solid transparent; }
+  .med-card { border-radius:14px; padding:15px 19px; cursor:pointer; transition:all 0.22s ease; display:flex; align-items:flex-start; gap:13px; user-select:none; border:1.5px solid transparent; }
 
-  .med-card:hover { transform:translateY(-1px); }
+  .med-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px var(--shadow); }
+
+  .med-card.active { transform:translateY(-2px); }
 
   body:not(.dark) .med-card.theme-blue   { background:#f0f7ff; border-color:#b8d8f0; }
-  body:not(.dark) .med-card.theme-blue.active   { background:#d0eafa; border-color:#4a9cc7; box-shadow:0 4px 16px rgba(74,156,199,0.18); }
+  body:not(.dark) .med-card.theme-blue.active   { background:#d0eafa; border-color:#4a9cc7; box-shadow:0 6px 24px rgba(74,156,199,0.35); }
   body:not(.dark) .med-card.theme-purple { background:#f7f0ff; border-color:#d0b8f0; }
-  body:not(.dark) .med-card.theme-purple.active { background:#ead0fa; border-color:#7a4cc7; box-shadow:0 4px 16px rgba(122,76,199,0.18); }
+  body:not(.dark) .med-card.theme-purple.active { background:#ead0fa; border-color:#7a4cc7; box-shadow:0 6px 24px rgba(122,76,199,0.35); }
   body:not(.dark) .med-card.theme-red    { background:#fff0f0; border-color:#f0b8b8; }
-  body:not(.dark) .med-card.theme-red.active    { background:#fad0d0; border-color:#c74a4a; box-shadow:0 4px 16px rgba(199,74,74,0.18); }
+  body:not(.dark) .med-card.theme-red.active    { background:#fad0d0; border-color:#c74a4a; box-shadow:0 6px 24px rgba(199,74,74,0.35); }
   body:not(.dark) .med-card.theme-green  { background:#f0fff4; border-color:#b8e8c8; }
-  body:not(.dark) .med-card.theme-green.active  { background:#c8f0d8; border-color:#2a9c52; box-shadow:0 4px 16px rgba(42,156,82,0.18); }
+  body:not(.dark) .med-card.theme-green.active  { background:#c8f0d8; border-color:#2a9c52; box-shadow:0 6px 24px rgba(42,156,82,0.35); }
   body:not(.dark) .med-card.theme-orange { background:#fff8f0; border-color:#f0d0b8; }
-  body:not(.dark) .med-card.theme-orange.active { background:#fae4c8; border-color:#c7784a; box-shadow:0 4px 16px rgba(199,120,74,0.18); }
+  body:not(.dark) .med-card.theme-orange.active { background:#fae4c8; border-color:#c7784a; box-shadow:0 6px 24px rgba(199,120,74,0.35); }
 
   body.dark .med-card.theme-blue   { background:rgba(74,156,199,0.08); border-color:rgba(74,156,199,0.22); }
   body.dark .med-card.theme-blue.active   { background:rgba(74,156,199,0.18); border-color:#4a9cc7; }
@@ -168,13 +180,18 @@
 
   .med-title { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--ink); transition:color var(--T); }
 
-  .med-badge { font-family:'DM Sans',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; border-radius:50px; color:white; }
+  .med-badge { font-family:'DM Sans',sans-serif; font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:3px 9px; border-radius:50px; transition:all 0.2s ease; background:var(--bg2); color:var(--ink3); border:1.5px solid var(--border); }
 
-  .theme-blue   .med-badge { background:#4a9cc7; }
-  .theme-purple .med-badge { background:#7a4cc7; }
-  .theme-red    .med-badge { background:#c74a4a; }
-  .theme-green  .med-badge { background:#2a9c52; }
-  .theme-orange .med-badge { background:#c7784a; }
+  .theme-blue   .med-card.active .med-badge,
+  .med-card.theme-blue.active   .med-badge { background:#4a9cc7; color:white; border-color:#4a9cc7; }
+  .theme-purple .med-card.active .med-badge,
+  .med-card.theme-purple.active .med-badge { background:#7a4cc7; color:white; border-color:#7a4cc7; }
+  .theme-red    .med-card.active .med-badge,
+  .med-card.theme-red.active    .med-badge { background:#c74a4a; color:white; border-color:#c74a4a; }
+  .theme-green  .med-card.active .med-badge,
+  .med-card.theme-green.active  .med-badge { background:#2a9c52; color:white; border-color:#2a9c52; }
+  .theme-orange .med-card.active .med-badge,
+  .med-card.theme-orange.active .med-badge { background:#c7784a; color:white; border-color:#c7784a; }
 
   .med-desc { font-size:12px; line-height:1.55; font-weight:300; color:var(--ink3); transition:color var(--T); }
 
@@ -192,11 +209,11 @@
   body.dark .med-rule-tag { opacity:1; color:#e8dcc8; }
 
   /* SHOPPING TOGGLE */
-  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:7px 17px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'DM Sans',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
 
-  .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); }
+  .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); background:rgba(212,137,10,0.06); }
 
-  .shopping-toggle.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:500; }
+  .shopping-toggle.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:600; box-shadow:0 3px 12px rgba(212,137,10,0.4); transform:translateY(-1px); }
 
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
@@ -343,7 +360,7 @@
   <div id="cuisineSection">
     <p class="section-label" data-i18n="labelCuisine">Choose your cuisine</p>
     <div class="cuisine-grid">
-      <div class="cuisine-card" data-cuisine="Turkish"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🫙</span><span class="cuisine-name" data-i18n="cuisineTurkish">Turkish</span></div>
+      <div class="cuisine-card" data-cuisine="Turkish"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🥙</span><span class="cuisine-name" data-i18n="cuisineTurkish">Turkish</span></div>
       <div class="cuisine-card" data-cuisine="Italian"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🍝</span><span class="cuisine-name" data-i18n="cuisineItalian">Italian</span></div>
       <div class="cuisine-card" data-cuisine="Japanese" onclick="selectCuisine(this)"><span class="cuisine-emoji">🍱</span><span class="cuisine-name" data-i18n="cuisineJapanese">Japanese</span></div>
       <div class="cuisine-card" data-cuisine="Mexican"  onclick="selectCuisine(this)"><span class="cuisine-emoji">🌮</span><span class="cuisine-name" data-i18n="cuisineMexican">Mexican</span></div>
@@ -642,7 +659,7 @@
       shoppingBtn:'Include shopping list', generateBtn:'Generate My Menu',
       surpriseBtn:'Surprise Me', loading:'Crafting your perfect menu…',
       validating:'Verifying dietary safety…',
-      badgeOff:'Off', badgeActive:'Active',
+      badgeOff:'Off', badgeActive:'ON',
       starter:'Starter', mainCourse:'Main Course', dessert:'Dessert',
       shoppingListTitle:'🛒 Shopping List',
       regenBtn:'↺ New Menu', changeBtn:'← Change Options',
@@ -686,7 +703,7 @@
       shoppingBtn:'Alışveriş listesi ekle', generateBtn:'Menümü Oluştur',
       surpriseBtn:'Şansıma Bırak', loading:'Mükemmel menün hazırlanıyor…',
       validating:'Diyet güvenliği doğrulanıyor…',
-      badgeOff:'Kapalı', badgeActive:'Aktif',
+      badgeOff:'Kapalı', badgeActive:'AÇIK',
       starter:'Başlangıç', mainCourse:'Ana Yemek', dessert:'Tatlı',
       shoppingListTitle:'🛒 Alışveriş Listesi',
       regenBtn:'↺ Yeni Menü', changeBtn:'← Seçenekleri Değiştir',
@@ -935,11 +952,13 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     const t = i18n[currentLang];
     document.querySelectorAll('.med-card').forEach(c => {
       c.classList.remove('active');
-      c.querySelector('[data-badge]').textContent = t.badgeOff;
+      const badge = c.querySelector('[data-badge]');
+      badge.textContent = t.badgeOff;
     });
     if (!wasActive) {
       card.classList.add('active');
-      card.querySelector('[data-badge]').textContent = t.badgeActive;
+      const badge = card.querySelector('[data-badge]');
+      badge.textContent = '● ' + t.badgeActive;
       activeMedicalMode = mode;
       const noSpice = ['chemo','heart'];
       document.getElementById('spiceSection').classList.toggle('dimmed', noSpice.includes(mode));
