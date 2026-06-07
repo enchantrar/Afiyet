@@ -4,48 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🍳Afiyet</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:#FAF6EF; --bg2:#F0E8D8; --surface:#FFFFFF;
-    --ink:#1A1208; --ink2:#5C3D1E; --ink3:#7A6A55;
+    /* Sims 2 palette */
+    --bg:#C4D8A0; --bg2:#AECA88; --surface:#F0ECD8;
+    --ink:#1A2A08; --ink2:#3A5A18; --ink3:#6A8A48;
     --amber:#D4890A; --rust:#C04F1B; --sage:#5A7A5C;
-    --border:rgba(92,61,30,0.14); --shadow:rgba(26,18,8,0.08);
-    --grad1:rgba(212,137,10,0.08); --grad2:rgba(192,79,27,0.08);
-    --header-bg:linear-gradient(135deg,#1A1208 0%,#3A2510 100%);
-    --T:0.3s ease;
+    --border:rgba(80,110,30,0.3); --shadow:rgba(15,35,5,0.22);
+    --grad1:rgba(80,130,30,0.12); --grad2:rgba(50,100,20,0.08);
+    --header-bg:linear-gradient(180deg,#4A8A22 0%,#1E4A0A 100%);
+    --chrome:#2A5E10; --chrome2:#1A3E08;
+    --gold:#B89818; --gold2:#D4B030;
+    --bevel-hi:rgba(255,255,255,0.5); --bevel-lo:rgba(0,0,0,0.28);
+    --T:0.25s ease;
   }
 
   body.dark {
-    --bg:#12100D; --bg2:#1C1812; --surface:#231E17;
-    --ink:#F5EFE4; --ink2:#C4A882; --ink3:#9A8A72;
+    --bg:#162410; --bg2:#1E3014; --surface:#243018;
+    --ink:#D8ECC0; --ink2:#9EC870; --ink3:#6A9A48;
     --amber:#E8A020; --rust:#D4673A; --sage:#7AAA7C;
-    --border:rgba(200,160,100,0.14); --shadow:rgba(0,0,0,0.4);
-    --grad1:rgba(232,160,32,0.06); --grad2:rgba(212,103,58,0.06);
-    --header-bg:linear-gradient(135deg,#0A0806 0%,#201508 100%);
+    --border:rgba(100,170,50,0.22); --shadow:rgba(0,0,0,0.55);
+    --grad1:rgba(70,140,30,0.08); --grad2:rgba(40,110,20,0.05);
+    --header-bg:linear-gradient(180deg,#1E4A0A 0%,#0A2204 100%);
+    --chrome:#0E2008; --chrome2:#081408;
+    --gold:#C8A820; --gold2:#E0C038;
   }
 
-  body { background:var(--bg); color:var(--ink); font-family:'Montserrat',sans-serif; min-height:100vh; letter-spacing:0.01em; overflow-x:hidden; transition:background var(--T),color var(--T); }
+  body { background:var(--bg); color:var(--ink); font-family:'Nunito',sans-serif; min-height:100vh; letter-spacing:0.01em; overflow-x:hidden; transition:background var(--T),color var(--T); }
 
-  body::before { content:''; position:fixed; inset:0; background-image:radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 50%); pointer-events:none; z-index:0; }
+  /* Sims 2 background — subtle diamond tile pattern */
+  body::before { content:''; position:fixed; inset:0; background-image:repeating-linear-gradient(45deg,rgba(0,0,0,0.04) 0px,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 14px),repeating-linear-gradient(-45deg,rgba(0,0,0,0.04) 0px,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 14px),radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 55%); pointer-events:none; z-index:0; }
 
-  /* TOPBAR */
-  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 24px; background:var(--bg); border-bottom:1px solid var(--border); transition:background var(--T),border-color var(--T); }
+  /* TOPBAR — Sims 2 chrome bar */
+  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 24px; background:linear-gradient(180deg,#5A9A28 0%,#2A5E10 100%); border-bottom:3px solid var(--gold); box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 10px rgba(0,0,0,0.35); transition:background var(--T); }
+
+  body.dark .topbar { background:linear-gradient(180deg,#2A5010 0%,#0E2408 100%); }
 
   .topbar-brand { display:flex; align-items:baseline; gap:10px; flex-shrink:0; }
-  .topbar-logo { font-family:'Lora',serif; font-size:1.35rem; font-weight:600; font-style:italic; color:var(--rust); letter-spacing:0em; line-height:1; }
-  .topbar-tagline { font-size:10.5px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--amber); white-space:nowrap; }
+  .topbar-logo { font-family:'Lora',serif; font-size:1.35rem; font-weight:700; font-style:italic; color:#F5E888; letter-spacing:0em; line-height:1; text-shadow:0 1px 3px rgba(0,0,0,0.4); }
+  .topbar-tagline { font-size:10.5px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#D8D090; white-space:nowrap; text-shadow:0 1px 2px rgba(0,0,0,0.3); }
   .topbar-controls { display:flex; align-items:center; gap:8px; }
 
-  .toggle-pill { display:flex; align-items:center; background:var(--bg2); border:1.5px solid var(--border); border-radius:50px; overflow:hidden; transition:all var(--T); }
+  /* toggle pill — dark inset panel */
+  .toggle-pill { display:flex; align-items:center; background:rgba(0,0,0,0.3); border:2px solid var(--gold); border-radius:8px; overflow:hidden; box-shadow:inset 0 2px 4px rgba(0,0,0,0.3),0 1px 0 var(--bevel-hi); transition:all var(--T); }
 
-  .toggle-pill button { background:none; border:none; padding:6px 13px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:500; color:var(--ink3); cursor:pointer; border-radius:50px; transition:all 0.18s ease; }
+  .toggle-pill button { background:none; border:none; padding:5px 12px; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:#C0D890; cursor:pointer; border-radius:6px; transition:all 0.18s ease; }
 
-  .toggle-pill button.active { background:var(--ink); color:var(--bg); }
+  .toggle-pill button.active { background:linear-gradient(180deg,#5A9A28 0%,#2E6A10 100%); color:#F5E888; box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),inset 0 -1px 0 rgba(0,0,0,0.2); }
 
-  .pill-sep { width:1px; height:16px; background:var(--border); flex-shrink:0; }
+  .pill-sep { width:1px; height:16px; background:var(--gold); opacity:0.4; flex-shrink:0; }
 
   /* CONTAINER */
   .container { max-width:1320px; margin:0 auto; padding:88px 24px 80px; position:relative; z-index:1; }
@@ -67,42 +77,43 @@
 
   .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; transition:color var(--T); }
 
-  .logo { font-family:'Lora',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:700; letter-spacing:-0.01em; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); }
+  .logo { font-family:'Nunito',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:900; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); text-shadow:0 2px 0 rgba(0,0,0,0.12); }
 
   .logo em { font-style:italic; color:var(--rust); transition:color var(--T); }
 
-  .subtitle { font-size:14.5px; color:var(--ink3); font-weight:300; max-width:400px; margin:0 auto; line-height:1.6; transition:color var(--T); }
+  .subtitle { font-size:14.5px; color:var(--ink3); font-weight:600; max-width:400px; margin:0 auto; line-height:1.6; transition:color var(--T); }
 
   /* MODE SWITCHER */
   .mode-switcher { display:flex; gap:10px; margin-bottom:16px; animation:fadeUp 0.7s 0.15s ease both; }
 
-  .mode-btn { flex:1; padding:11px 13px; border-radius:14px; border:2px solid var(--border); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; }
+  /* MODE BUTTONS — Sims 2 panel card */
+  .mode-btn { flex:1; padding:11px 13px; border-radius:8px; border:3px solid var(--gold); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; box-shadow:inset 0 1px 0 var(--bevel-hi),inset 0 -1px 0 rgba(0,0,0,0.12),0 4px 0 rgba(0,0,0,0.25),0 5px 8px rgba(0,0,0,0.15); }
 
-  .mode-btn:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 8px 24px var(--shadow); }
+  .mode-btn:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:inset 0 1px 0 var(--bevel-hi),0 6px 0 rgba(0,0,0,0.25),0 8px 16px rgba(0,0,0,0.2); }
 
-  .mode-btn.active { border-color:var(--amber); background:linear-gradient(135deg,rgba(212,137,10,0.13),rgba(192,79,27,0.08)); box-shadow:0 4px 18px rgba(212,137,10,0.18), inset 0 0 0 1px rgba(212,137,10,0.25); transform:translateY(-1px); }
+  .mode-btn.active { border-color:var(--amber); background:linear-gradient(135deg,rgba(212,137,10,0.18),rgba(192,79,27,0.1)); box-shadow:inset 0 1px 0 var(--bevel-hi),0 4px 0 rgba(0,0,0,0.25),0 5px 12px rgba(212,137,10,0.25); transform:translateY(-1px); }
 
   .mode-btn.active .mode-btn-title { color:var(--amber); }
 
-  .mode-btn.active::after { content:''; position:absolute; top:10px; right:10px; width:8px; height:8px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 3px rgba(212,137,10,0.2); animation:pulse-dot 2s infinite; }
+  .mode-btn.active::after { content:'◆'; position:absolute; top:8px; right:10px; font-size:9px; color:var(--amber); animation:pulse-dot 2s infinite; }
 
-  @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 3px rgba(212,137,10,0.2)} 50%{box-shadow:0 0 0 6px rgba(212,137,10,0.08)} }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
   .mode-btn-icon { font-size:22px; flex-shrink:0; }
 
-  .mode-btn-title { font-family:'Montserrat',sans-serif; font-size:0.95rem; font-weight:700; color:var(--ink); margin-bottom:3px; transition:color var(--T); }
+  .mode-btn-title { font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:800; color:var(--ink); margin-bottom:3px; transition:color var(--T); }
 
-  .mode-btn-desc { font-size:11.5px; color:var(--ink3); font-weight:300; line-height:1.4; transition:color var(--T); }
+  .mode-btn-desc { font-size:11.5px; color:var(--ink3); font-weight:500; line-height:1.4; transition:color var(--T); }
 
 
-  /* COLLAPSIBLE SECTIONS */
-  .collapsible-header { display:flex; align-items:center; justify-content:space-between; padding:9px 13px; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); cursor:pointer; transition:all 0.18s ease; user-select:none; margin-bottom:8px; }
+  /* COLLAPSIBLE SECTIONS — Sims 2 drawer headers */
+  .collapsible-header { display:flex; align-items:center; justify-content:space-between; padding:9px 14px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); cursor:pointer; transition:all 0.18s ease; user-select:none; margin-bottom:8px; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
   .collapsible-header:hover { border-color:var(--amber); }
-  .collapsible-header.open { border-color:var(--amber); background:var(--bg2); }
+  .collapsible-header.open { border-color:var(--amber); background:linear-gradient(180deg,#FFF0D0 0%,#F0D8A0 100%); }
   .collapsible-header-left { display:flex; align-items:center; gap:8px; }
-  .collapsible-header-title { font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink2); transition:color var(--T); }
+  .collapsible-header-title { font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink2); transition:color var(--T); font-family:'Nunito',sans-serif; }
   .collapsible-header.open .collapsible-header-title { color:var(--amber); }
-  .collapsible-badge { font-size:10px; font-weight:700; padding:1px 7px; border-radius:50px; background:var(--amber); color:white; display:none; }
+  .collapsible-badge { font-size:10px; font-weight:800; padding:1px 7px; border-radius:4px; background:var(--amber); color:white; display:none; }
   .collapsible-badge.visible { display:inline-block; }
   .collapsible-arrow { font-size:10px; color:var(--ink3); transition:transform 0.2s ease; }
   .collapsible-header.open .collapsible-arrow { transform:rotate(180deg); }
@@ -117,30 +128,32 @@
   /* CUISINE GRID */
   .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:7px; margin-bottom:14px; animation:fadeUp 0.7s 0.2s ease both; }
 
-  .cuisine-card { background:var(--surface); border:1.5px solid var(--border); border-radius:10px; padding:11px 9px; cursor:pointer; transition:all 0.2s ease; text-align:center; user-select:none; }
+  /* CUISINE CARDS — Sims 2 tile panels */
+  .cuisine-card { background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); border:3px solid var(--gold); border-radius:6px; padding:11px 9px; cursor:pointer; transition:all 0.18s ease; text-align:center; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.28),0 4px 6px rgba(0,0,0,0.12); }
 
-  .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 6px 20px var(--shadow); }
+  .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:inset 0 1px 0 var(--bevel-hi),0 5px 0 rgba(0,0,0,0.28),0 6px 12px rgba(0,0,0,0.18); }
 
-  .cuisine-card.selected { border-color:var(--amber); background:var(--bg2); box-shadow:0 4px 16px rgba(212,137,10,0.22); }
+  .cuisine-card.selected { border-color:var(--amber); background:linear-gradient(180deg,#FFF0D0 0%,#F0D8A0 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,0.7),0 3px 0 rgba(0,0,0,0.28),0 4px 10px rgba(212,137,10,0.3); }
 
-  .cuisine-card.selected .cuisine-name { color:var(--amber); font-weight:600; }
+  .cuisine-card.selected .cuisine-name { color:var(--amber); font-weight:800; }
 
-  .cuisine-card.selected .cuisine-emoji { transform:scale(1.15); }
+  .cuisine-card.selected .cuisine-emoji { transform:scale(1.18); }
 
   .cuisine-emoji { font-size:22px; display:block; margin-bottom:4px; transition:transform 0.2s ease; }
 
-  .cuisine-name { font-size:11px; font-weight:500; color:var(--ink); transition:color var(--T); }
+  .cuisine-name { font-size:11px; font-weight:700; color:var(--ink); transition:color var(--T); font-family:'Nunito',sans-serif; }
 
   /* FILTER CHIPS */
   .filters-section { margin-bottom:10px; animation:fadeUp 0.7s 0.25s ease both; }
 
   .filter-grid { display:flex; flex-wrap:wrap; gap:7px; }
 
-  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  /* FILTER CHIPS — Sims 2 small toggle buttons */
+  .filter-chip { display:inline-flex; align-items:center; gap:5px; padding:6px 13px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.22); }
 
-  .filter-chip:hover { border-color:var(--sage); color:var(--sage); background:rgba(90,122,92,0.06); }
+  .filter-chip:hover { border-color:var(--amber); color:var(--amber); }
 
-  .filter-chip.active { background:var(--sage); border-color:var(--sage); color:white; font-weight:600; box-shadow:0 3px 10px rgba(90,122,92,0.35); transform:translateY(-1px); }
+  .filter-chip.active { background:linear-gradient(180deg,#7AAA4A 0%,#4A7A1A 100%); border-color:#3A6010; color:#F0FFD8; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 2px 4px rgba(0,0,0,0.15),0 1px 0 #1A3808; transform:translateY(1px); }
 
   .filter-chip.active::before { content:'✓ '; font-size:11px; }
 
@@ -218,50 +231,57 @@
   body.dark .med-rule-tag { opacity:1; color:#e8dcc8; }
 
   /* SHOPPING TOGGLE */
-  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border-radius:50px; border:1.5px solid var(--border); background:var(--surface); font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; user-select:none; }
+  .shopping-toggle { display:inline-flex; align-items:center; gap:7px; padding:7px 17px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
 
-  .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); background:rgba(212,137,10,0.06); }
+  .shopping-toggle:hover { border-color:var(--amber); color:var(--amber); }
 
-  .shopping-toggle.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:600; box-shadow:0 3px 12px rgba(212,137,10,0.4); transform:translateY(-1px); }
+  .shopping-toggle.active { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); border-color:#8A5010; color:#FFF0C0; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 2px 3px rgba(0,0,0,0.2),0 1px 0 #5A3008; transform:translateY(1px); }
 
 
   /* SERVING SIZE */
   .serving-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .serving-label { font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink2); white-space:nowrap; }
   .serving-btns { display:flex; gap:6px; }
-  .serving-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:var(--surface); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:500; color:var(--ink2); cursor:pointer; transition:all 0.18s ease; }
+  .serving-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,var(--surface) 0%,#E0DAC4 100%); font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.22); }
   .serving-btn:hover { border-color:var(--amber); color:var(--amber); }
-  .serving-btn.active { background:var(--amber); border-color:var(--amber); color:white; font-weight:700; box-shadow:0 3px 10px rgba(212,137,10,0.35); }
+  .serving-btn.active { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); border-color:#8A5010; color:#FFF0C0; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 2px 3px rgba(0,0,0,0.15),0 1px 0 #5A3008; transform:translateY(1px); }
 
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
 
-  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:14px 36px; font-family:'Montserrat',sans-serif; font-size:14.5px; font-weight:500; cursor:pointer; transition:all 0.25s ease; }
+  /* GENERATE BUTTON — the iconic Sims 2 green bevel button */
+  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:linear-gradient(180deg,#6AAE2C 0%,#3A7A12 50%,#2A5E0C 100%); color:#F5E888; border:3px solid #8A7010; border-radius:8px; padding:13px 34px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 5px 0 #1A4008,0 6px 10px rgba(0,0,0,0.35); letter-spacing:0.02em; text-shadow:0 1px 2px rgba(0,0,0,0.4); }
 
-  .generate-btn:hover:not(:disabled) { background:var(--rust); transform:scale(1.03); box-shadow:0 8px 28px var(--shadow); }
+  .generate-btn:hover:not(:disabled) { background:linear-gradient(180deg,#7ABE3C 0%,#4A8A1C 50%,#3A6E14 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 6px 0 #1A4008,0 8px 14px rgba(0,0,0,0.35); }
 
-  .generate-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .generate-btn:active:not(:disabled) { transform:translateY(3px); box-shadow:inset 0 2px 4px rgba(0,0,0,0.3),0 2px 0 #1A4008; }
 
-  .surprise-btn { background:none; border:1.5px solid var(--border); color:var(--ink2); border-radius:50px; padding:10px 24px; font-family:'Montserrat',sans-serif; font-size:12px; cursor:pointer; transition:all 0.2s ease; margin-left:10px; }
+  .generate-btn:disabled { opacity:0.45; cursor:not-allowed; }
 
-  .surprise-btn:hover { border-color:var(--amber); color:var(--amber); }
+  /* Surprise button — secondary Sims 2 style */
+  .surprise-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B878 100%); border:2px solid #A89020; color:#3A2A08; border-radius:8px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:12.5px; font-weight:800; cursor:pointer; transition:all 0.15s ease; margin-left:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 3px 0 #6A5808,0 4px 6px rgba(0,0,0,0.2); text-shadow:0 1px 0 rgba(255,255,255,0.4); }
+
+  .surprise-btn:hover { background:linear-gradient(180deg,#F0E8B8 0%,#D8C888 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 4px 0 #6A5808,0 5px 8px rgba(0,0,0,0.25); }
+
+  .surprise-btn:active { transform:translateY(2px); box-shadow:inset 0 2px 3px rgba(0,0,0,0.2),0 1px 0 #6A5808; }
 
   /* RESULT */
   #result { display:none; animation:fadeUp 0.6s ease both; }
   #result.visible { display:block; }
 
-  .result-card { background:var(--surface); border-radius:20px; overflow:hidden; box-shadow:0 20px 60px var(--shadow); border:1px solid var(--border); transition:background var(--T),border-color var(--T); }
+  /* RESULT CARD — Sims 2 panel with thick gold border */
+  .result-card { background:var(--surface); border-radius:10px; overflow:hidden; box-shadow:inset 0 1px 0 var(--bevel-hi),0 8px 0 rgba(0,0,0,0.3),0 10px 30px rgba(0,0,0,0.25); border:4px solid var(--gold); transition:background var(--T),border-color var(--T); }
 
   .translate-overlay { position:absolute; inset:0; border-radius:20px; background:rgba(var(--overlay-rgb,250,246,239),0.82); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; z-index:10; animation:fadeUp 0.2s ease both; }
   body.dark .translate-overlay { background:rgba(18,16,13,0.82); }
   .translate-overlay-spinner { width:28px; height:28px; border:2.5px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; }
   .translate-overlay-text { font-family:'Montserrat',sans-serif; font-style:italic; font-size:0.95rem; color:var(--ink2); }
 
-  .result-header { background:var(--header-bg); padding:30px 34px; display:flex; justify-content:space-between; align-items:flex-start; }
+  .result-header { background:var(--header-bg); padding:30px 34px; display:flex; justify-content:space-between; align-items:flex-start; box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -2px 0 rgba(0,0,0,0.2); }
 
-  .result-cuisine-tag { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); font-weight:500; margin-bottom:7px; }
+  .result-cuisine-tag { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#F0D870; font-weight:800; margin-bottom:7px; font-family:'Nunito',sans-serif; text-shadow:0 1px 2px rgba(0,0,0,0.3); }
 
-  .result-title { font-family:'Montserrat',sans-serif; font-size:1.65rem; color:#FAF6EF; font-weight:700; }
+  .result-title { font-family:'Nunito',sans-serif; font-size:1.65rem; color:#F5EFD8; font-weight:900; text-shadow:0 1px 3px rgba(0,0,0,0.35); }
 
   .result-emoji { font-size:42px; }
 
@@ -273,20 +293,24 @@
 
   .course-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:5px; transition:color var(--T); }
 
-  .course-name { font-family:'Montserrat',sans-serif; font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
+  .course-name { font-family:'Nunito',sans-serif; font-size:1.2rem; font-weight:900; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
   .dish-native-name { font-weight:400; font-size:0.95em; color:var(--ink3); font-style:italic; }
 
   .course-desc { font-size:13.5px; color:var(--ink3); line-height:1.6; font-weight:300; transition:color var(--T); }
 
-  .result-footer { padding:17px 34px; background:var(--bg2); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); }
+  .result-footer { padding:17px 34px; background:linear-gradient(180deg,#8AB860 0%,#5A8830 100%); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); border-top:2px solid var(--gold); box-shadow:inset 0 1px 0 rgba(255,255,255,0.25); }
 
-  .regen-btn { background:var(--ink); color:var(--bg); border:none; border-radius:50px; padding:9px 21px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s ease; }
+  body.dark .result-footer { background:linear-gradient(180deg,#2A4818 0%,#162A0A 100%); }
 
-  .regen-btn:hover { background:var(--rust); }
+  .regen-btn { background:linear-gradient(180deg,#5A9A28 0%,#2E6A10 100%); color:#F5E888; border:2px solid #8A7010; border-radius:6px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 3px 0 #1A3808; text-shadow:0 1px 2px rgba(0,0,0,0.35); }
 
-  .other-btn { background:var(--surface); color:var(--ink2); border:1.5px solid var(--border); border-radius:50px; padding:9px 21px; font-family:'Montserrat',sans-serif; font-size:13px; cursor:pointer; transition:all 0.2s ease; }
+  .regen-btn:hover { background:linear-gradient(180deg,#6AAA38 0%,#3A7A18 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 4px 0 #1A3808; }
 
-  .other-btn:hover { border-color:var(--amber); color:var(--amber); }
+  .regen-btn:active { transform:translateY(2px); box-shadow:inset 0 2px 3px rgba(0,0,0,0.2),0 1px 0 #1A3808; }
+
+  .other-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B870 100%); color:#2A1A08; border:2px solid #A08818; border-radius:6px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.45),0 3px 0 #5A4808; text-shadow:0 1px 0 rgba(255,255,255,0.4); }
+
+  .other-btn:hover { background:linear-gradient(180deg,#F0E8B8 0%,#D8C878 100%); transform:translateY(-1px); }
 
 
   /* COLLAPSIBLE */
@@ -315,8 +339,8 @@
   }
 
   /* RECIPE */
-  .recipe-btn { display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:5px 13px; border-radius:50px; border:1.5px solid var(--border); background:none; font-family:'Montserrat',sans-serif; font-size:11.5px; color:var(--ink3); cursor:pointer; transition:all 0.18s ease; }
-  .recipe-btn:hover { border-color:var(--amber); color:var(--amber); }
+  .recipe-btn { display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:5px 13px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:700; color:var(--ink3); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
+  .recipe-btn:hover { border-color:var(--amber); color:var(--amber); transform:translateY(-1px); }
   .recipe-btn.loading { opacity:0.5; pointer-events:none; }
 
   .recipe-panel { display:none; margin-top:18px; padding-top:18px; border-top:1px solid var(--border); animation:fadeUp 0.3s ease both; }
@@ -358,7 +382,7 @@
   .loading-area { display:none; text-align:center; padding:46px 24px; }
   .loading-area.visible { display:block; }
   .loading-spinner { width:38px; height:38px; border:3px solid var(--bg2); border-top-color:var(--amber); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 14px; }
-  .loading-text { font-family:'Montserrat',sans-serif; font-size:1.05rem; font-style:italic; color:var(--ink2); }
+  .loading-text { font-family:'Nunito',sans-serif; font-size:1.05rem; font-style:italic; font-weight:700; color:var(--ink2); }
 
   .hidden-section { display:none; }
 
