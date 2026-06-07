@@ -9,39 +9,39 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    /* Sims 2 palette */
-    --bg:#C4D8A0; --bg2:#AECA88; --surface:#F0ECD8;
-    --ink:#1A2A08; --ink2:#3A5A18; --ink3:#6A8A48;
-    --amber:#D4890A; --rust:#C04F1B; --sage:#5A7A5C;
-    --border:rgba(80,110,30,0.3); --shadow:rgba(15,35,5,0.22);
-    --grad1:rgba(80,130,30,0.12); --grad2:rgba(50,100,20,0.08);
-    --header-bg:linear-gradient(180deg,#4A8A22 0%,#1E4A0A 100%);
-    --chrome:#2A5E10; --chrome2:#1A3E08;
-    --gold:#B89818; --gold2:#D4B030;
+    /* Sims 2 palette — blue UI with gold trim */
+    --bg:#A8C0D8; --bg2:#8AAAC8; --surface:#F0ECD8;
+    --ink:#0E1E38; --ink2:#2A4268; --ink3:#5A7898;
+    --amber:#D4890A; --rust:#C04F1B; --sage:#4A7A9C;
+    --border:rgba(30,60,110,0.28); --shadow:rgba(10,20,50,0.25);
+    --grad1:rgba(50,100,180,0.12); --grad2:rgba(30,70,150,0.08);
+    --header-bg:linear-gradient(180deg,#3A6AAA 0%,#1A3A70 100%);
+    --chrome:#1E3A6A; --chrome2:#0E2248;
+    --gold:#C4A020; --gold2:#DCC038;
     --bevel-hi:rgba(255,255,255,0.5); --bevel-lo:rgba(0,0,0,0.28);
     --T:0.25s ease;
   }
 
   body.dark {
-    --bg:#162410; --bg2:#1E3014; --surface:#243018;
-    --ink:#D8ECC0; --ink2:#9EC870; --ink3:#6A9A48;
-    --amber:#E8A020; --rust:#D4673A; --sage:#7AAA7C;
-    --border:rgba(100,170,50,0.22); --shadow:rgba(0,0,0,0.55);
-    --grad1:rgba(70,140,30,0.08); --grad2:rgba(40,110,20,0.05);
-    --header-bg:linear-gradient(180deg,#1E4A0A 0%,#0A2204 100%);
-    --chrome:#0E2008; --chrome2:#081408;
-    --gold:#C8A820; --gold2:#E0C038;
+    --bg:#0E1E38; --bg2:#162848; --surface:#1E3058;
+    --ink:#C8DDF5; --ink2:#88AACC; --ink3:#5A7898;
+    --amber:#E8A020; --rust:#D4673A; --sage:#6AAAD0;
+    --border:rgba(80,130,200,0.22); --shadow:rgba(0,0,0,0.6);
+    --grad1:rgba(50,100,200,0.08); --grad2:rgba(30,70,160,0.05);
+    --header-bg:linear-gradient(180deg,#1A3A70 0%,#080E28 100%);
+    --chrome:#081428; --chrome2:#040A18;
+    --gold:#D4B028; --gold2:#E8C840;
   }
 
   body { background:var(--bg); color:var(--ink); font-family:'Nunito',sans-serif; min-height:100vh; letter-spacing:0.01em; overflow-x:hidden; transition:background var(--T),color var(--T); }
 
   /* Sims 2 background — subtle diamond tile pattern */
-  body::before { content:''; position:fixed; inset:0; background-image:repeating-linear-gradient(45deg,rgba(0,0,0,0.04) 0px,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 14px),repeating-linear-gradient(-45deg,rgba(0,0,0,0.04) 0px,rgba(0,0,0,0.04) 1px,transparent 1px,transparent 14px),radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 55%); pointer-events:none; z-index:0; }
+  body::before { content:''; position:fixed; inset:0; background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.06) 0px,rgba(255,255,255,0.06) 1px,transparent 1px,transparent 14px),repeating-linear-gradient(-45deg,rgba(255,255,255,0.06) 0px,rgba(255,255,255,0.06) 1px,transparent 1px,transparent 14px),radial-gradient(ellipse at 20% 20%,var(--grad1) 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,var(--grad2) 0%,transparent 55%); pointer-events:none; z-index:0; }
 
   /* TOPBAR — Sims 2 chrome bar */
-  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 24px; background:linear-gradient(180deg,#5A9A28 0%,#2A5E10 100%); border-bottom:3px solid var(--gold); box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 10px rgba(0,0,0,0.35); transition:background var(--T); }
+  .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 24px; background:linear-gradient(180deg,#4A78BE 0%,#1E3A70 100%); border-bottom:3px solid var(--gold); box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 10px rgba(0,0,0,0.35); transition:background var(--T); }
 
-  body.dark .topbar { background:linear-gradient(180deg,#2A5010 0%,#0E2408 100%); }
+  body.dark .topbar { background:linear-gradient(180deg,#1A3060 0%,#0A1838 100%); }
 
   .topbar-brand { display:flex; align-items:baseline; gap:10px; flex-shrink:0; }
   .topbar-logo { font-family:'Lora',serif; font-size:1.35rem; font-weight:700; font-style:italic; color:#F5E888; letter-spacing:0em; line-height:1; text-shadow:0 1px 3px rgba(0,0,0,0.4); }
@@ -53,7 +53,7 @@
 
   .toggle-pill button { background:none; border:none; padding:5px 12px; font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:#C0D890; cursor:pointer; border-radius:6px; transition:all 0.18s ease; }
 
-  .toggle-pill button.active { background:linear-gradient(180deg,#5A9A28 0%,#2E6A10 100%); color:#F5E888; box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),inset 0 -1px 0 rgba(0,0,0,0.2); }
+  .toggle-pill button.active { background:linear-gradient(180deg,#4A78BE 0%,#1E3A70 100%); color:#F5E888; box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),inset 0 -1px 0 rgba(0,0,0,0.2); }
 
   .pill-sep { width:1px; height:16px; background:var(--gold); opacity:0.4; flex-shrink:0; }
 
@@ -87,7 +87,7 @@
   .mode-switcher { display:flex; gap:10px; margin-bottom:16px; animation:fadeUp 0.7s 0.15s ease both; }
 
   /* MODE BUTTONS — Sims 2 panel card */
-  .mode-btn { flex:1; padding:11px 13px; border-radius:8px; border:3px solid var(--gold); background:var(--surface); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; box-shadow:inset 0 1px 0 var(--bevel-hi),inset 0 -1px 0 rgba(0,0,0,0.12),0 4px 0 rgba(0,0,0,0.25),0 5px 8px rgba(0,0,0,0.15); }
+  .mode-btn { flex:1; padding:11px 13px; border-radius:8px; border:3px solid var(--gold); background:linear-gradient(180deg,#F8F4E8 0%,#E8E0C8 100%); cursor:pointer; text-align:left; transition:all 0.2s ease; display:flex; align-items:center; gap:12px; position:relative; box-shadow:inset 0 1px 0 var(--bevel-hi),inset 0 -1px 0 rgba(0,0,0,0.12),0 4px 0 rgba(0,0,0,0.25),0 5px 8px rgba(0,0,0,0.15); }
 
   .mode-btn:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:inset 0 1px 0 var(--bevel-hi),0 6px 0 rgba(0,0,0,0.25),0 8px 16px rgba(0,0,0,0.2); }
 
@@ -107,9 +107,9 @@
 
 
   /* COLLAPSIBLE SECTIONS — Sims 2 drawer headers */
-  .collapsible-header { display:flex; align-items:center; justify-content:space-between; padding:9px 14px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); cursor:pointer; transition:all 0.18s ease; user-select:none; margin-bottom:8px; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
+  .collapsible-header { display:flex; align-items:center; justify-content:space-between; padding:9px 14px; border-radius:6px; border:2px solid var(--gold); background:linear-gradient(180deg,#F8F4E8 0%,#E8E0C8 100%); cursor:pointer; transition:all 0.18s ease; user-select:none; margin-bottom:8px; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
   .collapsible-header:hover { border-color:var(--amber); }
-  .collapsible-header.open { border-color:var(--amber); background:linear-gradient(180deg,#FFF0D0 0%,#F0D8A0 100%); }
+  .collapsible-header.open { border-color:var(--amber); background:linear-gradient(180deg,#E8F0FF 0%,#C8D8F0 100%); }
   .collapsible-header-left { display:flex; align-items:center; gap:8px; }
   .collapsible-header-title { font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink2); transition:color var(--T); font-family:'Nunito',sans-serif; }
   .collapsible-header.open .collapsible-header-title { color:var(--amber); }
@@ -129,11 +129,11 @@
   .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:7px; margin-bottom:14px; animation:fadeUp 0.7s 0.2s ease both; }
 
   /* CUISINE CARDS — Sims 2 tile panels */
-  .cuisine-card { background:linear-gradient(180deg,var(--surface) 0%,#E4DEC8 100%); border:3px solid var(--gold); border-radius:6px; padding:11px 9px; cursor:pointer; transition:all 0.18s ease; text-align:center; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.28),0 4px 6px rgba(0,0,0,0.12); }
+  .cuisine-card { background:linear-gradient(180deg,#F8F4E8 0%,#E8E0C8 100%); border:3px solid var(--gold); border-radius:6px; padding:11px 9px; cursor:pointer; transition:all 0.18s ease; text-align:center; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.28),0 4px 6px rgba(0,0,0,0.12); }
 
   .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:inset 0 1px 0 var(--bevel-hi),0 5px 0 rgba(0,0,0,0.28),0 6px 12px rgba(0,0,0,0.18); }
 
-  .cuisine-card.selected { border-color:var(--amber); background:linear-gradient(180deg,#FFF0D0 0%,#F0D8A0 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,0.7),0 3px 0 rgba(0,0,0,0.28),0 4px 10px rgba(212,137,10,0.3); }
+  .cuisine-card.selected { border-color:var(--amber); background:linear-gradient(180deg,#FFF4D8 0%,#F0DDA8 100%); box-shadow:inset 0 1px 0 rgba(255,255,255,0.7),0 3px 0 rgba(0,0,0,0.28),0 4px 10px rgba(212,137,10,0.3); }
 
   .cuisine-card.selected .cuisine-name { color:var(--amber); font-weight:800; }
 
@@ -153,7 +153,7 @@
 
   .filter-chip:hover { border-color:var(--amber); color:var(--amber); }
 
-  .filter-chip.active { background:linear-gradient(180deg,#7AAA4A 0%,#4A7A1A 100%); border-color:#3A6010; color:#F0FFD8; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 2px 4px rgba(0,0,0,0.15),0 1px 0 #1A3808; transform:translateY(1px); }
+  .filter-chip.active { background:linear-gradient(180deg,#4A78BE 0%,#1E3A70 100%); border-color:#0E2248; color:#EEF4FF; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),inset 0 2px 4px rgba(0,0,0,0.2),0 1px 0 #08103A; transform:translateY(1px); }
 
   .filter-chip.active::before { content:'✓ '; font-size:11px; }
 
@@ -249,17 +249,17 @@
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
 
-  /* GENERATE BUTTON — the iconic Sims 2 green bevel button */
-  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:linear-gradient(180deg,#6AAE2C 0%,#3A7A12 50%,#2A5E0C 100%); color:#F5E888; border:3px solid #8A7010; border-radius:8px; padding:13px 34px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 5px 0 #1A4008,0 6px 10px rgba(0,0,0,0.35); letter-spacing:0.02em; text-shadow:0 1px 2px rgba(0,0,0,0.4); }
+  /* GENERATE BUTTON — Sims 2 blue bevel button */
+  .generate-btn { display:inline-flex; align-items:center; gap:9px; background:linear-gradient(180deg,#5A8ED8 0%,#2A5AAA 50%,#1A3E80 100%); color:#F5E888; border:3px solid #8A7010; border-radius:8px; padding:13px 34px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 5px 0 #0A1840,0 6px 10px rgba(0,0,0,0.35); letter-spacing:0.02em; text-shadow:0 1px 2px rgba(0,0,0,0.4); }
 
-  .generate-btn:hover:not(:disabled) { background:linear-gradient(180deg,#7ABE3C 0%,#4A8A1C 50%,#3A6E14 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 6px 0 #1A4008,0 8px 14px rgba(0,0,0,0.35); }
+  .generate-btn:hover:not(:disabled) { background:linear-gradient(180deg,#6A9EE8 0%,#3A6ABA 50%,#2A4E90 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 6px 0 #0A1840,0 8px 14px rgba(0,0,0,0.35); }
 
-  .generate-btn:active:not(:disabled) { transform:translateY(3px); box-shadow:inset 0 2px 4px rgba(0,0,0,0.3),0 2px 0 #1A4008; }
+  .generate-btn:active:not(:disabled) { transform:translateY(3px); box-shadow:inset 0 2px 4px rgba(0,0,0,0.3),0 2px 0 #0A1840; }
 
   .generate-btn:disabled { opacity:0.45; cursor:not-allowed; }
 
-  /* Surprise button — secondary Sims 2 style */
-  .surprise-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B878 100%); border:2px solid #A89020; color:#3A2A08; border-radius:8px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:12.5px; font-weight:800; cursor:pointer; transition:all 0.15s ease; margin-left:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 3px 0 #6A5808,0 4px 6px rgba(0,0,0,0.2); text-shadow:0 1px 0 rgba(255,255,255,0.4); }
+  /* Surprise button — gold secondary */
+  .surprise-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B878 100%); border:2px solid #A89020; color:#2A1A08; border-radius:8px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:12.5px; font-weight:800; cursor:pointer; transition:all 0.15s ease; margin-left:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 3px 0 #6A5808,0 4px 6px rgba(0,0,0,0.2); text-shadow:0 1px 0 rgba(255,255,255,0.4); }
 
   .surprise-btn:hover { background:linear-gradient(180deg,#F0E8B8 0%,#D8C888 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 4px 0 #6A5808,0 5px 8px rgba(0,0,0,0.25); }
 
@@ -298,15 +298,15 @@
 
   .course-desc { font-size:13.5px; color:var(--ink3); line-height:1.6; font-weight:300; transition:color var(--T); }
 
-  .result-footer { padding:17px 34px; background:linear-gradient(180deg,#8AB860 0%,#5A8830 100%); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); border-top:2px solid var(--gold); box-shadow:inset 0 1px 0 rgba(255,255,255,0.25); }
+  .result-footer { padding:17px 34px; background:linear-gradient(180deg,#3A68B0 0%,#1A3A70 100%); display:flex; gap:9px; flex-wrap:wrap; transition:background var(--T); border-top:2px solid var(--gold); box-shadow:inset 0 1px 0 rgba(255,255,255,0.2); }
 
-  body.dark .result-footer { background:linear-gradient(180deg,#2A4818 0%,#162A0A 100%); }
+  body.dark .result-footer { background:linear-gradient(180deg,#162848 0%,#0A1428 100%); }
 
-  .regen-btn { background:linear-gradient(180deg,#5A9A28 0%,#2E6A10 100%); color:#F5E888; border:2px solid #8A7010; border-radius:6px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 3px 0 #1A3808; text-shadow:0 1px 2px rgba(0,0,0,0.35); }
+  .regen-btn { background:linear-gradient(180deg,#5A8ED8 0%,#2A5AAA 100%); color:#F5E888; border:2px solid #8A7010; border-radius:6px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 3px 0 #0A1840; text-shadow:0 1px 2px rgba(0,0,0,0.35); }
 
-  .regen-btn:hover { background:linear-gradient(180deg,#6AAA38 0%,#3A7A18 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 4px 0 #1A3808; }
+  .regen-btn:hover { background:linear-gradient(180deg,#6A9EE8 0%,#3A6ABA 100%); transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 4px 0 #0A1840; }
 
-  .regen-btn:active { transform:translateY(2px); box-shadow:inset 0 2px 3px rgba(0,0,0,0.2),0 1px 0 #1A3808; }
+  .regen-btn:active { transform:translateY(2px); box-shadow:inset 0 2px 3px rgba(0,0,0,0.2),0 1px 0 #0A1840; }
 
   .other-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B870 100%); color:#2A1A08; border:2px solid #A08818; border-radius:6px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.45),0 3px 0 #5A4808; text-shadow:0 1px 0 rgba(255,255,255,0.4); }
 
