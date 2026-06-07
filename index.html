@@ -391,9 +391,23 @@
 
   .shopping-list li::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--amber); flex-shrink:0; }
 
-  /* SAVED MENUS SECTION */
-  .saved-menus-section { margin-bottom:16px; animation:fadeUp 0.5s ease both; }
-  .saved-menu-list { display:flex; flex-direction:column; gap:6px; padding:4px 0; }
+  /* SAVED DISC BUTTON in topbar */
+  .saved-disc-btn { position:relative; background:rgba(0,0,0,0.25); border:2px solid var(--gold); border-radius:8px; width:36px; height:36px; font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),0 2px 4px rgba(0,0,0,0.3); transition:all 0.15s ease; flex-shrink:0; }
+  .saved-disc-btn:hover { background:rgba(0,0,0,0.4); transform:translateY(-1px); }
+  .saved-disc-badge { position:absolute; top:-5px; right:-5px; background:var(--amber); color:white; font-family:'Nunito',sans-serif; font-size:9px; font-weight:900; width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; border:2px solid #1A1E48; }
+  .saved-disc-badge.visible { display:flex; }
+
+  /* SAVED MENUS DRAWER */
+  .saved-drawer { position:fixed; top:56px; right:16px; width:320px; max-height:calc(100vh - 80px); background:var(--surface); border:3px solid var(--gold); border-radius:16px; box-shadow:inset 0 1px 0 var(--bevel-hi),0 8px 32px rgba(0,0,0,0.35); z-index:200; display:none; flex-direction:column; overflow:hidden; animation:fadeDown 0.2s ease both; }
+  .saved-drawer.open { display:flex; }
+  .saved-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:13px 16px 10px; background:linear-gradient(180deg,#9098CC 0%,#6068B0 100%); border-bottom:2px solid var(--gold); flex-shrink:0; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3); }
+  body.dark .saved-drawer-header { background:linear-gradient(180deg,#585E98 0%,#383E78 100%); }
+  .saved-drawer-title { font-family:'Nunito',sans-serif; font-size:13px; font-weight:900; color:#F5E888; text-shadow:0 1px 2px rgba(0,0,0,0.3); letter-spacing:0.05em; text-transform:uppercase; }
+  .saved-drawer-close { background:none; border:none; font-size:20px; color:rgba(255,255,255,0.7); cursor:pointer; line-height:1; padding:0 2px; transition:color 0.15s; }
+  .saved-drawer-close:hover { color:white; }
+  .saved-menu-list { display:flex; flex-direction:column; gap:6px; padding:10px; overflow-y:auto; max-height:calc(100vh - 160px); }
+  .saved-drawer-overlay { display:none; position:fixed; inset:0; z-index:199; }
+  .saved-drawer-overlay.open { display:block; }
   .saved-menu-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.35); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.18); }
   .saved-menu-item:hover { transform:translateY(-1px); border-color:var(--amber); box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.2),0 4px 8px rgba(0,0,0,0.12); }
   body.dark .saved-menu-item { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
@@ -473,8 +487,24 @@
       <div class="pill-sep"></div>
       <button onclick="setTheme('dark')">🌙</button>
     </div>
+    <button class="saved-disc-btn" id="savedDiscBtn" onclick="toggleSavedDrawer()" title="Saved Menus">
+      💾
+      <span class="saved-disc-badge" id="savedBadge"></span>
+    </button>
   </div>
 </div>
+
+<!-- SAVED MENUS DRAWER -->
+<div class="saved-drawer" id="savedDrawer">
+  <div class="saved-drawer-header">
+    <span class="saved-drawer-title" id="savedMenusLabel">Saved Menus</span>
+    <button class="saved-drawer-close" onclick="toggleSavedDrawer()">×</button>
+  </div>
+  <div class="saved-menu-list" id="savedMenuList">
+    <p class="saved-empty">No saved menus yet</p>
+  </div>
+</div>
+<div class="saved-drawer-overlay" id="savedOverlay" onclick="toggleSavedDrawer()"></div>
 
 <div class="container">
 
@@ -484,23 +514,6 @@
 
   <div class="layout">
   <div class="panel-left">
-
-  <!-- SAVED MENUS -->
-  <div class="saved-menus-section" id="savedMenusSection">
-    <div class="collapsible-header" id="savedHeader" onclick="toggleCollapsible('saved')">
-      <div class="collapsible-header-left">
-        <span>🔖</span>
-        <span class="collapsible-header-title" id="savedMenusLabel">Saved Menus</span>
-        <span class="collapsible-badge" id="savedBadge">0</span>
-      </div>
-      <span class="collapsible-arrow">▾</span>
-    </div>
-    <div class="collapsible-body" id="savedBody">
-      <div class="saved-menu-list" id="savedMenuList">
-        <p class="saved-empty" id="savedEmptyMsg">No saved menus yet</p>
-      </div>
-    </div>
-  </div>
 
   <div class="mode-switcher">
     <div class="mode-btn active" id="modeGeneral" onclick="setMode('general')">
@@ -1387,7 +1400,7 @@ Respond with ONLY this JSON:
     if (!lastMenu) return;
     const t = i18n[currentLang];
     const copy = JSON.parse(JSON.stringify(lastMenu));
-    delete copy.recipes; delete copy.openRecipes;
+    delete copy.openRecipes; // Set — not serializable, UI state only
     const entry = {
       id: Date.now(),
       savedAt: new Date().toLocaleDateString(currentLang === 'tr' ? 'tr-TR' : 'en-GB', { day:'numeric', month:'short', year:'numeric' }),
@@ -1402,10 +1415,18 @@ Respond with ONLY this JSON:
     showToast(t.savedLabel || 'Saved!');
     const btn = document.getElementById('saveMenuBtn');
     if (btn) { btn.innerHTML = '🔖 ' + (t.savedLabel || 'Saved!'); btn.disabled = true; }
-    // open saved panel if closed
-    const body = document.getElementById('savedBody');
-    const header = document.getElementById('savedHeader');
-    if (body && !body.classList.contains('open')) { body.classList.add('open'); header.classList.add('open'); }
+    // briefly open drawer to confirm save
+    const drawer = document.getElementById('savedDrawer');
+    const overlay = document.getElementById('savedOverlay');
+    if (drawer && !drawer.classList.contains('open')) { drawer.classList.add('open'); overlay.classList.add('open'); }
+  }
+
+  function toggleSavedDrawer() {
+    const drawer = document.getElementById('savedDrawer');
+    const overlay = document.getElementById('savedOverlay');
+    const isOpen = drawer.classList.contains('open');
+    drawer.classList.toggle('open', !isOpen);
+    overlay.classList.toggle('open', !isOpen);
   }
 
   function renderSavedMenus() {
@@ -1437,10 +1458,12 @@ Respond with ONLY this JSON:
     if (!entry) return;
     selected = entry.cuisine; activeMedicalMode = entry.medicalMode || null;
     renderMenu(entry.menu);
-    // mark save button as already saved
-    const btn = document.getElementById('saveMenuBtn');
     const t = i18n[currentLang];
+    const btn = document.getElementById('saveMenuBtn');
     if (btn) { btn.innerHTML = '🔖 ' + (t.savedLabel || 'Saved!'); btn.disabled = true; }
+    // close drawer
+    document.getElementById('savedDrawer').classList.remove('open');
+    document.getElementById('savedOverlay').classList.remove('open');
     document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'nearest' });
   }
 
