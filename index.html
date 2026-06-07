@@ -1020,8 +1020,9 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     }
 
     try {
-      const prompt = `Translate the following JSON content into ${targetLang}. 
-Translate ALL text values: menuTitle, dish names, descriptions, ingredient names and quantities, step instructions, notes, yield, prepTime, cookTime.
+      const prompt = `Translate the following JSON content into ${targetLang}.
+Translate ALL text values: menuTitle, descriptions, ingredient names and quantities, step instructions, notes, yield, prepTime, cookTime.
+IMPORTANT: Do NOT translate dish names — keep them in their original native cuisine language (e.g. "Spaghetti alla Carbonara" stays as-is, "Mercimek Çorbası" stays as-is).
 Keep JSON structure identical. Keep measurement numbers the same. Return ONLY valid JSON, no markdown.
 
 ${JSON.stringify(toTranslate)}`;
@@ -1272,7 +1273,8 @@ INSTRUCTIONS:
 2. If a course contains a forbidden ingredient — replace that entire course with a fully compliant alternative in ${lang}, drawing from any world cuisine.
 3. If the shopping list contains forbidden ingredients — remove them and add compliant replacements.
 4. If nothing is forbidden — return the menu exactly as given, unchanged.
-5. Do NOT add explanations or comments. Return ONLY the JSON.
+5. Dish names must remain in their native cuisine language — do NOT translate them.
+6. Do NOT add explanations or comments. Return ONLY the JSON.
 
 Respond with ONLY this JSON:
 {
@@ -1368,9 +1370,9 @@ ${activeMedicalMode ? '- Each course should feel like it could come from a diffe
 Respond with ONLY this JSON:
 {
   "menuTitle": "A poetic 3-5 word title in ${lang}",
-  "starter":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
-  "main":     { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
-  "dessert":  { "name": "Dish name in ${lang}", "description": "1-2 sentence description in ${lang}" },
+  "starter":  { "name": "Authentic dish name in its native cuisine language (never translate — e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai)", "description": "1-2 sentence description in ${lang}" },
+  "main":     { "name": "Authentic dish name in its native cuisine language (never translate — e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai)", "description": "1-2 sentence description in ${lang}" },
+  "dessert":  { "name": "Authentic dish name in its native cuisine language (never translate — e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai)", "description": "1-2 sentence description in ${lang}" },
   "keyIngredients": ["list", "8-10", "main", "ingredients", "used", "across", "all", "courses"]${shoppingSchema}
 }`
           }]
