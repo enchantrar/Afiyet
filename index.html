@@ -76,7 +76,7 @@
   /* HEADER */
   header { text-align:center; margin-bottom:12px; animation:fadeDown 0.7s ease both; }
 
-  .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--amber); margin-bottom:12px; transition:color var(--T); }
+  .tagline { font-size:11px; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--ink2); margin-bottom:12px; transition:color var(--T); }
 
   .logo { font-family:'Nunito',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:900; color:var(--ink); letter-spacing:-0.02em; line-height:1; margin-bottom:10px; transition:color var(--T); text-shadow:0 2px 0 rgba(0,0,0,0.12); }
 
@@ -94,7 +94,7 @@
 
   .mode-btn.active { border-color:var(--amber); background:linear-gradient(135deg,rgba(212,137,10,0.18),rgba(192,79,27,0.1)); box-shadow:inset 0 1px 0 var(--bevel-hi),0 4px 0 rgba(0,0,0,0.25),0 5px 12px rgba(212,137,10,0.25); transform:translateY(-1px); }
 
-  .mode-btn.active .mode-btn-title { color:var(--amber); }
+  .mode-btn.active .mode-btn-title { color:var(--ink); }
 
   .mode-btn.active::after { content:'◆'; position:absolute; top:8px; right:10px; font-size:9px; color:var(--amber); animation:pulse-dot 2s infinite; }
 
@@ -114,6 +114,13 @@
   .collapsible-header-left { display:flex; align-items:center; gap:8px; }
   .collapsible-header-title { font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink2); transition:color var(--T); font-family:'Nunito',sans-serif; }
   .collapsible-header.open .collapsible-header-title { color:var(--amber); }
+  body.dark .collapsible-header { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  body.dark .collapsible-header.open { background:linear-gradient(180deg,#505888 0%,#404070 100%); }
+  body.dark .mode-btn { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  body.dark .filter-chip { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); color:var(--ink2); }
+  body.dark .recipe-btn { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  body.dark .shopping-toggle { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  body.dark .serving-btn { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
   .collapsible-badge { font-size:10px; font-weight:800; padding:1px 7px; border-radius:4px; background:var(--amber); color:white; display:none; }
   .collapsible-badge.visible { display:inline-block; }
   .collapsible-arrow { font-size:10px; color:var(--ink3); transition:transform 0.2s ease; }
@@ -130,7 +137,7 @@
   .cuisine-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:7px; margin-bottom:14px; animation:fadeUp 0.7s 0.2s ease both; }
 
   /* CUISINE CARDS — Sims 2 tile panels */
-  .cuisine-card { background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.4); border-radius:14px; padding:11px 9px; cursor:pointer; transition:all 0.18s ease; text-align:center; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.28),0 4px 6px rgba(0,0,0,0.12); }
+  .cuisine-card { background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.4); border-radius:14px; color:var(--ink); padding:11px 9px; cursor:pointer; transition:all 0.18s ease; text-align:center; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.28),0 4px 6px rgba(0,0,0,0.12); }
 
   .cuisine-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:inset 0 1px 0 var(--bevel-hi),0 5px 0 rgba(0,0,0,0.28),0 6px 12px rgba(0,0,0,0.18); }
 
@@ -142,7 +149,11 @@
 
   .cuisine-emoji { font-size:22px; display:block; margin-bottom:4px; transition:transform 0.2s ease; }
 
-  .cuisine-name { font-size:11px; font-weight:700; color:var(--ink); transition:color var(--T); font-family:'Nunito',sans-serif; }
+  .cuisine-name { font-size:11px; font-weight:700; color:#12163A; transition:color var(--T); font-family:'Nunito',sans-serif; }
+  body.dark .cuisine-card { background:linear-gradient(180deg,#585E98 0%,#404880 100%); border-color:rgba(255,255,255,0.2); }
+  body.dark .cuisine-name { color:#D8DCFF; }
+  body.dark .cuisine-card.selected { background:linear-gradient(180deg,#FFF4D8 0%,#F0DDA8 100%); }
+  body.dark .cuisine-card.selected .cuisine-name { color:var(--amber); }
 
   /* FILTER CHIPS */
   .filters-section { margin-bottom:10px; animation:fadeUp 0.7s 0.25s ease both; }
@@ -293,7 +304,7 @@
 
   .course-block:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
 
-  .course-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:5px; transition:color var(--T); }
+  .course-label { font-size:10px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink2); margin-bottom:5px; transition:color var(--T); }
 
   .course-name { font-family:'Nunito',sans-serif; font-size:1.2rem; font-weight:900; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
   .dish-native-name { font-weight:400; font-size:0.95em; color:var(--ink3); font-style:italic; }
