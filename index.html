@@ -274,6 +274,7 @@
   .course-label { font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:5px; transition:color var(--T); }
 
   .course-name { font-family:'Montserrat',sans-serif; font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:5px; transition:color var(--T); }
+  .dish-native-name { font-weight:400; font-size:0.95em; color:var(--ink3); font-style:italic; }
 
   .course-desc { font-size:13.5px; color:var(--ink3); line-height:1.6; font-weight:300; transition:color var(--T); }
 
@@ -995,6 +996,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       dessert:  { name: lastMenu.dessert.name,   description: lastMenu.dessert.description },
       recipes: {}
     };
+    // nativeNames are never translated — preserve them separately
     if (lastMenu.recipes) {
       Object.entries(lastMenu.recipes).forEach(([course, r]) => {
         toTranslate.recipes[course] = {
@@ -1021,8 +1023,7 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
 
     try {
       const prompt = `Translate the following JSON content into ${targetLang}.
-Translate ALL text values: menuTitle, descriptions, ingredient names and quantities, step instructions, notes, yield, prepTime, cookTime.
-IMPORTANT: Do NOT translate dish names — keep them in their original native cuisine language (e.g. "Spaghetti alla Carbonara" stays as-is, "Mercimek Çorbası" stays as-is).
+Translate: menuTitle, dish names (the "name" field only), descriptions, ingredient names and quantities, step instructions, notes, yield, prepTime, cookTime.
 Keep JSON structure identical. Keep measurement numbers the same. Return ONLY valid JSON, no markdown.
 
 ${JSON.stringify(toTranslate)}`;
@@ -1040,8 +1041,8 @@ ${JSON.stringify(toTranslate)}`;
       const raw = data.content[0].text.replace(/```json|```/g, '').trim();
       const translated = JSON.parse(raw);
 
-      // merge translated text back into lastMenu
-      lastMenu.menuTitle       = translated.menuTitle;
+      // merge translated text back into lastMenu — nativeName is never changed
+      lastMenu.menuTitle           = translated.menuTitle;
       lastMenu.starter.name        = translated.starter.name;
       lastMenu.starter.description = translated.starter.description;
       lastMenu.main.name           = translated.main.name;
@@ -1279,9 +1280,9 @@ INSTRUCTIONS:
 Respond with ONLY this JSON:
 {
   "menuTitle": "...",
-  "starter":  { "name": "...", "description": "..." },
-  "main":     { "name": "...", "description": "..." },
-  "dessert":  { "name": "...", "description": "..." }${shoppingSchema}
+  "starter":  { "name": "...", "nativeName": "...", "description": "..." },
+  "main":     { "name": "...", "nativeName": "...", "description": "..." },
+  "dessert":  { "name": "...", "nativeName": "...", "description": "..." }${shoppingSchema}
 }`
         }]
       })
@@ -1370,9 +1371,9 @@ ${activeMedicalMode ? '- Each course should feel like it could come from a diffe
 Respond with ONLY this JSON:
 {
   "menuTitle": "A poetic 3-5 word title in ${lang}",
-  "starter":  { "name": "Authentic dish name in its native cuisine language (never translate — e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai)", "description": "1-2 sentence description in ${lang}" },
-  "main":     { "name": "Authentic dish name in its native cuisine language (never translate — e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai)", "description": "1-2 sentence description in ${lang}" },
-  "dessert":  { "name": "Authentic dish name in its native cuisine language (never translate — e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai)", "description": "1-2 sentence description in ${lang}" },
+  "starter":  { "name": "Dish name in ${lang}", "nativeName": "Authentic name in the dish's original cuisine language (e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai) — omit or repeat name if the cuisine language matches the UI language", "description": "1-2 sentence description in ${lang}" },
+  "main":     { "name": "Dish name in ${lang}", "nativeName": "Authentic name in the dish's original cuisine language (e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai) — omit or repeat name if the cuisine language matches the UI language", "description": "1-2 sentence description in ${lang}" },
+  "dessert":  { "name": "Dish name in ${lang}", "nativeName": "Authentic name in the dish's original cuisine language (e.g. Bouillabaisse, Mercimek Çorbası, Pad Thai) — omit or repeat name if the cuisine language matches the UI language", "description": "1-2 sentence description in ${lang}" },
   "keyIngredients": ["list", "8-10", "main", "ingredients", "used", "across", "all", "courses"]${shoppingSchema}
 }`
           }]
@@ -1405,6 +1406,12 @@ Respond with ONLY this JSON:
       document.getElementById('loadingArea').classList.remove('visible');
       document.getElementById('generateBtn').disabled = false;
     }
+  }
+
+  /* Format dish name: show "Translated Name (Native Name)" when they differ */
+  function formatDishName(name, nativeName) {
+    if (!nativeName || nativeName.trim().toLowerCase() === name.trim().toLowerCase()) return name;
+    return `${name} <span class="dish-native-name">(${nativeName})</span>`;
   }
 
   /* RENDER */
@@ -1449,23 +1456,23 @@ Respond with ONLY this JSON:
         <div class="result-body">
           <div class="course-block" id="course-starter">
             <p class="course-label">${t.starter}</p>
-            <h3 class="course-name">${menu.starter.name}</h3>
+            <h3 class="course-name">${formatDishName(menu.starter.name, menu.starter.nativeName)}</h3>
             <p class="course-desc">${menu.starter.description}</p>
-            <button class="recipe-btn" onclick="fetchRecipe('starter','${menu.starter.name.replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
+            <button class="recipe-btn" onclick="fetchRecipe('starter','${(menu.starter.nativeName||menu.starter.name).replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
             <div class="recipe-panel" id="recipe-starter"></div>
           </div>
           <div class="course-block" id="course-main">
             <p class="course-label">${t.mainCourse}</p>
-            <h3 class="course-name">${menu.main.name}</h3>
+            <h3 class="course-name">${formatDishName(menu.main.name, menu.main.nativeName)}</h3>
             <p class="course-desc">${menu.main.description}</p>
-            <button class="recipe-btn" onclick="fetchRecipe('main','${menu.main.name.replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
+            <button class="recipe-btn" onclick="fetchRecipe('main','${(menu.main.nativeName||menu.main.name).replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
             <div class="recipe-panel" id="recipe-main"></div>
           </div>
           <div class="course-block" id="course-dessert">
             <p class="course-label">${t.dessert}</p>
-            <h3 class="course-name">${menu.dessert.name}</h3>
+            <h3 class="course-name">${formatDishName(menu.dessert.name, menu.dessert.nativeName)}</h3>
             <p class="course-desc">${menu.dessert.description}</p>
-            <button class="recipe-btn" onclick="fetchRecipe('dessert','${menu.dessert.name.replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
+            <button class="recipe-btn" onclick="fetchRecipe('dessert','${(menu.dessert.nativeName||menu.dessert.name).replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
             <div class="recipe-panel" id="recipe-dessert"></div>
           </div>
           ${shoppingHTML}
