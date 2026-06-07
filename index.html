@@ -391,6 +391,30 @@
 
   .shopping-list li::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--amber); flex-shrink:0; }
 
+  /* SAVED MENUS SECTION */
+  .saved-menus-section { margin-bottom:16px; animation:fadeUp 0.5s ease both; }
+  .saved-menu-list { display:flex; flex-direction:column; gap:6px; padding:4px 0; }
+  .saved-menu-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:12px; background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.35); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.18); }
+  .saved-menu-item:hover { transform:translateY(-1px); border-color:var(--amber); box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.2),0 4px 8px rgba(0,0,0,0.12); }
+  body.dark .saved-menu-item { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  .saved-menu-info { flex:1; min-width:0; }
+  .saved-menu-title { font-family:'Nunito',sans-serif; font-size:12.5px; font-weight:800; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color var(--T); }
+  .saved-menu-date { font-size:11px; color:var(--ink3); font-weight:500; margin-top:2px; transition:color var(--T); }
+  .saved-menu-del { background:none; border:none; font-size:16px; color:var(--ink3); cursor:pointer; padding:0 2px; line-height:1; transition:color 0.15s ease; flex-shrink:0; }
+  .saved-menu-del:hover { color:var(--rust); }
+  .saved-empty { font-size:12px; color:var(--ink3); font-weight:500; text-align:center; padding:12px 0; font-style:italic; }
+
+  /* SAVE & SHARE BUTTONS */
+  .save-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(180deg,#E8DCA8 0%,#C8B870 100%); border:2px solid #A08818; border-radius:16px; padding:8px 18px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:#2A1A08; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.45),0 3px 0 #5A4808; text-shadow:0 1px 0 rgba(255,255,255,0.35); }
+  .save-btn:hover:not(:disabled) { background:linear-gradient(180deg,#F0E8B8 0%,#D8C878 100%); transform:translateY(-1px); }
+  .save-btn:disabled { opacity:0.55; cursor:default; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.35); border-radius:16px; padding:8px 18px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.22); }
+  .share-btn:hover { border-color:var(--amber); color:var(--amber); transform:translateY(-1px); }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(12px); background:#1A1E48; color:#F0F4FF; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; padding:10px 22px; border-radius:50px; z-index:9999; opacity:0; transition:opacity 0.25s ease,transform 0.25s ease; pointer-events:none; box-shadow:0 4px 20px rgba(0,0,0,0.35); }
+  .toast.visible { opacity:1; transform:translateX(-50%) translateY(0); }
+
   /* LOADING */
   .loading-area { display:none; text-align:center; padding:46px 24px; }
   .loading-area.visible { display:block; }
@@ -460,6 +484,23 @@
 
   <div class="layout">
   <div class="panel-left">
+
+  <!-- SAVED MENUS -->
+  <div class="saved-menus-section" id="savedMenusSection">
+    <div class="collapsible-header" id="savedHeader" onclick="toggleCollapsible('saved')">
+      <div class="collapsible-header-left">
+        <span>🔖</span>
+        <span class="collapsible-header-title" id="savedMenusLabel">Saved Menus</span>
+        <span class="collapsible-badge" id="savedBadge">0</span>
+      </div>
+      <span class="collapsible-arrow">▾</span>
+    </div>
+    <div class="collapsible-body" id="savedBody">
+      <div class="saved-menu-list" id="savedMenuList">
+        <p class="saved-empty" id="savedEmptyMsg">No saved menus yet</p>
+      </div>
+    </div>
+  </div>
 
   <div class="mode-switcher">
     <div class="mode-btn active" id="modeGeneral" onclick="setMode('general')">
@@ -806,6 +847,9 @@
       regenBtn:'↺ New Menu', changeBtn:'← Change Options',
       recipeBtn:'View Recipe', recipeClose:'Close Recipe', recipeLoading:'Fetching recipe…',
       cuisineWord:'Cuisine',
+      savedMenusTitle:'Saved Menus', noSavedMenus:'No saved menus yet',
+      saveBtn:'Save Menu', savedLabel:'Saved!', shareBtn:'Share',
+      copiedMsg:'Menu copied to clipboard!',
     },
     tr: {
       tagline:'Sofranızın Günlük İlhamı ✿',
@@ -853,6 +897,9 @@
       regenBtn:'↺ Yeni Menü', changeBtn:'← Seçenekleri Değiştir',
       recipeBtn:'Tarifi Gör', recipeClose:'Tarifi Kapat', recipeLoading:'Tarif yükleniyor…',
       cuisineWord:'Mutfağı',
+      savedMenusTitle:'Kaydedilen Menüler', noSavedMenus:'Henüz kaydedilen menü yok',
+      saveBtn:'Menüyü Kaydet', savedLabel:'Kaydedildi!', shareBtn:'Paylaş',
+      copiedMsg:'Menü panoya kopyalandı!',
     }
   };
 
@@ -1016,6 +1063,8 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
       const isActive = badge.closest('.med-card')?.classList.contains('active');
       badge.textContent = isActive ? ('● ' + t.badgeActive) : t.badgeOff;
     });
+    // update saved menus panel label
+    renderSavedMenus();
     // if a menu is visible, translate the AI-generated content into the new language
     if (lastMenu && document.getElementById('result').classList.contains('visible')) {
       translateMenu(lang);
@@ -1330,6 +1379,106 @@ Respond with ONLY this JSON:
     return JSON.parse(raw);
   }
 
+  /* SAVED MENUS */
+  let savedMenus = [];
+  try { savedMenus = JSON.parse(localStorage.getItem('afiyet_saved') || '[]'); } catch(e) {}
+
+  function saveMenu() {
+    if (!lastMenu) return;
+    const t = i18n[currentLang];
+    const copy = JSON.parse(JSON.stringify(lastMenu));
+    delete copy.recipes; delete copy.openRecipes;
+    const entry = {
+      id: Date.now(),
+      savedAt: new Date().toLocaleDateString(currentLang === 'tr' ? 'tr-TR' : 'en-GB', { day:'numeric', month:'short', year:'numeric' }),
+      cuisine: selected,
+      medicalMode: activeMedicalMode,
+      menu: copy
+    };
+    savedMenus.unshift(entry);
+    if (savedMenus.length > 20) savedMenus = savedMenus.slice(0, 20);
+    try { localStorage.setItem('afiyet_saved', JSON.stringify(savedMenus)); } catch(e) {}
+    renderSavedMenus();
+    showToast(t.savedLabel || 'Saved!');
+    const btn = document.getElementById('saveMenuBtn');
+    if (btn) { btn.innerHTML = '🔖 ' + (t.savedLabel || 'Saved!'); btn.disabled = true; }
+    // open saved panel if closed
+    const body = document.getElementById('savedBody');
+    const header = document.getElementById('savedHeader');
+    if (body && !body.classList.contains('open')) { body.classList.add('open'); header.classList.add('open'); }
+  }
+
+  function renderSavedMenus() {
+    const t = i18n[currentLang];
+    const list = document.getElementById('savedMenuList');
+    const badge = document.getElementById('savedBadge');
+    const label = document.getElementById('savedMenusLabel');
+    if (label) label.textContent = t.savedMenusTitle || 'Saved Menus';
+    if (!list) return;
+    if (badge) { badge.textContent = savedMenus.length; badge.classList.toggle('visible', savedMenus.length > 0); }
+    if (savedMenus.length === 0) {
+      list.innerHTML = `<p class="saved-empty">${t.noSavedMenus || 'No saved menus yet'}</p>`;
+      return;
+    }
+    list.innerHTML = savedMenus.map(e => {
+      const emoji = cuisineEmojis[e.cuisine] || '🍽️';
+      return `<div class="saved-menu-item" onclick="viewSavedMenu(${e.id})">
+        <div class="saved-menu-info">
+          <div class="saved-menu-title">${e.menu.menuTitle || 'Menu'}</div>
+          <div class="saved-menu-date">${emoji} ${e.cuisine} · ${e.savedAt}</div>
+        </div>
+        <button class="saved-menu-del" onclick="event.stopPropagation();deleteSavedMenu(${e.id})" title="Delete">×</button>
+      </div>`;
+    }).join('');
+  }
+
+  function viewSavedMenu(id) {
+    const entry = savedMenus.find(e => e.id === id);
+    if (!entry) return;
+    selected = entry.cuisine; activeMedicalMode = entry.medicalMode || null;
+    renderMenu(entry.menu);
+    // mark save button as already saved
+    const btn = document.getElementById('saveMenuBtn');
+    const t = i18n[currentLang];
+    if (btn) { btn.innerHTML = '🔖 ' + (t.savedLabel || 'Saved!'); btn.disabled = true; }
+    document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+
+  function deleteSavedMenu(id) {
+    savedMenus = savedMenus.filter(e => e.id !== id);
+    try { localStorage.setItem('afiyet_saved', JSON.stringify(savedMenus)); } catch(e) {}
+    renderSavedMenus();
+  }
+
+  function shareMenu() {
+    if (!lastMenu) return;
+    const t = i18n[currentLang];
+    const text = `🍽️ ${lastMenu.menuTitle}\n\n` +
+      `${t.starter}: ${lastMenu.starter.name}\n${lastMenu.starter.description}\n\n` +
+      `${t.mainCourse}: ${lastMenu.main.name}\n${lastMenu.main.description}\n\n` +
+      `${t.dessert}: ${lastMenu.dessert.name}\n${lastMenu.dessert.description}\n\n` +
+      `— Afiyet 🍳`;
+    if (navigator.share) {
+      navigator.share({ title: lastMenu.menuTitle, text }).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(text).then(() => showToast(t.copiedMsg || 'Copied!')).catch(()=>{});
+    }
+  }
+
+  function showToast(msg) {
+    const old = document.querySelector('.toast');
+    if (old) old.remove();
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => { requestAnimationFrame(() => toast.classList.add('visible')); });
+    setTimeout(() => { toast.classList.remove('visible'); setTimeout(() => toast.remove(), 300); }, 2500);
+  }
+
+  // init saved menus on load
+  document.addEventListener('DOMContentLoaded', () => renderSavedMenus());
+
   /* GENERATE */
   async function generateMenu() {
     // In medical mode a cuisine isn't required — the world cuisine pool is used instead
@@ -1457,6 +1606,11 @@ Respond with ONLY this JSON:
     if (!lastMenu.recipes) lastMenu.recipes = {};
     if (!lastMenu.openRecipes) lastMenu.openRecipes = new Set();
     const t = i18n[currentLang];
+    // reset save button for new menu
+    setTimeout(() => {
+      const btn = document.getElementById('saveMenuBtn');
+      if (btn) { btn.innerHTML = '🔖 ' + (t.saveBtn || 'Save Menu'); btn.disabled = false; }
+    }, 0);
     const emoji = cuisineEmojis[selected] || '🍽️';
     const medColors = {
       chemo:'rgba(74,156,199,0.2);color:#4a9cc7',
@@ -1517,6 +1671,8 @@ Respond with ONLY this JSON:
         <div class="result-footer">
           <button class="regen-btn" onclick="generateMenu()">${t.regenBtn}</button>
           <button class="other-btn" onclick="scrollToTop()">${t.changeBtn}</button>
+          <button class="save-btn" id="saveMenuBtn" onclick="saveMenu()">🔖 ${t.saveBtn}</button>
+          <button class="share-btn" onclick="shareMenu()">↗ ${t.shareBtn}</button>
         </div>
       </div>`;
     document.getElementById('result').classList.add('visible');
