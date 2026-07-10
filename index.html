@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>🍳Afiyet</title>
+<meta name="description" content="Afiyet — cuisine-based 3-course menu generator with medical diet modes.">
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#6068B0">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<!-- iOS install support (Safari ignores most of the manifest) -->
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Afiyet">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -235,6 +246,15 @@
 
   .med-rule-tag { font-size:11px; font-weight:500; border-radius:50px; padding:3px 9px; }
 
+  /* GOITER SUB-CHOICE CHIPS */
+  .goiter-chips { display:flex; gap:6px; flex-wrap:wrap; width:100%; margin-top:4px; }
+  .goiter-chip { display:inline-flex; align-items:center; padding:5px 12px; border-radius:20px; border:2px solid rgba(122,76,199,0.35); background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:700; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; user-select:none; }
+  .goiter-chip:hover { border-color:#7a4cc7; color:#7a4cc7; }
+  .goiter-chip.active { background:linear-gradient(180deg,#9068D0 0%,#6a3cb7 100%); border-color:#4a2c87; color:#F0E8FF; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 2px 8px rgba(122,76,199,0.4); }
+  .goiter-chip.active::before { content:'✓ '; font-size:10px; }
+  body.dark .goiter-chip { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(160,120,230,0.35); }
+  body.dark .goiter-chip.active { background:linear-gradient(180deg,#9068D0 0%,#6a3cb7 100%); color:#F0E8FF; }
+
   .theme-blue   .med-rule-tag { background:rgba(74,156,199,0.12); color:#1a5a7a; }
   .theme-purple .med-rule-tag { background:rgba(122,76,199,0.12); color:#3a1a7a; }
   .theme-red    .med-rule-tag { background:rgba(199,74,74,0.12); color:#7a1a1a; }
@@ -257,6 +277,14 @@
   .serving-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; border:2px solid rgba(255,255,255,0.35); background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.22); }
   .serving-btn:hover { border-color:var(--amber); color:var(--amber); }
   .serving-btn.active { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); border-color:#8A5010; color:#FFF0C0; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 2px 3px rgba(0,0,0,0.15),0 1px 0 #5A3008; transform:translateY(1px); }
+
+  /* MEAL TYPE */
+  .meal-btns { display:flex; gap:6px; flex-wrap:wrap; }
+  .meal-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; border-radius:20px; border:2px solid rgba(255,255,255,0.35); background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); font-family:'Nunito',sans-serif; font-size:12px; font-weight:700; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; user-select:none; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.22); }
+  .meal-btn:hover { border-color:var(--amber); color:var(--amber); }
+  .meal-btn.active { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); border-color:#8A5010; color:#FFF0C0; font-weight:800; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),inset 0 2px 3px rgba(0,0,0,0.15),0 1px 0 #5A3008; transform:translateY(1px); }
+  body.dark .meal-btn { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  body.dark .meal-btn.active { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); border-color:#8A5010; color:#FFF0C0; }
 
   /* CTA */
   .cta-area { text-align:center; margin-bottom:46px; animation:fadeUp 0.7s 0.35s ease both; }
@@ -324,32 +352,6 @@
   .other-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B870 100%); color:#2A1A08; border:2px solid #A08818; border-radius:6px; padding:8px 20px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,0.45),0 3px 0 #5A4808; text-shadow:0 1px 0 rgba(255,255,255,0.4); }
 
   .other-btn:hover { background:linear-gradient(180deg,#F0E8B8 0%,#D8C878 100%); transform:translateY(-1px); }
-
-
-  /* COLLAPSIBLE */
-  function toggleCollapsible(id) {
-    const header = document.getElementById(id + 'Header');
-    const body   = document.getElementById(id + 'Body');
-    const isOpen = body.classList.contains('open');
-    body.classList.toggle('open', !isOpen);
-    header.classList.toggle('open', !isOpen);
-  }
-
-  function updateDietaryBadge() {
-    const badge = document.getElementById('dietaryBadge');
-    if (!badge) return;
-    const count = activeFilters.size;
-    badge.textContent = count;
-    badge.classList.toggle('visible', count > 0);
-  }
-
-  function updateMedicalBadge() {
-    const badge = document.getElementById('medicalBadge');
-    if (!badge) return;
-    const hasActive = !!activeMedicalMode;
-    badge.textContent = '●';
-    badge.classList.toggle('visible', hasActive);
-  }
 
   /* RECIPE */
   .recipe-btn { display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:5px 13px; border-radius:20px; border:2px solid rgba(255,255,255,0.35); background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:700; color:var(--ink3); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
@@ -424,6 +426,31 @@
   .save-btn:disabled { opacity:0.55; cursor:default; }
   .share-btn { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.35); border-radius:16px; padding:8px 18px; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; color:var(--ink2); cursor:pointer; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(0,0,0,0.22); }
   .share-btn:hover { border-color:var(--amber); color:var(--amber); transform:translateY(-1px); }
+
+  /* WEEKLY PLANNER */
+  .week-header { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .week-title { font-family:'Nunito',sans-serif; font-size:1.25rem; font-weight:900; color:var(--ink); }
+  .week-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .week-grid { display:flex; flex-direction:column; gap:10px; }
+  .week-day-card { background:var(--surface); border:2px solid rgba(255,255,255,0.3); border-radius:16px; padding:14px 18px; box-shadow:inset 0 1px 0 var(--bevel-hi),0 3px 0 rgba(30,35,100,0.3),0 4px 10px rgba(0,0,0,0.15); transition:all 0.15s ease; }
+  .week-day-card.locked { border-color:var(--gold); }
+  .week-day-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+  .week-day-name { font-family:'Nunito',sans-serif; font-size:13px; font-weight:900; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink2); }
+  .week-day-btns { display:flex; gap:6px; }
+  .week-icon-btn { background:linear-gradient(180deg,#EEF0FF 0%,#D8DCF4 100%); border:2px solid rgba(255,255,255,0.35); border-radius:8px; width:30px; height:30px; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s ease; box-shadow:inset 0 1px 0 var(--bevel-hi),0 2px 0 rgba(0,0,0,0.2); }
+  .week-icon-btn:hover { border-color:var(--amber); transform:translateY(-1px); }
+  .week-icon-btn.locked { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); border-color:#8A5010; }
+  .week-icon-btn:disabled { opacity:0.4; cursor:default; }
+  body.dark .week-icon-btn { background:linear-gradient(180deg,#484E88 0%,#383E78 100%); border-color:rgba(255,255,255,0.15); }
+  body.dark .week-icon-btn.locked { background:linear-gradient(180deg,#E8A020 0%,#B87010 100%); }
+  .week-course { display:flex; gap:8px; align-items:baseline; margin-bottom:4px; }
+  .week-course-label { font-size:9.5px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink3); flex-shrink:0; width:86px; }
+  .week-course-name { font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; color:var(--ink); line-height:1.4; }
+  .week-course-desc { font-size:11.5px; color:var(--ink3); font-weight:400; }
+  .weekly-btn { background:linear-gradient(180deg,#E8DCA8 0%,#C8B878 100%); border:2px solid #A89020; color:#2A1A08; border-radius:8px; padding:10px 22px; font-family:'Nunito',sans-serif; font-size:12.5px; font-weight:800; cursor:pointer; transition:all 0.15s ease; margin-left:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 3px 0 #6A5808,0 4px 6px rgba(0,0,0,0.2); text-shadow:0 1px 0 rgba(255,255,255,0.4); }
+  .weekly-btn:hover { background:linear-gradient(180deg,#F0E8B8 0%,#D8C888 100%); transform:translateY(-1px); }
+  .weekly-btn:active { transform:translateY(2px); }
+  @media(max-width:600px){ .weekly-btn{margin-left:0;margin-top:8px;} .week-course-label{width:72px;} }
 
   /* TOAST */
   .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(12px); background:#1A1E48; color:#F0F4FF; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; padding:10px 22px; border-radius:50px; z-index:9999; opacity:0; transition:opacity 0.25s ease,transform 0.25s ease; pointer-events:none; box-shadow:0 4px 20px rgba(0,0,0,0.35); }
@@ -697,6 +724,25 @@
           </div>
         </div>
 
+        <div class="med-card theme-purple" data-mode="goiter" onclick="toggleMedical(this)">
+          <div class="med-icon">🦋</div>
+          <div class="med-body">
+            <div class="med-title-row">
+              <span class="med-title" data-i18n="medGoiterTitle">Goiter / Thyroid Diet</span>
+              <span class="med-badge" data-badge>Off</span>
+            </div>
+            <p class="med-desc" data-i18n="medGoiterDesc">Thyroid-supportive eating. The two goiter types have opposite rules — select your type below.</p>
+            <div class="med-rules">
+              <span class="med-rule-tag" data-i18n="goiterPick">Select goiter type:</span>
+              <div class="goiter-chips">
+                <div class="goiter-chip" data-goiter="iodine" onclick="event.stopPropagation();selectGoiterType(this)"><span data-i18n="goiterIodine">Iodine-deficiency</span></div>
+                <div class="goiter-chip" data-goiter="hashimoto" onclick="event.stopPropagation();selectGoiterType(this)"><span data-i18n="goiterHashi">Hashimoto's / autoimmune</span></div>
+              </div>
+              <span class="med-rule-tag" id="goiterRuleTag" style="display:none;"></span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     </div><!-- /collapsible-body -->
@@ -705,6 +751,15 @@
   <div style="margin-bottom:16px;">
     <div class="shopping-toggle" id="shoppingToggle" onclick="toggleShopping()">
       🛒 <span data-i18n="shoppingBtn">Include shopping list</span>
+    </div>
+  </div>
+
+  <div class="serving-row">
+    <span class="serving-label" data-i18n="labelMeal">Meal</span>
+    <div class="meal-btns">
+      <div class="meal-btn" data-meal="breakfast" onclick="selectMeal(this)">🌅 <span data-i18n="mealBreakfast">Breakfast</span></div>
+      <div class="meal-btn" data-meal="lunch" onclick="selectMeal(this)">☀️ <span data-i18n="mealLunch">Lunch</span></div>
+      <div class="meal-btn active" data-meal="dinner" onclick="selectMeal(this)">🌙 <span data-i18n="mealDinner">Dinner</span></div>
     </div>
   </div>
 
@@ -723,6 +778,7 @@
       ✿ <span data-i18n="generateBtn">Generate My Menu</span>
     </button>
     <button class="surprise-btn" onclick="surpriseMe()">🎲 <span data-i18n="surpriseBtn">Surprise Me</span></button>
+    <button class="weekly-btn" onclick="openWeeklyPlanner()">📅 <span data-i18n="weeklyBtn">Plan My Week</span></button>
   </div>
 
   </div><!-- /panel-left -->
@@ -830,6 +886,8 @@
       worldCuisines:'World Cuisines',
       emptyTitle:'Your menu will appear here',
       labelServing:'Serves',
+      labelMeal:'Meal', mealBreakfast:'Breakfast', mealLunch:'Lunch', mealDinner:'Dinner',
+      bfStarter:'Bread & Pastry', bfMain:'Main Dish', bfDessert:'Drink or Light Sweet',
       emptyDesc:'Choose your options on the left and hit Generate',
       medChemoTitle:'GI Chemotherapy Diet',
       medChemoDesc:'Strict diet for GI cancer patients during chemo. No root veg, no poultry, no legumes, no grains, no spices, no fried foods.',
@@ -851,6 +909,12 @@
       heartR1:'No saturated / trans fat', heartR2:'Low sodium', heartR4:'Omega-3 rich',
       goutR1:'No red meat / organ meat', goutR2:'No shellfish', goutR3:'No alcohol',
       tbR1:'No alcohol', tbR2:'No raw/undercooked food', tbR3:'High calorie + protein', tbR4:'Vitamins A, C, E + zinc',
+      medGoiterTitle:'Goiter / Thyroid Diet',
+      medGoiterDesc:'Thyroid-supportive eating. The two goiter types have opposite rules — select your type below.',
+      goiterPick:'Select goiter type:',
+      goiterIodine:'Iodine-deficiency', goiterHashi:"Hashimoto's / autoimmune",
+      goiterIodineRules:'✓ Iodine-rich: seafood, dairy, eggs · ✗ Raw cabbage, broccoli, kale · ✓ Selenium sources',
+      goiterHashiRules:'✗ Gluten · ✗ Excess iodine (seaweed/kelp) · ✓ Anti-inflammatory · ✓ Selenium + zinc',
       shoppingBtn:'Include shopping list', generateBtn:'Generate My Menu',
       surpriseBtn:'Surprise Me', loading:'Crafting your perfect menu…',
       validating:'Verifying dietary safety…',
@@ -861,8 +925,12 @@
       recipeBtn:'View Recipe', recipeClose:'Close Recipe', recipeLoading:'Fetching recipe…',
       cuisineWord:'Cuisine',
       savedMenusTitle:'Saved Menus', noSavedMenus:'No saved menus yet',
-      saveBtn:'Save Menu', savedLabel:'Saved!', shareBtn:'Share',
-      copiedMsg:'Menu copied to clipboard!',
+      saveBtn:'Save Menu', savedLabel:'Saved!', shareBtn:'Share', shareImgBtn:'Image',
+      copiedMsg:'Menu copied to clipboard!', imgSavedMsg:'Menu image downloaded!',
+      weeklyBtn:'Plan My Week', weekTitle:'Weekly Menu Plan',
+      weekLoading:'Planning your week…', weekRegenDay:'New menu for this day',
+      weekLock:'Lock day', weekUnlock:'Unlock day', weekRegenAll:'↺ Regenerate Week', weekBack:'← Single Menu',
+      weekDays:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
     },
     tr: {
       tagline:'Sofranızın Günlük İlhamı ✿',
@@ -880,6 +948,8 @@
       worldCuisines:'Dünya Mutfakları',
       emptyTitle:'Menün burada görünecek',
       labelServing:'Kişi sayısı',
+      labelMeal:'Öğün', mealBreakfast:'Kahvaltı', mealLunch:'Öğle Yemeği', mealDinner:'Akşam Yemeği',
+      bfStarter:'Ekmek & Hamur İşi', bfMain:'Ana Kahvaltılık', bfDessert:'İçecek veya Hafif Tatlı',
       emptyDesc:'Soldaki seçenekleri belirle ve Oluştur\'a bas',
       medChemoTitle:'GİS Kemoterapi Diyeti',
       medChemoDesc:'Kemoterapi sürecindeki GİS kanser hastaları için sıkı diyet. Kök sebze, kümes hayvanı, baklagil, tahıl, baharat, kızartma yok.',
@@ -901,6 +971,12 @@
       heartR1:'Doymuş / trans yağ yok', heartR2:'Düşük sodyum', heartR4:'Omega-3 zengini',
       goutR1:'Kırmızı et / sakatat yok', goutR2:'Kabuklu deniz ürünleri yok', goutR3:'Alkol yok',
       tbR1:'Alkol yok', tbR2:'Çiğ/az pişmiş yemek yok', tbR3:'Yüksek kalori + protein', tbR4:'A, C, E vitamini + çinko',
+      medGoiterTitle:'Guatr / Tiroid Diyeti',
+      medGoiterDesc:'Tiroid dostu beslenme. İki guatr türünün kuralları birbirine zıttır — aşağıdan türünü seç.',
+      goiterPick:'Guatr türünü seç:',
+      goiterIodine:'İyot eksikliği', goiterHashi:'Haşimato / otoimmün',
+      goiterIodineRules:'✓ İyot zengini: deniz ürünleri, süt ürünleri, yumurta · ✗ Çiğ lahana, brokoli, karalahana · ✓ Selenyum kaynakları',
+      goiterHashiRules:'✗ Gluten · ✗ Aşırı iyot (yosun) · ✓ Anti-inflamatuar · ✓ Selenyum + çinko',
       shoppingBtn:'Alışveriş listesi ekle', generateBtn:'Menümü Oluştur',
       surpriseBtn:'Şansıma Bırak', loading:'Mükemmel menün hazırlanıyor…',
       validating:'Diyet güvenliği doğrulanıyor…',
@@ -911,8 +987,12 @@
       recipeBtn:'Tarifi Gör', recipeClose:'Tarifi Kapat', recipeLoading:'Tarif yükleniyor…',
       cuisineWord:'Mutfağı',
       savedMenusTitle:'Kaydedilen Menüler', noSavedMenus:'Henüz kaydedilen menü yok',
-      saveBtn:'Menüyü Kaydet', savedLabel:'Kaydedildi!', shareBtn:'Paylaş',
-      copiedMsg:'Menü panoya kopyalandı!',
+      saveBtn:'Menüyü Kaydet', savedLabel:'Kaydedildi!', shareBtn:'Paylaş', shareImgBtn:'Görsel',
+      copiedMsg:'Menü panoya kopyalandı!', imgSavedMsg:'Menü görseli indirildi!',
+      weeklyBtn:'Haftamı Planla', weekTitle:'Haftalık Menü Planı',
+      weekLoading:'Haftan planlanıyor…', weekRegenDay:'Bu gün için yeni menü',
+      weekLock:'Günü kilitle', weekUnlock:'Kilidi aç', weekRegenAll:'↺ Haftayı Yenile', weekBack:'← Tek Menü',
+      weekDays:['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'],
     }
   };
 
@@ -1031,7 +1111,46 @@ PREFERRED INGREDIENTS:
 - Fats: olive oil, avocado, nuts, seeds — add generously to increase caloric density
 
 RULE: Caloric density is the priority. TB patients are often malnourished. Include a vitamin C source at lunch and dinner (aids iron absorption). Include a vitamin D source once (eggs, fish, or fortified dairy).
-SELF-VERIFICATION — before writing the menu, confirm protein appears in every course, vitamin C appears at main and dessert, and no alcohol or raw protein is used.`
+SELF-VERIFICATION — before writing the menu, confirm protein appears in every course, vitamin C appears at main and dessert, and no alcohol or raw protein is used.`,
+
+  goiter: () => goiterType === 'hashimoto'
+    ? `MEDICAL DIET — HASHIMOTO'S / AUTOIMMUNE GOITER: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
+
+STRICTLY FORBIDDEN:
+- ALL gluten: wheat, barley, rye, bulgur, couscous, semolina, standard bread, standard pasta, standard pastry — strict gluten-free is the core rule
+- Excess iodine: seaweed (nori, kelp, wakame, kombu), iodine-fortified products
+- Large amounts of soy: soy milk, edamame, tofu in large quantity (small amounts acceptable)
+- Large amounts of RAW goitrogens: raw cabbage, raw broccoli, raw cauliflower, raw kale, raw Brussels sprouts (cooked is fine in moderation)
+- Highly processed foods, added sugars, sugary drinks
+
+PREFERRED INGREDIENTS:
+- Protein: oily fish (salmon, sardines — omega-3 anti-inflammatory), turkey, eggs, white fish
+- Selenium sources: Brazil nuts (1-2 per day is enough), eggs, sunflower seeds, fish
+- Zinc sources: pumpkin seeds, chickpeas, cashews
+- Carbs (gluten-free only): rice, quinoa, buckwheat, potatoes, corn, gluten-free oats
+- Vegetables: cooked leafy greens, zucchini, capsicum, tomato, carrots
+- Fats: olive oil, avocado; anti-inflammatory aromatics like turmeric and ginger encouraged
+- Fermented dairy (yogurt, kefir) if tolerated
+
+RULE: Strictly gluten-free. Anti-inflammatory focus. Include one selenium source and one zinc source across the menu.
+SELF-VERIFICATION — before writing the menu, confirm zero gluten-containing ingredients (check breads, pastries, sauces, thickeners) and no seaweed.`
+    : `MEDICAL DIET — IODINE-DEFICIENCY GOITER: Drawing from any world cuisine, strictly exclude the following ingredients from every course:
+
+STRICTLY FORBIDDEN:
+- RAW goitrogenic / Brassica vegetables: raw cabbage, raw broccoli, raw cauliflower, raw kale, raw Brussels sprouts, raw bok choy, raw turnip, raw radish, raw rocket (these block iodine uptake when raw — thoroughly cooked versions allowed in small amounts, never as the main ingredient)
+- Millet (actively goitrogenic)
+- Large amounts of soy: soy milk, tofu, edamame in large quantity
+- Highly processed foods with unfortified salt
+
+PREFERRED INGREDIENTS:
+- Iodine-rich (the priority): sea fish (cod, sea bass, haddock), shrimp, seaweed in moderation, dairy (milk, yogurt, cheese), eggs, iodised salt in cooking
+- Selenium sources (support thyroid hormone conversion): Brazil nuts, eggs, sunflower seeds, fish
+- Protein: fish first, then turkey, eggs, dairy
+- Carbs: any whole grains, rice, potatoes
+- Vegetables: all except raw Brassicas — zucchini, spinach (cooked), capsicum, tomato, green beans
+
+RULE: Every menu must include at least TWO iodine-rich ingredients across the courses, and one selenium source.
+SELF-VERIFICATION — before writing the menu, confirm no raw Brassica vegetables and no millet appear, and iodine-rich ingredients are present.`
 };
 
   const medicalLabels = {
@@ -1040,7 +1159,8 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     diabetes:     { en:'💉 Type 2 Diabetes Diet',  tr:'💉 Tip 2 Diyabet Diyeti' },
     heart:        { en:'❤️ Heart-Healthy Diet',    tr:'❤️ Kalp Dostu Diyet' },
     gout:         { en:'🦴 Gout Diet',             tr:'🦴 Gut Diyeti' },
-    tuberculosis: { en:'🫁 TB Recovery Diet',      tr:'🫁 TB İyileşme Diyeti' }
+    tuberculosis: { en:'🫁 TB Recovery Diet',      tr:'🫁 TB İyileşme Diyeti' },
+    goiter:       { en:'🦋 Thyroid / Goiter Diet', tr:'🦋 Tiroid / Guatr Diyeti' }
   };
 
   // Compact forbidden-ingredient lists used by the AI validation layer.
@@ -1051,7 +1171,10 @@ SELF-VERIFICATION — before writing the menu, confirm protein appears in every 
     diabetes: `Refined sugar, honey, syrup, sweets, sugary sauces or dressings, high-GI starches (white bread, white rice, white pasta, instant mashed potato, corn flakes, rice cakes, crackers), sugary drinks (juice, soda, sports drinks, sweetened tea or coffee), processed/packaged foods (biscuits, cake, pastry, crisps, fast food), high-sugar fruits (watermelon, grapes, ripe banana, dates, mango, pineapple), full-fat dairy (cream, butter, full-fat cheese)`,
     heart: `Saturated fats (butter, lard, coconut oil, palm oil, full-fat dairy, cream, full-fat cheese), trans fats (margarine, shortening, packaged pastry, fried fast food), high-sodium foods (processed meats, sausage, salami, ham, bacon, canned soups, pickles, soy sauce, excess table salt, crisps), red and processed meat (beef, lamb, pork, veal, hot dogs, deli meats), refined carbs and sugar (white bread, sugary cereals, pastry, sweets, sugary drinks), deep-fried foods`,
     gout: `Organ meats (liver, kidney, heart, brain), anchovies, sardines, mackerel, herring, mussels, scallops, shrimp, crab, lobster, high-purine meats (beef, lamb, pork, veal, game meat, goose), all alcohol especially beer, fructose drinks (fruit juice, soda, energy drinks, sweetened beverages), refined carbs and sugary snacks`,
-    tuberculosis: `All alcohol, raw or undercooked meat/eggs/fish (everything must be fully cooked), packaged junk food with no nutritional value, excess caffeine (more than 1 cup per day)`
+    tuberculosis: `All alcohol, raw or undercooked meat/eggs/fish (everything must be fully cooked), packaged junk food with no nutritional value, excess caffeine (more than 1 cup per day)`,
+    goiter: () => goiterType === 'hashimoto'
+      ? `ALL gluten (wheat, barley, rye, bulgur, couscous, semolina, standard bread/pasta/pastry, hidden gluten in sauces and thickeners), seaweed (nori, kelp, wakame, kombu), iodine-fortified products, large amounts of soy, large amounts of raw goitrogens (raw cabbage, raw broccoli, raw cauliflower, raw kale, raw Brussels sprouts), highly processed foods, added sugars, sugary drinks`
+      : `Raw goitrogenic/Brassica vegetables (raw cabbage, raw broccoli, raw cauliflower, raw kale, raw Brussels sprouts, raw bok choy, raw turnip, raw radish, raw rocket), millet, large amounts of soy (soy milk, tofu, edamame), highly processed foods`
   };
 
   const cuisineEmojis = {
@@ -1191,6 +1314,7 @@ ${JSON.stringify(toTranslate)}`;
     if (mode === 'general') {
       activeMedicalMode = null;
       updateMedicalBadge();
+      resetGoiterChoice();
       document.querySelectorAll('.med-card').forEach(c => {
         c.classList.remove('active');
         c.querySelector('[data-badge]').textContent = i18n[currentLang].badgeOff;
@@ -1200,8 +1324,8 @@ ${JSON.stringify(toTranslate)}`;
     }
 
     if (mode === 'medical') {
-      // keep cuisine selection if already made, require both cuisine + medical card
-      document.getElementById('generateBtn').disabled = !(activeMedicalMode && selected);
+      // keep cuisine selection if already made, require cuisine + medical card (+ goiter sub-type)
+      document.getElementById('generateBtn').disabled = !(medicalReady() && selected);
     }
 
     document.getElementById('result').classList.remove('visible');
@@ -1224,6 +1348,14 @@ ${JSON.stringify(toTranslate)}`;
     servingSize = parseInt(btn.dataset.serves);
   }
 
+  /* MEAL TYPE */
+  let mealType = 'dinner';
+  function selectMeal(btn) {
+    document.querySelectorAll('.meal-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mealType = btn.dataset.meal;
+  }
+
   /* FILTERS / SPICE / SHOPPING */
   function toggleFilter(chip) {
     chip.classList.toggle('active');
@@ -1239,6 +1371,37 @@ ${JSON.stringify(toTranslate)}`;
   }
 
   /* MEDICAL */
+  let goiterType = null;
+
+  function resetGoiterChoice() {
+    goiterType = null;
+    document.querySelectorAll('.goiter-chip').forEach(c => c.classList.remove('active'));
+    const tag = document.getElementById('goiterRuleTag');
+    if (tag) { tag.style.display = 'none'; tag.textContent = ''; }
+  }
+
+  function selectGoiterType(chip) {
+    document.querySelectorAll('.goiter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    goiterType = chip.dataset.goiter;
+    const t = i18n[currentLang];
+    const tag = document.getElementById('goiterRuleTag');
+    if (tag) {
+      tag.textContent = goiterType === 'hashimoto' ? t.goiterHashiRules : t.goiterIodineRules;
+      tag.style.display = 'inline-block';
+    }
+    if (activeMedicalMode === 'goiter') {
+      document.getElementById('generateBtn').disabled = !selected;
+    }
+  }
+
+  // The goiter card needs a sub-type before generation is allowed
+  function medicalReady() {
+    if (!activeMedicalMode) return false;
+    if (activeMedicalMode === 'goiter' && !goiterType) return false;
+    return true;
+  }
+
   function toggleMedical(card) {
     const mode = card.dataset.mode;
     const wasActive = card.classList.contains('active');
@@ -1254,11 +1417,14 @@ ${JSON.stringify(toTranslate)}`;
       badge.textContent = '● ' + t.badgeActive;
       activeMedicalMode = mode;
       updateMedicalBadge();
-      // require both medical card and cuisine selection
-      document.getElementById('generateBtn').disabled = !selected;
+      if (mode !== 'goiter') resetGoiterChoice();
+      // require medical card (+ goiter sub-type if applicable) and cuisine selection
+      document.getElementById('generateBtn').disabled = !(selected && medicalReady());
     } else {
       activeMedicalMode = null;
-      // no card active and no cuisine selected — disable until user picks a card
+      resetGoiterChoice();
+      updateMedicalBadge();
+      // no card active — disable until user picks a card
       document.getElementById('generateBtn').disabled = true;
     }
   }
@@ -1288,14 +1454,26 @@ ${JSON.stringify(toTranslate)}`;
     const base = medicalPrompts[mode]();
     const f = filters instanceof Set ? filters : new Set(filters);
 
+    // MODE-AWARE CONFLICT RESOLUTION — the medical forbidden list ALWAYS takes
+    // precedence over what a dietary pattern would normally allow. Without this,
+    // "vegetarian" makes the model reach for lentils/legumes, which are strictly
+    // forbidden for GI chemo patients (Notion bug: vegetarian → mercimek in GIS menus).
+    const isChemo = mode === 'chemo';
+    const chemoVegClause = isChemo
+      ? ` MEDICAL LIST TAKES PRECEDENCE: even though vegetarian cooking normally relies on legumes and soy, ALL legumes (lentils/mercimek, chickpeas, beans, peas, edamame) and ALL soy products (tofu, tempeh, soy milk) remain STRICTLY FORBIDDEN for this GI chemo patient. The ONLY compliant proteins are: soft-cooked eggs, small amounts of plain strained yogurt, and vegan cheese. Build courses around gentle cooked vegetables (zucchini, spinach, green beans, pumpkin, asparagus) with these proteins.`
+      : ` The medical diet's forbidden list below still applies in full and takes precedence — never use a plant protein that the medical list forbids.`;
+    const chemoVeganClause = isChemo
+      ? ` MEDICAL LIST TAKES PRECEDENCE: legumes, soy/tofu, grains, and most dairy are ALSO forbidden by this patient's GI chemo diet — do not use them as vegan substitutes. Compliant building blocks are: vegan cheese, gentle cooked vegetables (zucchini, spinach, green beans, pumpkin, asparagus), permitted low-sugar fruits (cooked peeled apple or pear, blueberries, quince), white rice alternatives are NOT allowed (grains forbidden), olive/avocado/grape seed oil. Keep courses simple, soft, and easy to digest.`
+      : ` The medical diet's forbidden list below still applies in full and takes precedence — never use a plant protein that the medical list forbids.`;
+
     if (f.has('Vegan')) {
-      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGAN. Absolutely no animal products of any kind. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy. Every protein source mentioned below must be ignored and replaced with a compliant plant-based alternative (e.g. legumes if permitted by the medical diet, tofu if permitted, seeds, nuts). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGAN. Absolutely no animal products of any kind. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy. Every animal protein mentioned below must be ignored and replaced with a compliant plant-based alternative.${chemoVeganClause} This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
     if (f.has('Vegetarian')) {
-      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below — all fish and seafood. Ignore all meat/poultry/fish protein recommendations. Use only eggs, plain yogurt or dairy (if not forbidden by the medical diet), legumes (if not forbidden), or tofu (if not forbidden). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is VEGETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below — all fish and seafood. Ignore all meat/poultry/fish protein recommendations.${chemoVegClause} This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
     if (f.has('Pescetarian')) {
-      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is PESCETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below. Ignore all meat and poultry recommendations. Use only fish, seafood, eggs, or dairy as animal proteins (subject to the medical diet's own restrictions). This constraint cannot be overridden by anything that follows.\n\n${base}`;
+      return `⚠️ CRITICAL — READ THIS BEFORE EVERYTHING ELSE: The patient is PESCETARIAN. FORBIDDEN: all meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek) — this explicitly includes turkey/hindi which appears as a "preferred" protein in the guidelines below. Ignore all meat and poultry recommendations. Use only fish, seafood, eggs, or dairy as animal proteins — subject to the medical diet's own restrictions, which take precedence. This constraint cannot be overridden by anything that follows.\n\n${base}`;
     }
 
     return base;
@@ -1329,18 +1507,20 @@ ${JSON.stringify(toTranslate)}`;
      the offending course(s) with compliant alternatives and returns corrected JSON.
      Only runs when a medical diet mode is active. -------------------------------- */
   async function validateMenu(menu, medicalMode, dietaryFilters) {
-    const forbiddenList = medicalForbiddenLists[medicalMode];
+    let forbiddenList = medicalForbiddenLists[medicalMode];
+    if (typeof forbiddenList === 'function') forbiddenList = forbiddenList();
     if (!forbiddenList) return menu;
 
     // Build a dietary extension to the forbidden list
     const df = dietaryFilters || new Set();
     let dietaryForbidden = '';
+    const precedence = ` IMPORTANT: every replacement must ALSO comply with the medical forbidden list above — the medical list always takes precedence. Never introduce legumes (lentils/mercimek, chickpeas, beans), soy/tofu, or any other medically forbidden ingredient as a dietary substitute.`;
     if (df.has('Vegan')) {
-      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy (milk, yogurt, cheese, butter). Any dish containing any of these — even as a minor ingredient — must be replaced with a fully plant-based alternative.`;
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek, goose/kaz), all fish, all seafood, eggs, all dairy (milk, yogurt, cheese, butter). Any dish containing any of these — even as a minor ingredient — must be replaced with a fully plant-based alternative.${precedence}`;
     } else if (df.has('Vegetarian')) {
-      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek), all fish, all seafood. Replace any violation with an egg- or dairy-based alternative.`;
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (VEGETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti), all poultry (chicken/tavuk, turkey/hindi, duck/ördek), all fish, all seafood. Replace any violation with an egg-, yogurt-, or vegan-cheese-based alternative.${precedence}`;
     } else if (df.has('Pescetarian')) {
-      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (PESCETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek). Replace any violation with fish, seafood, eggs, or dairy.`;
+      dietaryForbidden = `\n\nADDITIONAL DIETARY FORBIDDEN (PESCETARIAN): All meat (beef/dana, lamb/kuzu, pork/domuz, veal/dana eti) and all poultry (chicken/tavuk, turkey/hindi, duck/ördek). Replace any violation with fish, seafood, eggs, or dairy.${precedence}`;
     }
 
     const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
@@ -1476,16 +1656,103 @@ Respond with ONLY this JSON:
   function shareMenu() {
     if (!lastMenu) return;
     const t = i18n[currentLang];
+    const isBf = lastMenu.mealType === 'breakfast';
     const text = `🍽️ ${lastMenu.menuTitle}\n\n` +
-      `${t.starter}: ${lastMenu.starter.name}\n${lastMenu.starter.description}\n\n` +
-      `${t.mainCourse}: ${lastMenu.main.name}\n${lastMenu.main.description}\n\n` +
-      `${t.dessert}: ${lastMenu.dessert.name}\n${lastMenu.dessert.description}\n\n` +
+      `${isBf ? t.bfStarter : t.starter}: ${lastMenu.starter.name}\n${lastMenu.starter.description}\n\n` +
+      `${isBf ? t.bfMain : t.mainCourse}: ${lastMenu.main.name}\n${lastMenu.main.description}\n\n` +
+      `${isBf ? t.bfDessert : t.dessert}: ${lastMenu.dessert.name}\n${lastMenu.dessert.description}\n\n` +
       `— Afiyet 🍳`;
     if (navigator.share) {
       navigator.share({ title: lastMenu.menuTitle, text }).catch(()=>{});
     } else {
       navigator.clipboard.writeText(text).then(() => showToast(t.copiedMsg || 'Copied!')).catch(()=>{});
     }
+  }
+
+  /* SHARE AS IMAGE — draws the menu onto a canvas card, then Web Share or PNG download */
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = String(text || '').split(' ');
+    let line = '', yy = y;
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        ctx.fillText(line, x, yy); line = w; yy += lineHeight;
+      } else { line = test; }
+    }
+    if (line) ctx.fillText(line, x, yy);
+    return yy + lineHeight;
+  }
+
+  function shareMenuImage() {
+    if (!lastMenu) return;
+    const t = i18n[currentLang];
+    const isBf = lastMenu.mealType === 'breakfast';
+    const labels = [
+      isBf ? t.bfStarter : t.starter,
+      isBf ? t.bfMain : t.mainCourse,
+      isBf ? t.bfDessert : t.dessert
+    ];
+    const courses = [lastMenu.starter, lastMenu.main, lastMenu.dessert];
+    const W = 800, pad = 48;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = 1400; // trimmed after measuring
+    const ctx = canvas.getContext('2d');
+
+    // background
+    ctx.fillStyle = '#DCE0F4'; ctx.fillRect(0, 0, W, canvas.height);
+    // header
+    const grad = ctx.createLinearGradient(0, 0, 0, 190);
+    grad.addColorStop(0, '#9098CC'); grad.addColorStop(1, '#5860A0');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, W, 190);
+    ctx.fillStyle = '#F0D870'; ctx.font = '700 22px Nunito, sans-serif';
+    ctx.fillText((selected || '') + (activeMedicalMode ? ' · ' + (medicalLabels[activeMedicalMode]?.[currentLang] || '') : ''), pad, 70);
+    ctx.fillStyle = '#F5EFD8'; ctx.font = '900 40px Nunito, sans-serif';
+    let y = wrapCanvasText(ctx, lastMenu.menuTitle, pad, 125, W - pad * 2, 48);
+    y = Math.max(y, 240);
+
+    // courses
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = '#5860A0'; ctx.font = '800 16px Nunito, sans-serif';
+      ctx.fillText(String(labels[i] || '').toUpperCase(), pad, y); y += 30;
+      ctx.fillStyle = '#12163A'; ctx.font = '900 27px Nunito, sans-serif';
+      const nm = courses[i].name + (courses[i].nativeName && courses[i].nativeName.toLowerCase() !== courses[i].name.toLowerCase() ? ' (' + courses[i].nativeName + ')' : '');
+      y = wrapCanvasText(ctx, nm, pad, y, W - pad * 2, 34) + 2;
+      ctx.fillStyle = '#5860A0'; ctx.font = '400 19px Nunito, sans-serif';
+      y = wrapCanvasText(ctx, courses[i].description, pad, y, W - pad * 2, 27) + 14;
+      if (i < 2) { ctx.strokeStyle = 'rgba(40,48,120,0.25)'; ctx.beginPath(); ctx.moveTo(pad, y - 10); ctx.lineTo(W - pad, y - 10); ctx.stroke(); y += 16; }
+    }
+
+    // footer
+    y += 8;
+    const fgrad = ctx.createLinearGradient(0, y, 0, y + 70);
+    fgrad.addColorStop(0, '#8890C4'); fgrad.addColorStop(1, '#5860A0');
+    ctx.fillStyle = fgrad; ctx.fillRect(0, y, W, 70);
+    ctx.fillStyle = '#F5E888'; ctx.font = 'italic 700 26px Lora, serif';
+    ctx.fillText('Afiyet 🍳', pad, y + 45);
+    ctx.fillStyle = '#D8D090'; ctx.font = '600 15px Nunito, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('afiyet.vercel.app', W - pad, y + 44);
+    ctx.textAlign = 'left';
+
+    // trim to used height
+    const H = y + 70;
+    const out = document.createElement('canvas');
+    out.width = W; out.height = H;
+    out.getContext('2d').drawImage(canvas, 0, 0, W, H, 0, 0, W, H);
+
+    out.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], 'afiyet-menu.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: lastMenu.menuTitle }); return; } catch(e) { if (e.name === 'AbortError') return; }
+      }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'afiyet-menu.png';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      showToast(t.imgSavedMsg || 'Menu image downloaded!');
+    }, 'image/png');
   }
 
   function showToast(msg) {
@@ -1501,6 +1768,213 @@ Respond with ONLY this JSON:
 
   // init saved menus on load
   document.addEventListener('DOMContentLoaded', () => renderSavedMenus());
+
+  /* WEEKLY PLANNER
+     Generates and persists a full 7-day menu plan. Locked days survive
+     "Regenerate Week"; single days can be regenerated individually.
+     Persisted to localStorage under 'afiyet_week'. -------------------- */
+  let weekPlan = null;
+  try { weekPlan = JSON.parse(localStorage.getItem('afiyet_week') || 'null'); } catch(e) {}
+
+  function saveWeekPlan() {
+    try { localStorage.setItem('afiyet_week', JSON.stringify(weekPlan)); } catch(e) {}
+  }
+
+  function canGenerateNow() {
+    if (currentMode === 'medical') return !!(selected && medicalReady());
+    return !!selected;
+  }
+
+  function weekConstraintBlock() {
+    const medicalNote = activeMedicalMode ? buildMedicalNote(activeMedicalMode, activeFilters) : '';
+    const dietaryNote = activeFilters.size > 0 ? buildDietaryNote([...activeFilters], activeMedicalMode) : '';
+    return [medicalNote, dietaryNote].filter(Boolean).join('\n\n');
+  }
+
+  function openWeeklyPlanner() {
+    if (weekPlan && Array.isArray(weekPlan.days) && weekPlan.days.length === 7) {
+      renderWeek();
+      return;
+    }
+    generateWeek();
+  }
+
+  function setWeekLoading(on) {
+    const t = i18n[currentLang];
+    document.getElementById('loadingArea').classList.toggle('visible', on);
+    if (on) {
+      document.querySelector('.loading-text').textContent = t.weekLoading || 'Planning your week…';
+      document.getElementById('result').classList.remove('visible');
+      document.getElementById('result').innerHTML = '';
+    } else {
+      document.querySelector('.loading-text').textContent = t.loading;
+    }
+  }
+
+  async function generateWeek() {
+    const t = i18n[currentLang];
+    if (!canGenerateNow()) { showToast(t.emptyDesc); return; }
+    setWeekLoading(true);
+
+    const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
+    const mealWord = { breakfast:'BREAKFAST', lunch:'LUNCH', dinner:'DINNER' }[mealType] || 'DINNER';
+    const constraints = weekConstraintBlock();
+
+    // keep locked days — collect their dishes so the model avoids repeats
+    const lockedEntries = (weekPlan?.days || []).map((d, i) => ({ ...d, i })).filter(d => d.locked && d.menu);
+    const lockedDishes = lockedEntries.flatMap(d => [d.menu.starter?.name, d.menu.main?.name, d.menu.dessert?.name]).filter(Boolean);
+    const lockedNote = lockedDishes.length
+      ? `\nThese dishes are already fixed on locked days — do NOT repeat any of them: ${lockedDishes.join(', ')}.`
+      : '';
+
+    try {
+      const response = await fetch('/api/generate', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          max_tokens: 4000,
+          system: `You are a creative, knowledgeable chef who designs weekly meal plans. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,
+          messages: [{
+            role: 'user',
+            content: `Create a 7-day ${selected} cuisine ${mealWord} menu plan (Monday through Sunday) for ${servingSize} ${servingSize === 1 ? 'person' : 'people'}. Each day has three courses.
+
+${constraints}
+
+HARD RULES:
+- No dish may appear twice anywhere in the week.
+- Vary proteins, cooking techniques, and course formats across the days — no two days should feel alike.
+- Keep every description to ONE short sentence (max 10 words).${lockedNote}
+- Seed: ${Math.random().toString(36).slice(2,9)}
+
+Respond with ONLY this JSON:
+{"days":[{"starter":{"name":"...","nativeName":"...","description":"..."},"main":{"name":"...","nativeName":"...","description":"..."},"dessert":{"name":"...","nativeName":"...","description":"..."}} , ... exactly 7 entries ...]}`
+          }]
+        })
+      });
+      const data = await response.json();
+      const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed.days) || parsed.days.length < 7) throw new Error('bad week');
+
+      const newDays = parsed.days.slice(0, 7).map((menu, i) => {
+        const lockedOld = weekPlan?.days?.[i];
+        return (lockedOld && lockedOld.locked && lockedOld.menu) ? lockedOld : { menu, locked: false };
+      });
+      weekPlan = { days: newDays, cuisine: selected, medicalMode: activeMedicalMode, goiterType, mealType, createdAt: Date.now() };
+      saveWeekPlan();
+      renderWeek();
+    } catch(err) {
+      renderError();
+    } finally {
+      setWeekLoading(false);
+    }
+  }
+
+  async function regenerateDay(idx) {
+    if (!weekPlan?.days?.[idx] || weekPlan.days[idx].locked) return;
+    const t = i18n[currentLang];
+    const card = document.getElementById('week-day-' + idx);
+    if (card) card.style.opacity = '0.45';
+
+    const lang = currentLang === 'tr' ? 'Turkish (Türkçe)' : 'English';
+    const mealWord = { breakfast:'BREAKFAST', lunch:'LUNCH', dinner:'DINNER' }[weekPlan.mealType] || 'DINNER';
+    const constraints = weekConstraintBlock();
+    const avoid = weekPlan.days.flatMap((d, i) => i === idx ? [] : [d.menu?.starter?.name, d.menu?.main?.name, d.menu?.dessert?.name]).filter(Boolean);
+
+    try {
+      const response = await fetch('/api/generate', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          max_tokens: 1000,
+          system: `You are a creative, knowledgeable chef. You write in ${lang}. Always respond ONLY with valid JSON — no markdown, no extra text.`,
+          messages: [{
+            role: 'user',
+            content: `Create one ${weekPlan.cuisine || selected} cuisine ${mealWord} menu (starter, main, dessert) for ${servingSize} ${servingSize === 1 ? 'person' : 'people'}.
+
+${constraints}
+
+HARD RULES:
+- Do NOT use any of these dishes (already in this week's plan): ${avoid.join(', ')}.
+- Keep every description to ONE short sentence (max 10 words).
+- Seed: ${Math.random().toString(36).slice(2,9)}
+
+Respond with ONLY this JSON:
+{"starter":{"name":"...","nativeName":"...","description":"..."},"main":{"name":"...","nativeName":"...","description":"..."},"dessert":{"name":"...","nativeName":"...","description":"..."}}`
+          }]
+        })
+      });
+      const data = await response.json();
+      const raw = data.content[0].text.replace(/```json|```/g,'').trim();
+      weekPlan.days[idx] = { menu: JSON.parse(raw), locked: false };
+      saveWeekPlan();
+      renderWeek();
+    } catch(e) {
+      if (card) card.style.opacity = '1';
+      showToast('😕');
+    }
+  }
+
+  function toggleWeekLock(idx) {
+    if (!weekPlan?.days?.[idx]) return;
+    weekPlan.days[idx].locked = !weekPlan.days[idx].locked;
+    saveWeekPlan();
+    renderWeek();
+  }
+
+  function closeWeek() {
+    document.getElementById('result').classList.remove('visible');
+    document.getElementById('result').innerHTML = '';
+  }
+
+  function renderWeek() {
+    if (!weekPlan?.days) return;
+    const t = i18n[currentLang];
+    const isBf = weekPlan.mealType === 'breakfast';
+    const labels = [
+      isBf ? t.bfStarter : t.starter,
+      isBf ? t.bfMain : t.mainCourse,
+      isBf ? t.bfDessert : t.dessert
+    ];
+    const dayNames = t.weekDays || ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const esc = s => String(s || '').replace(/</g,'&lt;');
+
+    const daysHTML = weekPlan.days.map((d, i) => {
+      const m = d.menu || {};
+      const courseRow = (label, c) => c ? `
+        <div class="week-course">
+          <span class="week-course-label">${esc(label)}</span>
+          <span class="week-course-name">${esc(c.name)}${c.nativeName && c.nativeName.toLowerCase() !== (c.name||'').toLowerCase() ? ` <span class="dish-native-name">(${esc(c.nativeName)})</span>` : ''} <span class="week-course-desc">— ${esc(c.description)}</span></span>
+        </div>` : '';
+      return `
+      <div class="week-day-card${d.locked ? ' locked' : ''}" id="week-day-${i}">
+        <div class="week-day-head">
+          <span class="week-day-name">${d.locked ? '🔒 ' : ''}${dayNames[i]}</span>
+          <div class="week-day-btns">
+            <button class="week-icon-btn${d.locked ? ' locked' : ''}" onclick="toggleWeekLock(${i})" title="${d.locked ? (t.weekUnlock||'Unlock day') : (t.weekLock||'Lock day')}">${d.locked ? '🔒' : '🔓'}</button>
+            <button class="week-icon-btn" onclick="regenerateDay(${i})" ${d.locked ? 'disabled' : ''} title="${t.weekRegenDay||'New menu for this day'}">↺</button>
+          </div>
+        </div>
+        ${courseRow(labels[0], m.starter)}
+        ${courseRow(labels[1], m.main)}
+        ${courseRow(labels[2], m.dessert)}
+      </div>`;
+    }).join('');
+
+    document.getElementById('result').innerHTML = `
+      <div class="week-header">
+        <span class="week-title">📅 ${t.weekTitle || 'Weekly Menu Plan'}</span>
+        <div class="week-actions">
+          <button class="regen-btn" onclick="generateWeek()">${t.weekRegenAll || '↺ Regenerate Week'}</button>
+          <button class="other-btn" onclick="closeWeek()">${t.weekBack || '← Single Menu'}</button>
+        </div>
+      </div>
+      <div class="week-grid">${daysHTML}</div>`;
+    document.getElementById('result').classList.add('visible');
+    if (window.innerWidth < 900) {
+      document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  }
 
   /* GENERATE */
   async function generateMenu() {
@@ -1542,9 +2016,23 @@ Respond with ONLY this JSON:
       Americas: 'Prioritise the rich diversity of Latin and South America (Brazilian, Peruvian, Mexican, Colombian, Argentine, Chilean, Caribbean) but may include North American regional traditions. Mix countries across courses.',
       Eurasian:   'Draw from the rich culinary traditions of the former Soviet republics — Russian, Ukrainian, Georgian, Armenian, Azerbaijani, Uzbek, Kazakh, Kyrgyz, Moldovan, Belarusian, Baltic (Estonian, Latvian, Lithuanian). Mix regions freely across courses.'
     };
+    const mealWord = { breakfast:'BREAKFAST', lunch:'LUNCH', dinner:'DINNER' }[mealType] || 'DINNER';
     const cuisineInstruction = activeMedicalMode
-      ? `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}. Apply the medical diet rules below strictly.`
-      : `Design a ${selected} cuisine menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}`;
+      ? `Design a ${selected} cuisine ${mealWord} menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}. Apply the medical diet rules below strictly.`
+      : `Design a ${selected} cuisine ${mealWord} menu for today${cuisineExpansions[selected] ? ' — ' + cuisineExpansions[selected] : ''}`;
+
+    // Breakfast replaces the starter/main/dessert formats with morning-appropriate courses
+    const courseFormatNote = mealType === 'breakfast'
+      ? `COURSE FORMAT — this is a BREAKFAST menu. The three JSON fields keep their names but represent morning courses:
+- "starter" MUST be: a bread, pastry, or dough-based breakfast item traditional to the cuisine
+- "main" MUST be: the main breakfast dish (egg-based, cheese-based, a warm skillet, or the cuisine's signature morning plate)
+- "dessert" MUST be: a traditional morning drink OR a light morning sweet
+Everything must be genuinely breakfast-appropriate for this cuisine — never serve dinner dishes at breakfast.`
+      : `COURSE FORMAT — these are hard requirements, not suggestions:
+- Starter MUST be: ${starterType}
+- Main MUST be: ${mainType}
+- Dessert MUST be: ${dessertType}
+Think imaginatively within these formats. If the format doesn't suit an obvious dish, invent a lesser-known regional alternative that fits.`;
 
     // Variety nudge: medical diets need extra encouragement to explore formats within the chosen cuisine
     const medicalVarietyNote = activeMedicalMode
@@ -1566,11 +2054,7 @@ Respond with ONLY this JSON:
 ${medicalNote}
 ${dietaryNote}
 ${shoppingNote}
-COURSE FORMAT — these are hard requirements, not suggestions:
-- Starter MUST be: ${starterType}
-- Main MUST be: ${mainType}
-- Dessert MUST be: ${dessertType}
-Think imaginatively within these formats. If the format doesn't suit an obvious dish, invent a lesser-known regional alternative that fits.
+${courseFormatNote}
 
 VARIETY RULES — these are hard rules, not guidelines:
 ${activeMedicalMode ? '- Each course should feel like it could come from a different cuisine tradition.' : `- Think like a home cook or regional chef — not a travel brochure about ${selected} food.\n- Pick dishes a local family would actually eat at home, not what tourists expect.`}${defaultBan}${historyBan}${ingredientBan}${medicalVarietyNote}
@@ -1598,6 +2082,7 @@ Respond with ONLY this JSON:
         menu = await validateMenu(menu, activeMedicalMode, activeFilters);
       }
 
+      menu.mealType = mealType;
       renderMenu(menu);
 
       // Update session history so next generation avoids these exact dishes and ingredients
@@ -1635,13 +2120,21 @@ Respond with ONLY this JSON:
       if (btn) { btn.innerHTML = '🔖 ' + (t.saveBtn || 'Save Menu'); btn.disabled = false; }
     }, 0);
     const emoji = cuisineEmojis[selected] || '🍽️';
+    // Breakfast menus use morning course labels instead of starter/main/dessert
+    const isBf = menu.mealType === 'breakfast';
+    const courseLabels = {
+      starter: isBf ? (t.bfStarter || t.starter) : t.starter,
+      main:    isBf ? (t.bfMain    || t.mainCourse) : t.mainCourse,
+      dessert: isBf ? (t.bfDessert || t.dessert) : t.dessert
+    };
     const medColors = {
       chemo:'rgba(74,156,199,0.2);color:#4a9cc7',
       hypoglycemia:'rgba(122,76,199,0.2);color:#7a4cc7',
       diabetes:'rgba(199,74,74,0.2);color:#c74a4a',
       heart:'rgba(199,74,74,0.2);color:#c74a4a',
       gout:'rgba(199,120,74,0.2);color:#c7784a',
-      tuberculosis:'rgba(42,156,82,0.2);color:#2a9c52'
+      tuberculosis:'rgba(42,156,82,0.2);color:#2a9c52',
+      goiter:'rgba(122,76,199,0.2);color:#7a4cc7'
     };
     const medTag = activeMedicalMode
       ? `<span style="background:${medColors[activeMedicalMode]};border-radius:50px;padding:3px 10px;font-size:11px;font-weight:600;">${medicalLabels[activeMedicalMode][currentLang]}</span>`
@@ -1669,21 +2162,21 @@ Respond with ONLY this JSON:
         </div>
         <div class="result-body">
           <div class="course-block" id="course-starter">
-            <p class="course-label">${t.starter}</p>
+            <p class="course-label">${courseLabels.starter}</p>
             <h3 class="course-name">${formatDishName(menu.starter.name, menu.starter.nativeName)}</h3>
             <p class="course-desc">${menu.starter.description}</p>
             <button class="recipe-btn" onclick="fetchRecipe('starter','${(menu.starter.nativeName||menu.starter.name).replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
             <div class="recipe-panel" id="recipe-starter"></div>
           </div>
           <div class="course-block" id="course-main">
-            <p class="course-label">${t.mainCourse}</p>
+            <p class="course-label">${courseLabels.main}</p>
             <h3 class="course-name">${formatDishName(menu.main.name, menu.main.nativeName)}</h3>
             <p class="course-desc">${menu.main.description}</p>
             <button class="recipe-btn" onclick="fetchRecipe('main','${(menu.main.nativeName||menu.main.name).replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
             <div class="recipe-panel" id="recipe-main"></div>
           </div>
           <div class="course-block" id="course-dessert">
-            <p class="course-label">${t.dessert}</p>
+            <p class="course-label">${courseLabels.dessert}</p>
             <h3 class="course-name">${formatDishName(menu.dessert.name, menu.dessert.nativeName)}</h3>
             <p class="course-desc">${menu.dessert.description}</p>
             <button class="recipe-btn" onclick="fetchRecipe('dessert','${(menu.dessert.nativeName||menu.dessert.name).replace(/'/g,"\\'")}',this)">📋 ${t.recipeBtn||'View Recipe'}</button>
@@ -1696,6 +2189,7 @@ Respond with ONLY this JSON:
           <button class="other-btn" onclick="scrollToTop()">${t.changeBtn}</button>
           <button class="save-btn" id="saveMenuBtn" onclick="saveMenu()">🔖 ${t.saveBtn}</button>
           <button class="share-btn" onclick="shareMenu()">↗ ${t.shareBtn}</button>
+          <button class="share-btn" onclick="shareMenuImage()">🖼 ${t.shareImgBtn || 'Image'}</button>
         </div>
       </div>`;
     document.getElementById('result').classList.add('visible');
@@ -1836,6 +2330,13 @@ Respond with ONLY this JSON:
     const btn = courseBlock.querySelector('.recipe-btn');
     if (btn) btn.innerHTML = '\uD83D\uDCCB ' + (i18n[currentLang].recipeBtn || 'View Recipe');
     if (lastMenu) lastMenu.openRecipes.delete(course);
+  }
+
+  /* PWA \u2014 register the service worker so Afiyet is installable on iOS + Android */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
   }
 </script>
 
