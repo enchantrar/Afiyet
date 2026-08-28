@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Afiyet",
+    "slug": "afiyet",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "afiyet",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#F5EFE6",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.afiyet.app"
+    },
+    "android": {
+      "package": "com.afiyet.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#F5EFE6"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
